@@ -1,0 +1,19 @@
+html[data-workspace-mode=local] .folder-copy strong {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.footer-actions {display:flex;align-items:center;gap:10px;}
+.stop-task {color:var(--danger);border-color:var(--danger-line);background:var(--surface);}
+.stop-task:hover:enabled {background:var(--danger-tint);}
+.page-nav {display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12px;white-space:nowrap;}
+.history-dialog .dialog-footer {flex-wrap:wrap;gap:10px;}
+.history-dialog .dialog-footer .subtle-text {flex-basis:100%;}
+.history-chooser {display:block;max-width:460px;width:100%;font-size:12px;border:1px solid var(--line);border-radius:5px;margin-top:12px;padding:6px;color:var(--secondary);background:var(--surface);}
+#history-warning {margin:0 28px 16px;}
+.history-meta {font-size:12px;color:var(--muted);margin-top:12px;}
+.history-item .history-error {font-size:12px;color:var(--danger);white-space:pre-wrap;overflow-wrap:anywhere;}
+.candidate-card .subtle-text {overflow-wrap:anywhere;font-size:12px;}
+.scan-notice {flex-shrink:0;max-height:128px;overflow:auto;padding:9px 17px;border-bottom:1px solid var(--warning-line);color:var(--warning);background:var(--warning-tint);font-size:12px;}
+.scan-notice summary {cursor:pointer;}
+.scan-notice ul {padding-left:19px;margin:8px 0 0;overflow-wrap:anywhere;}
+#scan-options-start {margin-top:20px;width:100%;}
+html[data-workspace-mode=local][data-drag-folder=true] .collection {outline:2px solid var(--blue);outline-offset:-3px;background:var(--blue-tint);}
+@media(max-width:1280px) {html[data-workspace-mode=local] .workflow {display:none;}}
+@media(max-width:960px) {html[data-workspace-mode=local] .folder-toolbar {gap:8px;padding-left:12px;padding-right:12px;}html[data-workspace-mode=local] .folder-toolbar button {font-size:12px;padding-left:9px;padding-right:9px;}.history-chooser {max-width:360px;}}

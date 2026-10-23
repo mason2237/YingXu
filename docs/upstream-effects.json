@@ -1,0 +1,806 @@
+{
+  "repository": "ruiqichenbiec/design-systems",
+  "commit": "7a424c93b9be13cf835b91ea67495fec2ec0584e",
+  "scope": "Stage 6.1 inventory with 6.2 themes and 6.3a action optics; project vapor is not Lattice adoption",
+  "projectExtensions": [{"name":"list-mist","source":"frontend/js/components/list-mist.js","status":"项目自写的气态列表背景，不计入 82 项上游组件"}],
+  "components": [
+    {
+      "system": "Lens",
+      "name": "button",
+      "title": "玻璃按钮",
+      "status": "已接入工作台及验收页",
+      "source": "lens/lab/design-system/components.js",
+      "next": "6.3a 已扩展到更换/确认、跳过/恢复与预览；真实文件执行仍在 7。"
+    },
+    {
+      "system": "Lens",
+      "name": "icon-button",
+      "title": "图标按钮",
+      "status": "已接入开发验收页",
+      "source": "lens/lab/design-system/component-patterns.js",
+      "next": "在 6.3 / 7 接入对应真实设置、审阅、搜索、通知或任务状态。"
+    },
+    {
+      "system": "Lens",
+      "name": "switch",
+      "title": "滑动开关",
+      "status": "已接入开发验收页",
+      "source": "lens/lab/design-system/components.js",
+      "next": "在 6.3 / 7 接入对应真实设置、审阅、搜索、通知或任务状态。"
+    },
+    {
+      "system": "Lens",
+      "name": "toggle-tile",
+      "title": "连接开关",
+      "status": "已接入开发验收页",
+      "source": "lens/lab/design-system/component-patterns.js",
+      "next": "保留原版可交互示例；按字幕业务需要定向接入，避免增加无意义的参数/页面。"
+    },
+    {
+      "system": "Lens",
+      "name": "choices",
+      "title": "选项胶囊",
+      "status": "已接入工作台及验收页",
+      "source": "lens/lab/design-system/components.js",
+      "next": "在 6.3 / 7 接入对应真实设置、审阅、搜索、通知或任务状态。"
+    },
+    {
+      "system": "Lens",
+      "name": "tabs",
+      "title": "分段标签",
+      "status": "已接入开发验收页",
+      "source": "lens/lab/design-system/component-patterns.js",
+      "next": "在 6.3 / 7 接入对应真实设置、审阅、搜索、通知或任务状态。"
+    },
+    {
+      "system": "Lens",
+      "name": "dock",
+      "title": "浮动导航",
+      "status": "已接入开发验收页",
+      "source": "lens/lab/design-system/component-patterns.js",
+      "next": "保留原版可交互示例；按字幕业务需要定向接入，避免增加无意义的参数/页面。"
+    },
+    {
+      "system": "Lens",
+      "name": "slider",
+      "title": "光学滑杆",
+      "status": "已接入开发验收页",
+      "source": "lens/lab/design-system/components.js",
+      "next": "在 6.3 / 7 接入对应真实设置、审阅、搜索、通知或任务状态。"
+    },
+    {
+      "system": "Lens",
+      "name": "stepper",
+      "title": "数值步进器",
+      "status": "已接入开发验收页",
+      "source": "lens/lab/design-system/components.js",
+      "next": "保留原版可交互示例；按字幕业务需要定向接入，避免增加无意义的参数/页面。"
+    },
+    {
+      "system": "Lens",
+      "name": "notification",
+      "title": "玻璃通知",
+      "status": "已接入开发验收页",
+      "source": "lens/lab/design-system/components.js",
+      "next": "在 6.3 / 7 接入对应真实设置、审阅、搜索、通知或任务状态。"
+    },
+    {
+      "system": "Lens",
+      "name": "menu",
+      "title": "操作菜单",
+      "status": "已接入开发验收页",
+      "source": "lens/lab/design-system/component-patterns.js",
+      "next": "在 6.3 / 7 接入对应真实设置、审阅、搜索、通知或任务状态。"
+    },
+    {
+      "system": "Lens",
+      "name": "search",
+      "title": "折射搜索框",
+      "status": "已接入开发验收页",
+      "source": "lens/lab/design-system/components.js",
+      "next": "在 6.3 / 7 接入对应真实设置、审阅、搜索、通知或任务状态。"
+    },
+    {
+      "system": "Lens",
+      "name": "panel",
+      "title": "弹性面板",
+      "status": "已接入工作台及验收页",
+      "source": "lens/lab/design-system/components.js",
+      "next": "在 6.3 / 7 接入对应真实设置、审阅、搜索、通知或任务状态。"
+    },
+    {
+      "system": "Lens",
+      "name": "lens",
+      "title": "自由透镜",
+      "status": "已接入开发验收页",
+      "source": "lens/lab/design-system/components.js",
+      "next": "保留原版可交互示例；按字幕业务需要定向接入，避免增加无意义的参数/页面。"
+    },
+    {
+      "system": "Lens",
+      "name": "card-list",
+      "title": "透镜卡片列表",
+      "status": "已接入开发验收页",
+      "source": "lens/lab/design-system/card-list.js",
+      "next": "保留原版可交互示例；按字幕业务需要定向接入，避免增加无意义的参数/页面。"
+    },
+    {
+      "system": "Lens",
+      "name": "progress",
+      "title": "光导进度条",
+      "status": "已接入开发验收页",
+      "source": "lens/lab/design-system/optical-components.js",
+      "next": "在 6.3 / 7 接入对应真实设置、审阅、搜索、通知或任务状态。"
+    },
+    {
+      "system": "Lens",
+      "name": "drop-select",
+      "title": "凹槽吸附选择",
+      "status": "已接入开发验收页",
+      "source": "lens/lab/design-system/optical-components.js",
+      "next": "在 6.3 / 7 接入对应真实设置、审阅、搜索、通知或任务状态。"
+    },
+    {
+      "system": "Lens",
+      "name": "xy-slider",
+      "title": "二维滤镜滑块",
+      "status": "已接入开发验收页",
+      "source": "lens/lab/design-system/optical-components.js",
+      "next": "保留原版可交互示例；按字幕业务需要定向接入，避免增加无意义的参数/页面。"
+    },
+    {
+      "system": "Lens",
+      "name": "line-chart",
+      "title": "玻璃光导折线",
+      "status": "待评估展示组合",
+      "source": "lens/lab/design-system/showcase-charts.js",
+      "next": "操作记录目前没有时间序列指标；保留为可选统计展示，不用虚构数据充当扫描结果。"
+    },
+    {
+      "system": "Lens",
+      "name": "bar-chart",
+      "title": "液体柱状图",
+      "status": "待评估展示组合",
+      "source": "lens/lab/design-system/showcase-charts.js",
+      "next": "可评估结果数量/类型分布；真实统计由第七阶段 Python 提供。"
+    },
+    {
+      "system": "Lens",
+      "name": "ring-chart",
+      "title": "彩色玻璃环图",
+      "status": "待评估展示组合",
+      "source": "lens/lab/design-system/showcase-charts.js",
+      "next": "可评估完成数量分布；不能用动画伪装未知进度。"
+    },
+    {
+      "system": "Lens",
+      "name": "records-table",
+      "title": "光学记录表",
+      "status": "待评估展示组合",
+      "source": "lens/lab/design-system/showcase-charts.js",
+      "next": "候选小表/历史可适配；原版分页展示不替代 10,000 行虚拟列表。"
+    },
+    {
+      "system": "Lattice",
+      "name": "Button",
+      "title": "点阵按钮",
+      "status": "可选展示",
+      "next": "单一控件材质以 Lens 为主；该体系的点群响应保留独立对照。",
+      "source": "lattice/src/components.css"
+    },
+    {
+      "system": "Lattice",
+      "name": "TextField",
+      "title": "点阵输入",
+      "status": "可选展示",
+      "next": "名称/错误提示可适配点列反馈；点阵字不用于中文文件名正文。",
+      "source": "lattice/src/components.css"
+    },
+    {
+      "system": "Lattice",
+      "name": "Tabs",
+      "title": "点群标签",
+      "status": "待适配",
+      "next": "6.3 对照点群与流体指示器；同一筛选只采用一种清晰反馈。",
+      "source": "lattice/src/dom/controls.js"
+    },
+    {
+      "system": "Lattice",
+      "name": "Switch",
+      "title": "气态/晶态开关",
+      "status": "可选展示",
+      "next": "与 Lens 设置开关作材质对照，不叠加两套手势控制器。",
+      "source": "lattice/src/dom/controls.js"
+    },
+    {
+      "system": "Lattice",
+      "name": "Slider",
+      "title": "点列滑杆",
+      "status": "可选展示",
+      "next": "作为强度调节的替代反馈，原生 range 保留键盘语义。",
+      "source": "lattice/src/dom/controls.js"
+    },
+    {
+      "system": "Lattice",
+      "name": "Progress",
+      "title": "结晶进度",
+      "status": "待适配",
+      "next": "真实任务进度的可选模式，暂停/完成由后端任务决定。",
+      "source": "lattice/src/dom/controls.js"
+    },
+    {
+      "system": "Lattice",
+      "name": "Toast",
+      "title": "点阵消息",
+      "status": "待适配",
+      "next": "短暂操作反馈；消除原演示消息与定时假成功。",
+      "source": "lattice/src/dom/command.js"
+    },
+    {
+      "system": "Lattice",
+      "name": "Loader",
+      "title": "轨迹加载器",
+      "status": "待适配",
+      "next": "用于未知总量的扫描状态；结束/隐藏时取消绘制。",
+      "source": "lattice/src/dom/dottext.js"
+    },
+    {
+      "system": "Lattice",
+      "name": "DotText",
+      "title": "逐点重排字",
+      "status": "可选展示",
+      "next": "仅品牌/短状态可用，5×7 字库不能承担中文长文件名。",
+      "source": "lattice/src/dom/dottext.js"
+    },
+    {
+      "system": "Lattice",
+      "name": "CursorHalo",
+      "title": "光标点集重组",
+      "status": "可选展示",
+      "next": "尊重系统光标与键盘焦点，默认不覆盖用户指针；独立验收页评估。",
+      "source": "lattice/src/dom/cursor.js"
+    },
+    {
+      "system": "Lattice",
+      "name": "CommandPalette",
+      "title": "命令面板",
+      "status": "待适配",
+      "next": "映射搜索/筛选/预览等已有动作，清除数学示例及占用快捷键。",
+      "source": "lattice/src/dom/command.js"
+    },
+    {
+      "system": "Lattice",
+      "name": "Field",
+      "title": "粒子点场/熔化/冲击波/旋转",
+      "status": "可选展示",
+      "next": "依赖 three.js 与 GPU 计算；完整场景放开发验收页，工作台评估低密度短反馈。",
+      "source": "lattice/src/gl/field.js"
+    },
+    {
+      "system": "Lattice",
+      "name": "Cascade",
+      "title": "依赖瀑布",
+      "status": "暂不采用",
+      "next": "现有审阅对象不是依赖 DAG；该演示的滚轮巡游与文件列表滚动用途冲突。",
+      "source": "lattice/src/gl/cascade.js"
+    },
+    {
+      "system": "Lattice",
+      "name": "ProofTree",
+      "title": "证明树生长/旋转",
+      "status": "暂不采用",
+      "next": "视频字幕匹配没有公理/结论树结构；不引入数学示例与假业务图。",
+      "source": "lattice/src/gl/prooftree.js"
+    },
+    {
+      "system": "Overture",
+      "name": "CueButton",
+      "title": "进入按钮",
+      "group": "动作与导航",
+      "status": "待适配",
+      "next": "确认动作的忙碌/成功/失败反馈；实际结果来自业务回调。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "悬停、键盘聚焦、禁用、忙碌和完成。1.3：填充从指针进入处张开，按压 snap 回弹；可选快门声。"
+    },
+    {
+      "system": "Overture",
+      "name": "IconButton",
+      "title": "图标按钮",
+      "group": "动作与导航",
+      "status": "待适配",
+      "next": "细线操作图标的按压/选中反馈，颜色映射映序主题。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "aria-pressed 双态、焦点、禁用。1.3：悬停填充从指针处张开，按下时图标像印章压下。"
+    },
+    {
+      "system": "Overture",
+      "name": "TextLink",
+      "title": "文字链接",
+      "group": "动作与导航",
+      "status": "待适配",
+      "next": "完整名称/路径披露；系统位置打开仍经 Python 白名单。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "悬停、焦点；提供 href 时为真实导航。"
+    },
+    {
+      "system": "Overture",
+      "name": "StageTabs",
+      "title": "幕次标签页",
+      "group": "动作与导航",
+      "status": "可选展示",
+      "next": "对照其保留速度的取景框与 Lens 流体指示层，统一最终控件。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "选中、非选中；左右、Home、End 键；原生 tablist 语义。连续切换保留取景框速度；减少动态时直接落位。"
+    },
+    {
+      "system": "Overture",
+      "name": "ChapterNav",
+      "title": "章节导航",
+      "group": "动作与导航",
+      "status": "待适配",
+      "next": "映射选择→审阅→预览→结果步骤，阶段变化由真实任务驱动。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "当前步骤、聚焦；onSelect 交给应用导航。1.3：朱红下划线按前进方向接力。"
+    },
+    {
+      "system": "Overture",
+      "name": "Breadcrumb",
+      "title": "路径导航",
+      "group": "动作与导航",
+      "status": "待适配",
+      "next": "用于目录层级显示，导航只引用已登记目录 ID。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "当前位置 aria-current；示例链接发出选择事件。"
+    },
+    {
+      "system": "Overture",
+      "name": "Pagination",
+      "title": "翻页",
+      "group": "动作与导航",
+      "status": "待适配",
+      "next": "预览/记录分页与有方向的页码反馈。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "首末页禁用、页码播报、按钮焦点。1.3：页码按翻页方向翻片。"
+    },
+    {
+      "system": "Overture",
+      "name": "CommandPalette",
+      "title": "动作搜索",
+      "group": "动作与导航",
+      "status": "待适配",
+      "next": "快捷操作与焦点/关闭生命周期；与 Lattice 面板对照后统一。",
+      "source": "overture/src/overlays.js",
+      "upstreamStates": "搜索、有结果、空结果、当前结果、执行、关闭。1.3：从触发按钮以光圈张开并退回；结果逐项显影（最多六项）；Escape 同样有退场。"
+    },
+    {
+      "system": "Overture",
+      "name": "TextField",
+      "title": "文字输入",
+      "group": "表单与选择",
+      "status": "待适配",
+      "next": "输入/校验/纠正反馈，维持中文 IME 与清晰边框。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "空、输入、聚焦、禁用、错误、纠正。1.3：出错时朱红线从左侧曝光，提示文字显影。"
+    },
+    {
+      "system": "Overture",
+      "name": "TextArea",
+      "title": "创作笔记",
+      "group": "表单与选择",
+      "status": "暂不采用",
+      "next": "当前没有创作笔记或多行文字编辑需求。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "空、输入、长度上限、可调整高度。"
+    },
+    {
+      "system": "Overture",
+      "name": "Select",
+      "title": "下拉选择",
+      "group": "表单与选择",
+      "status": "待适配",
+      "next": "文件类型/排序/材质选择的完整键盘与禁用状态。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "聚焦、展开、选定。"
+    },
+    {
+      "system": "Overture",
+      "name": "ChoiceGroup",
+      "title": "单选组",
+      "group": "表单与选择",
+      "status": "可选展示",
+      "next": "其选中压印适合对照；主筛选已有 Lens 真实手势。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "选中、未选中、键盘方向键。1.3：选中压印从指针进入处张开。"
+    },
+    {
+      "system": "Overture",
+      "name": "Check",
+      "title": "复选框",
+      "group": "表单与选择",
+      "status": "待适配",
+      "next": "最终预览的已核对复选框；勾选不能单独授权文件写入。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "选中、未选中、禁用、聚焦。1.3：勾一笔画出，方框以 snap 弹簧转正。"
+    },
+    {
+      "system": "Overture",
+      "name": "Switch",
+      "title": "状态开关",
+      "group": "表单与选择",
+      "status": "可选展示",
+      "next": "开关弹簧与 Lens 对照，最终同一设置只绑定一个状态源。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "开、关、禁用；Space/Enter。1.3：拨杆以 snap 弹簧带轻微过冲落位，按住时下压；可选拨杆声。"
+    },
+    {
+      "system": "Overture",
+      "name": "Range",
+      "title": "曝光滑杆",
+      "group": "表单与选择",
+      "status": "可选展示",
+      "next": "曝光游标效果可用于强度示例；没有图片曝光功能。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "拖拽、聚焦、键盘、最小最大、数值输出。游标跟随为视觉，数值输出始终精确；越过刻度有齿感声（可选）。"
+    },
+    {
+      "system": "Overture",
+      "name": "Stepper",
+      "title": "数量步进",
+      "group": "表单与选择",
+      "status": "可选展示",
+      "next": "数量翻片反馈可用于分页设置；不新增无用数值。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "值变化、边界禁用、屏幕阅读器播报。1.3：翻片按增减方向转动。"
+    },
+    {
+      "system": "Overture",
+      "name": "TagInput",
+      "title": "关键词输入",
+      "group": "表单与选择",
+      "status": "可选展示",
+      "next": "可展示添加/去重/移除动画，现有流程没有可写标签字段。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "输入、去重、添加、移除、数量上限。1.3：新词显影出现，删去的词被裁掉，其余词 FLIP 到新位置。"
+    },
+    {
+      "system": "Overture",
+      "name": "Dropzone",
+      "title": "本地图片选择",
+      "group": "表单与选择",
+      "status": "待适配",
+      "next": "采用拖入/错误状态反馈；其图片解码/上传示例改为原生目录选择入口。",
+      "source": "overture/src/controls.js",
+      "upstreamStates": "空、拖入、选择、成功、格式错误、超大文件。1.3：选中的图片显影进入。"
+    },
+    {
+      "system": "Overture",
+      "name": "Accordion",
+      "title": "折叠说明",
+      "group": "浮层与披露",
+      "status": "待适配",
+      "next": "完整路径和匹配依据的披露/收起。",
+      "source": "overture/src/overlays.js",
+      "upstreamStates": "关闭、展开、原生 details/summary 键盘行为。1.3：展开与收起都有高度过渡，正文淡入淡出（浏览器支持 interpolate-size 时）。"
+    },
+    {
+      "system": "Overture",
+      "name": "Dialog",
+      "title": "确认对话框",
+      "group": "浮层与披露",
+      "status": "已定向采用",
+      "next": "阶段 6 modal helper 已适配；光圈进入/退出与其他关闭路径在 6.3 补齐。",
+      "source": "overture/src/overlays.js",
+      "upstreamStates": "打开、取消、Escape、校验、保存、焦点返回。1.3：从触发按钮以光圈张开；按钮、取消、Escape、遮罩、保存五条路径都先退回按钮再关闭；遮罩淡入淡出。"
+    },
+    {
+      "system": "Overture",
+      "name": "Drawer",
+      "title": "侧边编辑",
+      "group": "浮层与披露",
+      "status": "待适配",
+      "next": "窄窗口详情的进入/退出与焦点恢复。",
+      "source": "overture/src/overlays.js",
+      "upstreamStates": "打开、编辑、保存、取消、关闭。1.3：侧幕以 settle 弹簧滑入，内容稍后跟上；任何关闭方式都滑出。"
+    },
+    {
+      "system": "Overture",
+      "name": "Tooltip",
+      "title": "辅助提示",
+      "group": "浮层与披露",
+      "status": "待适配",
+      "next": "图标/长名的键盘及悬停提示。",
+      "source": "overture/src/overlays.js",
+      "upstreamStates": "悬停、聚焦、离开；aria-describedby。"
+    },
+    {
+      "system": "Overture",
+      "name": "Popover",
+      "title": "就地选项",
+      "group": "浮层与披露",
+      "status": "待适配",
+      "next": "外观/筛选就地选项，检查定位、Escape 与外部点击。",
+      "source": "overture/src/overlays.js",
+      "upstreamStates": "展开、关闭、外部点击、Escape、选项改变。1.3：从触发按钮张开，关闭时先折回再隐藏。"
+    },
+    {
+      "system": "Overture",
+      "name": "Toast",
+      "title": "可撤销反馈",
+      "group": "反馈与进度",
+      "status": "待适配",
+      "next": "采用出现/退出/倒计时/暂停；原撤销演示不能冒充安全文件撤销。",
+      "source": "overture/src/overlays.js",
+      "upstreamStates": "出现、撤销、关闭、超时；悬停/聚焦时保留。1.3：快门式出现与消失；底部细线显示剩余时间，悬停或聚焦时暂停并在离开后继续。"
+    },
+    {
+      "system": "Overture",
+      "name": "Notice",
+      "title": "状态提示",
+      "group": "反馈与进度",
+      "status": "待适配",
+      "next": "冲突、权限错误和可执行恢复动作；移除默认示例处理。",
+      "source": "overture/src/overlays.js",
+      "upstreamStates": "待处理、执行恢复动作、已解决。1.3：解决后内容显影。"
+    },
+    {
+      "system": "Overture",
+      "name": "Progress",
+      "title": "显影进度",
+      "group": "反馈与进度",
+      "status": "可选展示",
+      "next": "其弹簧推进与 Lens 光导进度作对照，真实数值不得由定时器虚构。",
+      "source": "overture/src/overlays.js",
+      "upstreamStates": "开始、暂停、继续、完成、重置。1.3：每步 4 % 由 settle 弹簧连成连续推进，运行时前沿有冷光。"
+    },
+    {
+      "system": "Overture",
+      "name": "Loading",
+      "title": "准备状态",
+      "group": "反馈与进度",
+      "status": "待适配",
+      "next": "未知总量状态及减少动画表现，结束时销毁。",
+      "source": "overture/src/overlays.js",
+      "upstreamStates": "加载、减少动态；状态有文字说明。"
+    },
+    {
+      "system": "Overture",
+      "name": "EmptyState",
+      "title": "空白起点",
+      "group": "反馈与进度",
+      "status": "待适配",
+      "next": "空目录/无字幕/搜索空结果引导，示例加入改为真实选择/清除筛选。",
+      "source": "overture/src/overlays.js",
+      "upstreamStates": "空、添加示例、成功。1.3：加入的照片展开并显影。"
+    },
+    {
+      "system": "Overture",
+      "name": "EditorialTable",
+      "title": "档案表格",
+      "group": "内容与数据",
+      "status": "待适配",
+      "next": "小型结果表/历史排序可用 FLIP；主列表保持虚拟渲染和稳定 ID。",
+      "source": "overture/src/overlays.js",
+      "upstreamStates": "默认、排序升降、行悬停、表头语义。1.3：排序时同一行 FLIP 到新位置，排序箭头翻转。"
+    },
+    {
+      "system": "Overture",
+      "name": "Timeline",
+      "title": "幕次时间线",
+      "group": "内容与数据",
+      "status": "待适配",
+      "next": "整理记录按真实时间与结果呈现，不载入演示故事。",
+      "source": "overture/src/overlays.js",
+      "upstreamStates": "顺序语义；每项都有时间、标题、补充说明。"
+    },
+    {
+      "system": "Overture",
+      "name": "ApertureStage",
+      "title": "光圈舞台",
+      "group": "影像与 GPU",
+      "status": "可选展示",
+      "next": "原 GPU 光圈要求摄影底图；先审查独立演示，主题转换优先复用运动原语。",
+      "source": "overture/src/media.js",
+      "upstreamStates": "开度调节、鼠标视差、进入/退回、静态降级。1.3：开度由 stage 弹簧驱动（约 0.83 s），滑杆与滚动联动 snap／settle 跟随，视差带惯性。"
+    },
+    {
+      "system": "Overture",
+      "name": "ContactSheet",
+      "title": "底片档案",
+      "group": "影像与 GPU",
+      "status": "可选展示",
+      "next": "照片底片/拖动惯性只在开发页评估；字幕候选没有图片素材。",
+      "source": "overture/src/contact.js",
+      "upstreamStates": "自动循环、暂停/继续、悬停/聚焦停格、离屏暂停、键盘与减少动态。1.3：底片带 1:1 跟手拖动，甩出后按速度停在最近一帧（settle 弹簧承接速度）。"
+    },
+    {
+      "system": "Overture",
+      "name": "FlashlightFocus",
+      "title": "追光取景",
+      "group": "影像与 GPU",
+      "status": "暂不采用",
+      "next": "固定照片灯位与三格滚轮切图会接管主文件列表滚动；没有照片浏览业务。",
+      "source": "overture/src/light.js",
+      "upstreamStates": "三格一张、0/3 至 2/3 计数、固定灯位、反向重计、首尾释放滚动、触屏/键盘逐张切换、独立开度、GPU / CSS 降级。1.3：前两格转动准星（对焦环）；第三格光束沿 settle 弹簧移到下一张照片中心，途中收窄、到达张开，只在六个固定灯位停留；减少动态时淡出淡入；指针拂过相纸时绕图钉摆动。"
+    },
+    {
+      "system": "Overture",
+      "name": "PinnedPhotoWall",
+      "title": "红线照片墙",
+      "group": "影像与 GPU",
+      "status": "暂不采用",
+      "next": "空间照片墙/摄影机巡游与文件行审阅无对应任务。",
+      "source": "overture/src/light.js",
+      "upstreamStates": "两格一张、半步反馈、可打断运镜、首尾释放滚动、索引/键盘/触屏切换、减少动态直接落位。1.3：运镜由 stage 弹簧驱动，连续输入保留速度；移动时镜头略后退，到达时推近；计数翻片；减少动态时淡出淡入到下一张；相纸被拂过时绕图钉摆动。"
+    },
+    {
+      "system": "Overture",
+      "name": "FilmCanister",
+      "title": "胶卷暗盒",
+      "group": "影像与 GPU",
+      "status": "可选展示",
+      "next": "胶片拖出/放回/橡皮筋回弹可独立审查，暂不加载摄影/视频素材。",
+      "source": "overture/src/film.js",
+      "upstreamStates": "拖动／滚轮／方向键拉片，放手后带惯性；悬停冷光取景并显色；向下拖出成相纸，未到桌面则弹回原位；桌面相纸可拖动摆放，双击、回车或退格放回胶片；空位显示为透明片基；WebGPU / WebGL2 暗盒与 CSS 静态暗盒降级；减少动态时无惯性、无显影动画。1.3：拉过两端有橡皮筋阻力并回弹，甩到尽头会弹回；相纸落桌以 settle 弹簧定位、snap 弹簧转正，并有一次落地压缩；方向键拉片走弹簧。"
+    },
+    {
+      "system": "Overture",
+      "name": "DevelopImage",
+      "title": "局部显影",
+      "group": "影像与 GPU",
+      "status": "可选展示",
+      "next": "局部显影可用于独立视觉对照；本工具没有图像显影功能。",
+      "source": "overture/src/media.js",
+      "upstreamStates": "移动显影、键盘聚焦从中心漫开、选中/取消、降级。1.3：光斑、漫开都由弹簧驱动，漫开前沿有暖色显影线。"
+    },
+    {
+      "system": "Overture",
+      "name": "FocusGallery",
+      "title": "取景画廊",
+      "group": "影像与 GPU",
+      "status": "可选展示",
+      "next": "灯箱焦点/退出行为有参考价值，暂不新增图片浏览模块。",
+      "source": "overture/src/media.js",
+      "upstreamStates": "悬停、聚焦、放大、前后翻图、Escape 关闭。1.3：打开时照片从缩略图飞到灯箱并显影，关闭时飞回原位；翻页按方向滑入并显影。"
+    },
+    {
+      "system": "Overture",
+      "name": "CompareLens",
+      "title": "显影比较",
+      "group": "影像与 GPU",
+      "status": "待适配",
+      "next": "开发验收页比较材质的拖动分界；不作为字幕文本比较逻辑。",
+      "source": "overture/src/media.js",
+      "upstreamStates": "拖拽、键盘、分界值说明。1.3：分界线以 snap 弹簧跟随。"
+    },
+    {
+      "system": "Overture",
+      "name": "SilkResonance",
+      "title": "共振褶皱",
+      "group": "影像与 GPU",
+      "status": "可选展示",
+      "next": "GPU 织物/持续回荡只在独立按需演示评估，不进入长期文件阅读区。",
+      "source": "overture/src/media.js",
+      "upstreamStates": "拖动、张力、键盘、持续运动、凝住、下载、降级。1.3：resonance 弹簧（k 140 · c 3.2，周期 0.53 s）；凝住冻结位移与速度，继续时同一次回荡接着走。"
+    },
+    {
+      "system": "Overture",
+      "name": "CuePlayer",
+      "title": "共振播放器",
+      "group": "影像与 GPU",
+      "status": "暂不采用",
+      "next": "当前没有音视频播放/解码流程；素材与播放器依赖不为装饰引入。",
+      "source": "overture/src/media.js",
+      "upstreamStates": "播放、暂停、续播、拖动进度、静音、结束。"
+    },
+    {
+      "system": "Overture",
+      "name": "Wordmark",
+      "title": "品牌字标",
+      "group": "品牌与版式",
+      "status": "待适配",
+      "next": "字标排版映射映序名称与系统中文字体，保留自己的品牌资源。",
+      "source": "overture/src/brand.js",
+      "upstreamStates": "响应式缩放；保持足够留白。"
+    },
+    {
+      "system": "Overture",
+      "name": "TypeSpecimen",
+      "title": "字体编排",
+      "group": "品牌与版式",
+      "status": "可选展示",
+      "next": "用于字级与长中文换行验收，不分发参考项目字体。",
+      "source": "overture/src/brand.js",
+      "upstreamStates": "长标题换行、窄屏缩放。"
+    },
+    {
+      "system": "Overture",
+      "name": "PullQuote",
+      "title": "编辑引言",
+      "group": "品牌与版式",
+      "status": "暂不采用",
+      "next": "没有编辑引言/署名内容，不能增加无关内容区。",
+      "source": "overture/src/brand.js",
+      "upstreamStates": "blockquote 与署名语义。"
+    },
+    {
+      "system": "Overture",
+      "name": "Poster",
+      "title": "宣传海报",
+      "group": "品牌与版式",
+      "status": "暂不采用",
+      "next": "没有摄影海报制作/宣传图输出功能。",
+      "source": "overture/src/brand.js",
+      "upstreamStates": "静态版式，标题与图像可替换。"
+    },
+    {
+      "system": "Overture",
+      "name": "BrandComposer",
+      "title": "品牌工坊",
+      "group": "品牌与版式",
+      "status": "暂不采用",
+      "next": "品牌图/PNG/WebM 工坊属于独立创作产品；会引入无关编辑与媒体导出流程。",
+      "source": "overture/src/brand.js",
+      "upstreamStates": "编辑、画幅/场景切换、PNG、6 秒 WebM、错误反馈。1.3：换画幅时预览从旧画框变形到新画框，换视觉语言时显影。"
+    },
+    {
+      "system": "Overture",
+      "name": "CurtainTransition",
+      "title": "幕布转场",
+      "group": "品牌与版式",
+      "status": "待适配",
+      "next": "6.2 已改编独立 transition/focusPoint；本组件幕布待 6.3 场景适配，尊重减少动画。",
+      "source": "overture/src/brand.js",
+      "upstreamStates": "当前幕、转场、下一幕；减少动态时立即切换。"
+    }
+  ],
+  "crosscutting": [
+    {
+      "system": "Lens",
+      "effect": "真实纹理采样/多层合成/折射/雾化/色散/Fresnel/指针高光",
+      "status": "原版渲染器已采用",
+      "source": "lens/lab/design-system/internal/renderer.js"
+    },
+    {
+      "system": "Lens",
+      "effect": "弹簧/压感/形变/吸附/手势取消",
+      "status": "原版控制器已采用",
+      "source": "lens/lab/design-system/internal/jelly.js"
+    },
+    {
+      "system": "Lens",
+      "effect": "4 个内置场景与自定义背景",
+      "status": "已接入验收页选择",
+      "source": "lens/lab/design-system/internal/renderer.js"
+    },
+    {
+      "system": "Lens",
+      "effect": "13 种合成短音与拖动摩擦音",
+      "status": "源码已采用；开发页可选，默认关闭，未做人工听感认证",
+      "source": "lens/lab/design-system/sound.js"
+    },
+    {
+      "system": "Lattice",
+      "effect": "粒子点集转换/冲击波/按住熔化",
+      "status": "可选展示，依赖和缩减方案待 6.3",
+      "source": "lattice/src/gl/field.js"
+    },
+    {
+      "system": "Lattice",
+      "effect": "夜间世界/点阵字体/声音",
+      "status": "应用明暗主题已统一；Lattice 夜间世界自身仍只作审查",
+      "source": "lattice/src/core/theme.js"
+    },
+    {
+      "system": "Overture",
+      "effect": "iris/develop/flip/count/spring 与可打断运动",
+      "status": "transition/focusPoint 已在 6.2 定向改编；其余运动原语待 6.3",
+      "source": "overture/src/dynamics.js"
+    },
+    {
+      "system": "Overture",
+      "effect": "三主题/两种光温/八种合成声音",
+      "status": "应用语义主题已实现；原三主题、光温和声音尚未移植",
+      "source": "overture/src/core.js"
+    }
+  ]
+}

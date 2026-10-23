@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN" data-effects="on">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+  <title>映序 · 字幕工作台预览</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="vendor/design-systems/lens/tokens.css">
+  <link rel="stylesheet" href="vendor/design-systems/lens/components.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/workspace.css">
+  <link rel="stylesheet" href="css/lens-adapter.css">
+  <link rel="stylesheet" href="css/appearance.css">
+  <link rel="stylesheet" href="css/materials.css">
+  <link rel="stylesheet" href="css/feedback.css">
+  <link rel="stylesheet" href="css/local-workspace.css">
+  <link rel="stylesheet" href="css/glass-controls.css">
+  <script src="qt/qwebchannel.js"></script>
+  <script src="js/workspace.js" type="module"></script>
+</head>
+<body>
+  <header class="app-chrome">
+    <div class="brand"><span class="brand-symbol" data-icon="brand"></span><strong>映序</strong><span class="brand-description">字幕整理</span></div>
+    <nav class="workflow" aria-label="整理流程"><span data-workflow="1"><i>1</i>选择目录</span><span data-workflow="2" class="current" aria-current="step"><i>2</i>审阅匹配</span><span data-workflow="3"><i>3</i>预览整理</span></nav>
+    <div class="chrome-actions"><span class="preview-badge">界面预览</span><button id="command-button" class="subtle-button command-launch" type="button" aria-haspopup="dialog" aria-keyshortcuts="Control+K"><span data-icon="search"></span><span>快捷操作</span><kbd>Ctrl K</kbd></button><label class="theme-quick"><span class="sr-only">界面主题</span><select id="theme-quick" data-theme-select aria-label="界面主题"><option value="system">跟随系统</option><option value="light">浅色</option><option value="dark">深色</option></select></label><button id="history-button" class="text-button" type="button"><span data-icon="history"></span>操作记录</button><button id="appearance-button" class="icon-button" aria-label="外观与动效" title="外观与动效" type="button"><span data-icon="settings"></span></button></div>
+  </header>
+  <main class="workspace">
+    <div class="page-heading"><div><h1>字幕工作台</h1><p>让每一份字幕，回到正确的位置。</p></div><div class="overview" id="overview" aria-live="polite"></div></div>
+    <section class="folder-toolbar glass-surface" id="glass-toolbar" aria-label="文件夹与扫描">
+      <span class="folder-symbol" data-icon="folder"></span><div class="folder-copy"><strong id="folder-name">选择包含视频和字幕的文件夹</strong><span id="folder-path">尚未选择目录</span></div>
+      <button id="dataset-button" class="subtle-button" type="button" aria-haspopup="dialog">切换示例<span data-icon="chevron"></span></button><span class="toolbar-divider"></span><button id="scan-button" type="button" class="secondary"><span data-icon="refresh"></span>重新加载</button>
+    </section>
+    <section class="collection" aria-label="文件匹配工作台">
+      <div class="collection-tools">
+        <div class="search-field"><span data-icon="search"></span><input id="search-input" type="search" placeholder="搜索视频、字幕或目标名称" aria-label="搜索文件" autocomplete="off"><kbd id="search-hint">Ctrl F</kbd></div>
+        <div class="status-filters" role="group" aria-label="匹配状态"><button type="button" data-filter="all" class="selected" aria-pressed="true">全部<span id="count-all">0</span></button><button type="button" data-filter="待整理" aria-pressed="false">已匹配<span id="count-ready">0</span></button><button type="button" data-filter="需确认" aria-pressed="false">待确认<span id="count-review">0</span></button><button type="button" data-filter="未匹配" aria-pressed="false">未匹配<span id="count-unmatched">0</span></button></div>
+        <label class="compact-select"><span class="sr-only">其他状态</span><select id="extra-filter" aria-label="其他状态"><option value="">更多状态</option><option value="存在冲突">存在冲突</option><option value="已跳过">已跳过</option><option value="已符合">无需变更</option></select></label>
+      </div>
+      <div class="review-body" id="review-body">
+        <section class="list-pane" aria-label="视频与匹配字幕">
+          <div class="list-heading"><div class="name-heading"><button id="sort-name" class="heading-button" type="button">视频 / 匹配字幕<span data-icon="sort"></span></button><select id="file-type" aria-label="文件类型"><option value="">所有类型</option><option value=".mkv">MKV</option><option value=".mp4">MP4</option></select></div><button id="sort-score" class="heading-button" type="button">匹配度<span data-icon="sort"></span></button><span>状态</span><button id="detail-toggle" class="icon-button small" type="button" aria-label="展开或收起详情" title="展开或收起详情"><span data-icon="panel"></span></button></div>
+          <div id="file-list" class="list-scroll" role="grid" tabindex="0" aria-label="视频匹配列表" aria-rowcount="0"><div id="list-spacer" class="list-spacer"></div><div id="list-items" class="list-items"></div></div>
+          <div id="empty-state" class="empty-state" hidden><span class="empty-icon" id="empty-icon" data-icon="folder"></span><h2 id="empty-title"></h2><p id="empty-message"></p><button id="empty-action" class="secondary" type="button">载入匹配示例</button></div>
+          <div id="loading-state" class="loading-state" role="status" aria-live="polite" hidden><div class="loading-copy"><span class="loading-symbol" data-icon="folder"></span><h2 id="loading-label">正在准备示例数据…</h2><p id="loading-detail">正在读取，请稍候</p><div id="loading-progress"></div><div id="loading-indeterminate" class="loading-indeterminate" role="progressbar" aria-label="正在读取，暂时无法确定总量"><span></span></div></div></div>
+          <div class="list-caption"><span id="list-count">正在加载示例…</span><span class="list-shortcuts">↑ ↓ 选择 · Enter 查看</span></div>
+        </section>
+        <aside id="inspector" class="inspector" aria-label="匹配详情"><div class="inspector-heading"><h2 id="inspector-title">匹配详情</h2><button id="close-details" class="icon-button small" aria-label="收起详情" type="button"><span data-icon="x"></span></button></div><div id="inspector-content" class="inspector-content"></div><div id="inspector-actions" class="inspector-actions" hidden></div></aside>
+      </div>
+    </section>
+    <footer class="work-footer"><div class="footer-state"><span id="status-dot" class="status-dot"></span><span id="footer-status" role="status">正在准备示例数据…</span><span class="footer-mode">示例数据 · 不会修改文件</span></div><button id="preview-button" class="primary" type="button" disabled><span data-icon="preview"></span>预览变更<span id="preview-count" class="button-count">0</span><span data-icon="arrow"></span></button></footer>
+  </main>
+  <dialog id="inspector-dialog" class="inspector-dialog" aria-labelledby="inspector-title"></dialog>
+  <dialog id="dataset-dialog" class="compact-dialog" aria-labelledby="dataset-title"><div class="dialog-heading"><div><span class="eyebrow">界面验收</span><h2 id="dataset-title" tabindex="-1" data-initial-focus>选择示例场景</h2></div><button data-close class="icon-button" aria-label="关闭" type="button"><span data-icon="x"></span></button></div><p class="dialog-note">这些数据仅用于交互预览，不会选择或扫描真实目录。</p><div id="datasets" class="dataset-options"></div></dialog>
+  <dialog id="appearance-dialog" class="compact-dialog" aria-labelledby="appearance-title">
+    <div class="dialog-heading"><div><span class="eyebrow">清晰阅读，自然反馈</span><h2 id="appearance-title" tabindex="-1" data-initial-focus>外观与动效</h2></div><button data-close class="icon-button" aria-label="关闭" type="button"><span data-icon="x"></span></button></div>
+    <label class="theme-setting"><span><strong>界面主题</strong><small data-theme-status aria-live="polite">正在读取外观设置</small></span><select id="theme-setting" data-theme-select aria-label="外观面板中的主题"><option value="system">跟随系统</option><option value="light">浅色</option><option value="dark">深色</option></select></label>
+    <label class="setting-row"><span><strong>气态列表</strong><small>轻雾流动与局部光丝，文字保持清晰</small></span><input id="mist-setting" type="checkbox" role="switch" checked></label>
+    <label class="setting-row"><span><strong>液态玻璃</strong><small>工具栏与操作按钮的折射、弹性反馈</small></span><input id="glass-setting" type="checkbox" role="switch" checked></label>
+    <label class="setting-strength">玻璃强度<select id="glass-strength"><option value="standard">标准</option><option value="enhanced" selected>增强</option></select></label>
+    <label class="setting-row"><span><strong>轻量粒子反馈</strong><small>示例加载完成后短暂出现</small></span><input id="particle-setting" type="checkbox" role="switch" checked></label>
+    <label class="setting-row"><span><strong>减少动态</strong><small id="motion-description">始终遵循系统的减少动画设置</small></span><input id="motion-setting" type="checkbox" role="switch"></label>
+    <div class="effect-status" id="effect-status"></div><button id="particle-preview" class="secondary" type="button"><span data-icon="spark"></span>预览短反馈</button>
+  </dialog>
+  <dialog id="candidate-dialog" class="candidate-dialog" aria-labelledby="candidate-title"><div class="dialog-heading"><div><span class="eyebrow">人工审阅</span><h2 id="candidate-title" tabindex="-1" data-initial-focus>选择合适的字幕</h2></div><button data-close class="icon-button" aria-label="关闭候选对比" type="button"><span data-icon="x"></span></button></div><p class="dialog-note" id="candidate-video"></p><div id="candidate-list" class="candidate-list"></div><div class="dialog-footer"><span class="subtle-text">人工指定后仍需确认，匹配评分保持原值。</span><button data-close class="secondary" type="button">返回审阅</button></div></dialog>
+  <dialog id="preview-dialog" class="preview-dialog" aria-labelledby="preview-title"><div class="dialog-heading"><div><span class="eyebrow">整理前，再看一眼</span><h2 id="preview-title" tabindex="-1" data-initial-focus>变更预览</h2><p id="preview-summary" class="dialog-note"></p></div><button data-close class="icon-button" aria-label="关闭变更预览" type="button"><span data-icon="x"></span></button></div><div id="preview-warning" class="notice warning" hidden></div><div class="preview-columns"><span>原名称 / 目录</span><span></span><span>最终名称 / 目录</span><span>处理</span></div><div id="preview-items" class="preview-items"></div><div class="preview-pagination"><span id="preview-page-label"></span><div><button id="preview-prev" class="icon-button small" aria-label="上一页变更" type="button"><span data-icon="left"></span></button><button id="preview-next" class="icon-button small" aria-label="下一页变更" type="button"><span data-icon="arrow"></span></button></div></div><div class="confirmation-strip"><label><input id="preview-ack" type="checkbox">我已核对原名称、目标名称与提示</label><span>当前为示例预览，实际整理将在后续阶段接入。</span></div><div class="dialog-footer"><button data-close class="secondary" type="button">返回继续审阅</button><button id="execute-button" class="primary" type="button" disabled title="第七阶段接入确认后的真实文件操作">确认整理 · 待接入<span data-icon="lock"></span></button></div></dialog>
+  <dialog id="history-dialog" class="history-dialog" aria-labelledby="history-title"><div class="dialog-heading"><div><span class="eyebrow">本地整理记录 · 示例</span><h2 id="history-title" tabindex="-1" data-initial-focus>操作记录</h2></div><button data-close class="icon-button" aria-label="关闭操作记录" type="button"><span data-icon="x"></span></button></div><div id="history-content"></div><div class="dialog-footer"><span class="subtle-text">此处展示结果布局，未执行任何示例文件操作。</span><button data-close class="secondary" type="button">完成</button></div></dialog>
+  <dialog id="command-dialog" class="command-dialog" aria-labelledby="command-title"><div class="command-heading"><span data-icon="search"></span><label class="sr-only" id="command-title" for="command-search">快捷操作</label><input id="command-search" type="search" role="combobox" aria-autocomplete="list" aria-controls="command-list" aria-expanded="false" placeholder="搜索一个操作…" autocomplete="off" data-initial-focus><button data-close class="icon-button small" type="button" aria-label="关闭快捷操作"><span data-icon="x"></span></button></div><div id="command-list" class="command-list" role="listbox" aria-label="可用操作"></div><div class="command-footer"><span><kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 执行</span><span><kbd>Esc</kbd> 返回</span></div></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" popover="manual" hidden><span id="toast-symbol" aria-hidden="true"></span><span id="toast-message"></span><button id="toast-close" data-notice-close class="icon-button small" type="button" aria-label="关闭提示"><span data-icon="x"></span></button><i data-notice-timer aria-hidden="true"></i></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+</body>
+</html>

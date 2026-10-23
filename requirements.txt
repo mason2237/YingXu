@@ -1,0 +1,2 @@
+# Stage 1 runtime uses only the Python 3.12 standard library, including Tkinter.
+# Windows: install CPython with Tcl/Tk support. No runtime pip packages required.

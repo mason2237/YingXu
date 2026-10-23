@@ -1,0 +1,51 @@
+button {display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 38px; padding: 7px 14px; border-radius: 7px; border: 1px solid transparent; background: transparent; font-size: 14px; font-weight: 550; transition: background var(--fast), border-color var(--fast), transform 100ms; white-space: nowrap;}
+button:active:enabled {transform: translateY(1px);}
+.primary {background: var(--blue); color: var(--on-accent); border-color: var(--blue);}
+.primary:hover:enabled {background: var(--blue-hover); border-color: var(--blue-hover);}
+.secondary {background: var(--surface); border-color: var(--control-line); color: var(--secondary);}
+.secondary:hover:enabled {background: var(--surface-hover); border-color: var(--control-line);}
+.subtle-button, .text-button {color: var(--secondary); font-weight: 450;}
+.subtle-button:hover:enabled, .text-button:hover:enabled {background: var(--surface-hover); color: var(--blue);}
+.icon-button {width: 36px; height: 36px; min-height: 36px; padding: 7px; color: var(--muted); border-radius: 7px;}
+.icon-button:hover:enabled {background: var(--surface-soft); color: var(--secondary);}
+.icon-button.small {width: 28px; height: 28px; min-height: 28px; padding: 5px;}
+.icon-button.small svg {width: 16px; height: 16px;}
+.button-count {font-size: 12px; background: #ffffff24; padding: 0 6px; border-radius: 4px; font-variant-numeric: tabular-nums;}
+.badge {display: inline-flex; align-items: center; gap: 5px; font-size: 12px; padding: 3px 8px; border-radius: 5px; background: var(--surface-soft); color: var(--muted); white-space: nowrap;}
+.badge::before {content: ''; width: 4px; height: 4px; border-radius: 50%; background: currentColor;}
+.badge.ready {color: var(--success); background: var(--success-tint);}
+.badge.review {color: var(--warning); background: var(--warning-tint);}
+.badge.conflict {color: var(--danger); background: var(--danger-tint);}
+.badge.unchanged {color: var(--success); background: var(--success-tint);}
+.badge.skipped {color: var(--soft); background: var(--surface-soft);}
+.language {display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; min-width: 25px; height: 21px; border: 1px solid var(--line); border-radius: 4px; color: var(--muted); background: var(--surface-raised); padding: 0 4px; flex-shrink: 0;}
+.notice {display: flex; align-items: center; gap: 8px; font-size: 13px; border: 1px solid var(--line); color: var(--secondary); background: var(--blue-tint); border-radius: 7px; padding: 11px 13px; line-height: 1.65;}
+.notice.warning {border-color: var(--warning-line); background: var(--warning-tint); color: var(--warning);}
+.notice.error {border-color: var(--danger-line); background: var(--danger-tint); color: var(--danger);}
+dialog {border: 1px solid var(--line); border-radius: 14px; padding: 0; max-height: calc(100vh - 60px); width: min(1040px, calc(100vw - 64px)); overflow: hidden; color: var(--ink); background: var(--surface); box-shadow: 0 16px 60px var(--dialog-shadow);}
+dialog::backdrop {background: var(--backdrop); backdrop-filter: blur(3px);}
+dialog:focus {outline: none;}
+.compact-dialog {width: 440px; max-width: calc(100vw - 64px); padding: 25px;}
+.dialog-heading {display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 26px 28px 20px; flex-shrink: 0;}
+.compact-dialog .dialog-heading {padding: 0 0 16px;}
+.dialog-heading h2:focus {outline: none;}
+.dialog-note {font-size: 13px; color: var(--muted); line-height: 1.7; overflow-wrap: anywhere;}
+.dialog-footer {display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 18px 28px; border-top: 1px solid var(--line); flex-shrink: 0;}
+.dataset-options {display: grid; gap: 7px; margin-top: 18px;}
+.dataset-option {width: 100%; justify-content: flex-start; text-align: left; padding: 11px 13px; border: 1px solid var(--line); background: var(--surface-raised); gap: 12px;}
+.dataset-option:hover {background: var(--blue-tint); border-color: var(--focus-line);}
+.dataset-option div {display: grid; gap: 3px;}
+.dataset-option small {font-size: 12px; color: var(--muted); font-weight: 400;}
+.setting-row {display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 16px 0; border-top: 1px solid var(--line);}
+.setting-row strong {font-size: 14px; font-weight: 550; display: block;}
+.setting-row small {display: block; color: var(--muted); margin-top: 4px;}
+input[role="switch"] {appearance: none; width: 34px; height: 20px; border-radius: 20px; background: var(--switch-track); border: 0; position: relative; flex-shrink: 0; cursor: pointer; transition: background var(--fast);}
+input[role="switch"]::after {content: ''; width: 16px; height: 16px; border-radius: 50%; background: var(--thumb); position: absolute; left: 2px; top: 2px; transition: transform var(--fast);}
+input[role="switch"]:checked {background: var(--blue);}
+input[role="switch"]:checked::after {transform: translateX(14px);}
+.effect-status {font-size: 12px; color: var(--muted); border-radius: 7px; background: var(--surface-soft); padding: 11px; margin: 5px 0 15px;}
+.toast {position: fixed; left: 50%; bottom: 88px; transform: translateX(-50%); display: flex; align-items: center; gap: 9px; padding: 10px 11px 10px 16px; border-radius: 9px; background: var(--toast-bg); color: var(--toast-ink); box-shadow: 0 8px 25px var(--overlay-shadow); font-size: 13px; z-index: 20; max-width: min(600px, calc(100vw - 40px));}
+.toast > [data-icon] {color: var(--toast-success);}
+.toast .icon-button {color: var(--toast-muted);}
+.toast .icon-button:hover {background: #ffffff18; color: var(--toast-ink);}
+#particles {position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 40;}

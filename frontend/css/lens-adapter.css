@@ -1,0 +1,31 @@
+.workspace-lens-stage {
+  min-height: 78px; padding: 4px; margin-bottom: 18px; flex-shrink: 0;
+  border: 1px solid color-mix(in srgb,var(--glass-border) 55%,transparent); border-radius: 14px;
+  --lg-radius-panel: 9px; --lg-font-family: "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI", sans-serif; --lg-font-control: 14px;
+}
+.workspace-lens-stage .folder-toolbar {
+  margin: 0; height: 68px; min-height: 68px; overflow: visible;
+  border-color: color-mix(in srgb,var(--glass-line) 60%,transparent); box-shadow: none; touch-action: auto;
+}
+.workspace-lens-stage .folder-toolbar > :not(canvas) {z-index: auto;}
+.workspace-lens-stage.lg-stage {background:var(--surface);}
+.workspace-lens-stage .lg-canvas {opacity:.45;}
+.workspace-lens-stage.webgl-ready .folder-toolbar,
+.workspace-lens-stage.webgl-ready .folder-toolbar .lg-surface {background: transparent; box-shadow: none;}
+.workspace-lens-stage .folder-toolbar button {border: 1px solid var(--glass-line); border-radius: 8px;}
+.workspace-lens-stage .folder-copy strong {color: var(--glass-ink);}
+.workspace-lens-stage .folder-copy span {color: var(--glass-secondary);}
+.filter-lens-stage {
+  margin-left: auto; flex-shrink: 0; padding: 3px; border-radius: 10px;
+  background: var(--glass-base); --lg-font-family: "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI", sans-serif; --lg-font-control: 13px;
+}
+.filter-lens-stage .status-filters {margin: 0;}
+.filter-lens-stage .status-filters button {border-radius: 7px; overflow: hidden;}
+.filter-lens-stage .status-filters button.selected {color: var(--blue);}
+.filter-lens-stage.webgl-ready .status-filters button {background: transparent; box-shadow: none;}
+.filter-lens-stage .status-filters button span:not(.lg-optic-rim):not(.lg-optic-beam) {position: relative; z-index: 1; color: var(--muted);}
+.setting-strength {display: flex; align-items: center; justify-content: space-between; padding: 0 0 14px; font-size: 13px; color: var(--muted);}
+.setting-strength select {border: 1px solid var(--line); border-radius: 6px; padding: 5px 9px; color: var(--ink); background: var(--surface);}
+.lg-stage[data-lens-reduced=true] *, html[data-reduced=true] .lg-stage * {animation-duration: .01ms !important; transition-duration: .01ms !important;}
+.workspace-lens-stage.fallback {background: var(--glass-fallback);}
+@media(max-width:960px) {.filter-lens-stage {padding: 2px;}.workspace-lens-stage {margin-bottom: 15px;}}

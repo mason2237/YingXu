@@ -1,0 +1,1297 @@
+{
+  "documents": [
+    {
+      "file": "PolyForm-Noncommercial-1.0.0.txt",
+      "url": "https://polyformproject.org/licenses/noncommercial/1.0.0.txt",
+      "resolvedURL": "https://polyformproject.org/licenses/noncommercial/1.0.0.txt",
+      "sha256": "ffcca38841adb694b6f380647e15f17c446a4d1656fed51a1e2041d064c94cc8",
+      "mode": "verbatim"
+    },
+    {
+      "file": "LGPL-3.0-only.txt",
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/LICENSES/LGPL-3.0-only.txt",
+      "resolvedURL": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/LICENSES/LGPL-3.0-only.txt",
+      "sha256": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768",
+      "mode": "verbatim"
+    },
+    {
+      "file": "GPL-3.0-only.txt",
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/LICENSES/GPL-3.0-only.txt",
+      "resolvedURL": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/LICENSES/GPL-3.0-only.txt",
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+      "mode": "verbatim"
+    },
+    {
+      "file": "LGPL-2.1-only.txt",
+      "url": "https://raw.githubusercontent.com/spdx/license-list-data/main/text/LGPL-2.1-only.txt",
+      "resolvedURL": "https://raw.githubusercontent.com/spdx/license-list-data/main/text/LGPL-2.1-only.txt",
+      "sha256": "5749785c8bdefafcb5d798270ed0a967036fe2ca63dcedade1627565dfef81d2",
+      "mode": "verbatim"
+    },
+    {
+      "file": "GPL-2.0-only.txt",
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/LICENSES/GPL-2.0-only.txt",
+      "resolvedURL": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/LICENSES/GPL-2.0-only.txt",
+      "sha256": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
+      "mode": "verbatim"
+    },
+    {
+      "file": "Apache-2.0.txt",
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/LICENSES/Apache-2.0.txt",
+      "resolvedURL": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/LICENSES/Apache-2.0.txt",
+      "sha256": "e3ba223bb1423f0aad8c3dfce0fe3148db48926d41e6fbc3afbbf5ff9e1c89cb",
+      "mode": "verbatim"
+    },
+    {
+      "file": "qtwebengine-3rdparty-abseil.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-abseil.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-abseil.html",
+      "sha256": "f334ed5c47ded0d173483e86110cb1303efc177fb2823d99340644a48b6e28fb",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-acorn-a-tiny-fast-javascript-parser-written-in-javascript.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-acorn-a-tiny-fast-javascript-parser-written-in-javascript.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-acorn-a-tiny-fast-javascript-parser-written-in-javascript.html",
+      "sha256": "4b35e026027fb5f816e2c1e0293d1ba2cf6b8e809627b7ee1c2f664a5b62a3ce",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-alliance-for-open-media-video-codec.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-alliance-for-open-media-video-codec.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-alliance-for-open-media-video-codec.html",
+      "sha256": "b9dc545af38d16f56117ded476f2c9ca6d16dae5f2db8e02a60be7fbbf69c484",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-almost-native-graphics-layer-engine.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-almost-native-graphics-layer-engine.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-almost-native-graphics-layer-engine.html",
+      "sha256": "9cc97c14058f8069aa96d6c7b1c1feaf259f9d17944614eb94c6190030d5272f",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-android-explicit-synchronization.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-android-explicit-synchronization.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-android-explicit-synchronization.html",
+      "sha256": "280d015068b8eb144c33fc46ef39970b188eeeb264c065066ebf39d85c983f67",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-boringssl.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-boringssl.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-boringssl.html",
+      "sha256": "c2e418d0420b28192885922aeb5662b1c63c03197b0952c9407da543b4e8cf60",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-brotli.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-brotli.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-brotli.html",
+      "sha256": "aa39f74841ffc5d76361ef873be8dba6bf1b00f6311f52970647bb8bb6a011e3",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-c-signal-slot-library.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-c-signal-slot-library.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-c-signal-slot-library.html",
+      "sha256": "59dfc88929b1d194dce447ac6b4f20a06e063d83eae7395bde0046cfb7c925da",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-chromium-global.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-chromium-global.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-chromium-global.html",
+      "sha256": "d44e0c3f7956752f884c4476f53d9b13a76858873782d41b5b1327d0bfdd98b2",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-cityhash.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-cityhash.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-cityhash.html",
+      "sha256": "a15551e05f864ab463aff045c12670765105e85a334804489c3db2adb9d93ccf",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-codemirror-5.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-codemirror-5.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-codemirror-5.html",
+      "sha256": "9be2416fd5f620030d986488946bed8ab53fded04356e3fb8703c0f35b17cda0",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-codemirror-6.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-codemirror-6.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-codemirror-6.html",
+      "sha256": "192262431b45ee46146ee9f5fc43341e8db263627fc752c6b8b26866a4f51d22",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-compact-encoding-detection.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-compact-encoding-detection.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-compact-encoding-detection.html",
+      "sha256": "9fa2bd2896312dd88319deb8c7de44e8d849ba9dd0bca97a809667ffb3debabd",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-compact-language-detector-v3.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-compact-language-detector-v3.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-compact-language-detector-v3.html",
+      "sha256": "bc19600492289568cc4d3d78fe3a634efbd13d9e2eeea4d39f172690ffe54d23",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-cpuinfo.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-cpuinfo.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-cpuinfo.html",
+      "sha256": "9c9cbbd7103e604614ece31fae1818783cbd52a43a994d93ed53af44f8a9e1a7",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-crashpad.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-crashpad.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-crashpad.html",
+      "sha256": "17ad932273f04bf3022eaf0e5e93e0e2b119f3e8a505f6c00cdda3a3a588a70b",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-crc32c.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-crc32c.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-crc32c.html",
+      "sha256": "757080d8d0e823d5b47b139b9fa37366f1b4adb33141698e4beea83a6b11991f",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-csp-evaluator-core-library-a-tool-that-allows-developers-to-check-if-a-content-security-policy-csp-serves-as-mitigation-against-xss-attacks.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-csp-evaluator-core-library-a-tool-that-allows-developers-to-check-if-a-content-security-policy-csp-serves-as-mitigation-against-xss-attacks.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-csp-evaluator-core-library-a-tool-that-allows-developers-to-check-if-a-content-security-policy-csp-serves-as-mitigation-against-xss-attacks.html",
+      "sha256": "d1c08b2954227f9b824f51d6de79dd5eb6892286d69ff16ca017ff6044ec889e",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-d3.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-d3.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-d3.html",
+      "sha256": "a606a3b950dc39cc39c863dad1c03c71f8c79b36281dfa135f6f9d332c45319a",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-dav1d-is-an-av1-decoder-.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-dav1d-is-an-av1-decoder-.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-dav1d-is-an-av1-decoder-.html",
+      "sha256": "edaecab75443a631f5e214aa7ed2fa0a87d4fec220c40faada197163c2b9a99f",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-dawn.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-dawn.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-dawn.html",
+      "sha256": "31406da20e7f23f54d51d1ef2eff222c41a68040d1b153697604f0202c61e05c",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-devtools-frontend.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-devtools-frontend.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-devtools-frontend.html",
+      "sha256": "70c6d8c5adf8f4e67250d596cf3d02b27620f729efa17c0c8f29586c312c36fc",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-dragonbox.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-dragonbox.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-dragonbox.html",
+      "sha256": "3d366aa708ea87d397ca17c5212e8d0b77db47fc6945229dafa0ca33ea7c1309",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-emoji-segmenter.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-emoji-segmenter.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-emoji-segmenter.html",
+      "sha256": "66e9ca99762f53c9763c848537d9d29f230fde30f0e15a7aebb92f18fd092d64",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-expat-xml-parser.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-expat-xml-parser.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-expat-xml-parser.html",
+      "sha256": "b6ffb31d8ad21162c2a995479f002916fa0756abd9b403cea1f7204623b15d81",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-fast-float.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-fast-float.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-fast-float.html",
+      "sha256": "924b0c074a3f6267c5fad51c43f623924b9dfb7ed29e6dd53f7f0a1a9679c5b5",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-ffmpeg.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-ffmpeg.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-ffmpeg.html",
+      "sha256": "43af71c49f236aa59dcd7919a4167635c9a664e06e9d94708183763c379bc7a4",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-fft.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-fft.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-fft.html",
+      "sha256": "65a3d876218c8306178b72c1a11247a022fc0c616e3f3f1186304dcbb32fd337",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-fiat-crypto-synthesizing-correct-by-construction-code-for-cryptographic-primitives.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-fiat-crypto-synthesizing-correct-by-construction-code-for-cryptographic-primitives.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-fiat-crypto-synthesizing-correct-by-construction-code-for-cryptographic-primitives.html",
+      "sha256": "b5fe13dc1cb8f8c9046f846fb400bacff74731061cc962056f31fffee7485301",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-flac.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-flac.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-flac.html",
+      "sha256": "8a0f8da43290304ba922a09118f31d1d9e43a6fc36aa268894f5776924e0c450",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-flatbuffers.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-flatbuffers.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-flatbuffers.html",
+      "sha256": "718772fd8f475a90a8fb2bfd8403fbc12569b031c00019ce1f560a1f940cefa3",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-fontconfig.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-fontconfig.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-fontconfig.html",
+      "sha256": "7334348914b253075b8c5e7bbad01fd5f9dd66516c7d3a686ee4656cf217c864",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-fp16.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-fp16.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-fp16.html",
+      "sha256": "762f000b44a785447904cee994db351c3c6da8171caa685a1b44ec5eb310d8d9",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-general-purpose-fft-fast-fourier-cosine-sine-transform-package.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-general-purpose-fft-fast-fourier-cosine-sine-transform-package.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-general-purpose-fft-fast-fourier-cosine-sine-transform-package.html",
+      "sha256": "547bfac3b353380ffda9dd749f13c12dd8d2c87b2422befdb845e29b66e51f9b",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-google-double-conversion.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-google-double-conversion.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-google-double-conversion.html",
+      "sha256": "9f120b58578ce2ea5a96a7f38225516eea03abbc592ccb1798322a86e91ec31d",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-google-glog-x27-s-symbolization-library.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-google-glog-x27-s-symbolization-library.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-google-glog-x27-s-symbolization-library.html",
+      "sha256": "163644cd2247bcc556f9a943278a94434e46662869b8abfee3453be8f8fb3161",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-harfbuzz.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-harfbuzz.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-harfbuzz.html",
+      "sha256": "602bd7100bb11caef9a02fb4ca2ca761747f35650748354b8f36d92b2f1a9dd9",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-headers-for-the-windows-10-webauthn-api-webauthn-dll.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-headers-for-the-windows-10-webauthn-api-webauthn-dll.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-headers-for-the-windows-10-webauthn-api-webauthn-dll.html",
+      "sha256": "2372a8aa802bbc47a19f691b0cdddeee389e0cbf694938690da72cf319d49af7",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-highway-c-library-for-simd.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-highway-c-library-for-simd.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-highway-c-library-for-simd.html",
+      "sha256": "49a9281a9e99403736601c72720002edd3b1c72b3dc9cf2bf08085e0a6ebf8ad",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-hunspell.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-hunspell.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-hunspell.html",
+      "sha256": "0e6c5ead62b4661e1629c8c876ce05d28eb3a76759bf1d90d53fc699500a7871",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-icu.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-icu.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-icu.html",
+      "sha256": "27d01d6d242ffed00a77a5bd8a84a851fc6bc29356da9b8e88b3e162bfb88f60",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-implementation-of-webdriver-bidi-standard.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-implementation-of-webdriver-bidi-standard.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-implementation-of-webdriver-bidi-standard.html",
+      "sha256": "c60667fffeb7b6533d6cb1059d8061c46b92e5eae5a8d48a2bec876002fef520",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-in-line-a-law-and-u-law-conversion-routines.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-in-line-a-law-and-u-law-conversion-routines.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-in-line-a-law-and-u-law-conversion-routines.html",
+      "sha256": "520845cfa19bda15ed8985fa91489a9b5f80f027e540da64dad10f6d74c6c3b5",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-ink-stroke-modeler.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-ink-stroke-modeler.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-ink-stroke-modeler.html",
+      "sha256": "f1fa5bb82e9138aaa158d423c3c0b8f554f57d8c406bf4fb0a8b9d7ad3754c6e",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-ink.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-ink.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-ink.html",
+      "sha256": "920947cc196e1ced070dc494bfc8e17f1f69968116b14dcd3bde61fc90c3a4aa",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-inspector-protocol.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-inspector-protocol.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-inspector-protocol.html",
+      "sha256": "caf023219fb41c19ae5df1a6c7122afc664b90eedb1d1b1bacdfb7cbc30c799e",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-intl-messageformat.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-intl-messageformat.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-intl-messageformat.html",
+      "sha256": "14340af6f4f9f8753594a3d4712684a0a331462c6da9548b7bebbfff5b3472ae",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-ipcz.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-ipcz.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-ipcz.html",
+      "sha256": "6a8edfd4ca76aba772900f857ee69f7be3586f05acba1b9c611ef27e2a29d835",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-json5.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-json5.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-json5.html",
+      "sha256": "2717ad975a5b76a2424c4dd201a57c34d58314d2fca2d702bab79533aef440e0",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-jsoncpp.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-jsoncpp.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-jsoncpp.html",
+      "sha256": "475ffdcaccc0d59cee039a0dbcfa3a058423017cc329eb78751615c18e5d95be",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-legacy-javascript.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-legacy-javascript.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-legacy-javascript.html",
+      "sha256": "4b357bab6b37bae57d19f315b9ebfd9d5ad8a0778e5ddfeb20d8bfb3cfb76e28",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-leveldb-a-fast-persistent-key-value-store.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-leveldb-a-fast-persistent-key-value-store.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-leveldb-a-fast-persistent-key-value-store.html",
+      "sha256": "624ef7e3dfd73e0bffac1accc7ce617336f4fc65a2fc0e91f59d8d03a96f1557",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-libaddressinput.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libaddressinput.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libaddressinput.html",
+      "sha256": "5f49c050e46090ce40ac1c2919c34ebaf1122da86f3c658ef66bc17ceaf0494c",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-libavif---library-for-encoding-and-decoding-avif-files.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libavif---library-for-encoding-and-decoding-avif-files.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libavif---library-for-encoding-and-decoding-avif-files.html",
+      "sha256": "c3b7140465b8971b538fb162a4619f1afe5e00d6dd237c6fa14a119fb4efeb5a",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-libgav1.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libgav1.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libgav1.html",
+      "sha256": "e29992d482dd9ece7c1492620356a4de5b69c465a3dcff6807c1be7261c08faf",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-libpng.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libpng.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libpng.html",
+      "sha256": "65eec3b4d6ee8b1f97022ab2e1c7496df07fb33344cd2003aa308124ce6681d0",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-libsrtp.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libsrtp.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libsrtp.html",
+      "sha256": "36416328638b81d6c15eb38c05a237e53ed896eb765b9c13e2790c1a2c65c9f0",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-libtess2.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libtess2.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libtess2.html",
+      "sha256": "837a7c31d36bcf41eb3125b640b80023e0c68342e21a14bd88ee79d4761dbc27",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-libvpx.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libvpx.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libvpx.html",
+      "sha256": "0ebc4865ae81414f299d6a8783d26378a65f53e73f62a6e553c6b5031e915309",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-libxml.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libxml.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libxml.html",
+      "sha256": "f73a62edb53635a0545988e0ecdc1d3d4a2c4ad2942dbba9350b784643cffb3e",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-libxslt.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libxslt.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libxslt.html",
+      "sha256": "43eade7ce5fdd8f99d02f42c1d09a4140a97f373d629c4c157d3fa61e7defb2e",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-libyuv.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libyuv.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-libyuv.html",
+      "sha256": "871b606d88e45e1b47e3c67c446256cee960a53eafc336219e62e8c59ea1d421",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-lighthouse-i18n-js.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-lighthouse-i18n-js.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-lighthouse-i18n-js.html",
+      "sha256": "aa7d606eb5fed632470f31293c49730be9c3686ae0049102b41acb978e60894c",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-lighthouse.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-lighthouse.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-lighthouse.html",
+      "sha256": "d40f5112a0d1e84f75f41294ceb7def6f3ce3190a32188317ff6aed00d69ae3a",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-lit.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-lit.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-lit.html",
+      "sha256": "f5e1a792fbd6daa8d6addd2c3386e9149755e1e2fb2ba7ec37e8ede261cc4433",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-lzma-sdk.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-lzma-sdk.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-lzma-sdk.html",
+      "sha256": "404909a235599c8cbfe9bda644d4ac87f0582601af360f177a142be45e61f57a",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-marked.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-marked.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-marked.html",
+      "sha256": "0e660ea2c081a3d0029e827f7dac064fc7e021ba2169d58fb497b8905738157d",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-material-color-utilities.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-material-color-utilities.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-material-color-utilities.html",
+      "sha256": "b4296429ca5bf4feb3a08ea10c59dd23c783f48477230cb9ddfb4a5913a81051",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-metrics-protos.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-metrics-protos.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-metrics-protos.html",
+      "sha256": "7a985cd0f7262574a7d65a16f81cacdecdd33b9bf859b267b3edc6f3d3938b74",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-minigbm.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-minigbm.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-minigbm.html",
+      "sha256": "a332f8b75efeb312d8b2bb7cc14f7823d8c16ba84cf0f6aee80a200c32a62357",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-mitt.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-mitt.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-mitt.html",
+      "sha256": "9b28907d5a4b160cca9ed3b5c6b327b1cfc6280bcbec67e3376e3184aa0c54f3",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-modp-base64-decoder.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-modp-base64-decoder.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-modp-base64-decoder.html",
+      "sha256": "da94aee6735a7f7002c871a12dac2a2fc7a953baa51526f29e77aa70bf269a3a",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-one-euro-filter.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-one-euro-filter.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-one-euro-filter.html",
+      "sha256": "1488a2261b84a59412ad6e094e298feb348698a06eeedba5882366c5375ce8de",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-opus.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-opus.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-opus.html",
+      "sha256": "de1e32538e46fd4eebf8c996823a221b5f5c8058aa4c71cdfbd9d1718736089d",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-ots-opentype-sanitizer.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-ots-opentype-sanitizer.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-ots-opentype-sanitizer.html",
+      "sha256": "b0d860ef3c5972cbf445f03d3fc24ed04cac2ff46b910c47f3670ba61d2acd50",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-paul-hsieh-x27-s-superfasthash.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-paul-hsieh-x27-s-superfasthash.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-paul-hsieh-x27-s-superfasthash.html",
+      "sha256": "8fe6ed04226bc58491f5324f34143f442aff17ebcd99ec286c29521192f8953e",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-pdfium.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-pdfium.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-pdfium.html",
+      "sha256": "c19280799376da7143ac035d9359fc55c3ec364020c685af25356238b79cdc0d",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-perfetto.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-perfetto.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-perfetto.html",
+      "sha256": "38a1c2f5f7ad3ec7b6aab79f3764b78e5529a0fecf76ba10e90b507a51e24d9d",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-pffft-a-pretty-fast-fft.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-pffft-a-pretty-fast-fft.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-pffft-a-pretty-fast-fft.html",
+      "sha256": "c35e6a59fa612ecfb5f6252516ef5dc5ab4e04e44032a90330a4e39be2de34d6",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-polymer.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-polymer.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-polymer.html",
+      "sha256": "5eb139814fd143ba897a0ac4544db4314ff51db536ef16fe80a6fdc91eef2fc3",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-private-join-and-compute-subset.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-private-join-and-compute-subset.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-private-join-and-compute-subset.html",
+      "sha256": "8c0a0242a9d151c484d5968c7538ed3ff01f1bbe530a5c58d9c59ec18fb34337",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-protocol-buffers-javascript.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-protocol-buffers-javascript.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-protocol-buffers-javascript.html",
+      "sha256": "9e4ccdf40d73e5a110b78e486717d5b4b2b42f4cd2bc1bafaef365e57fa13575",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-protocol-buffers.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-protocol-buffers.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-protocol-buffers.html",
+      "sha256": "25df3cc41a0e14a936e4e2b3496060e37ee426de81703b9cd978a57a134f124b",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-puppeteer-core.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-puppeteer-core.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-puppeteer-core.html",
+      "sha256": "58bcad12f4bc79816ad656926b7d2c01b3c9c30d674d4c013c64639c17d5921b",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-puppeteer-replay.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-puppeteer-replay.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-puppeteer-replay.html",
+      "sha256": "27a63af66810b20bb343c2d69fbf1fccfe048782f630f7db495f066131b5e172",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-quiche.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-quiche.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-quiche.html",
+      "sha256": "a435c09f6b72c5337b77eb33dc960646397ae2f6b0db2b46ed7f8c8c0cd9cc00",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-rapidhash.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-rapidhash.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-rapidhash.html",
+      "sha256": "3bb0bbcc3126a373cd3c740f7452fee2a46016c4ad8c62d521ed1c6af79edd30",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-re2---an-efficient-principled-regular-expression-library.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-re2---an-efficient-principled-regular-expression-library.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-re2---an-efficient-principled-regular-expression-library.html",
+      "sha256": "62dd3d33905ef0fc7b44719d87bb12813955da28a453b35f9082d742aee63379",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-recurrent-neural-network-for-audio-noise-reduction.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-recurrent-neural-network-for-audio-noise-reduction.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-recurrent-neural-network-for-audio-noise-reduction.html",
+      "sha256": "71f824219c256117543f5726106d906a679889a4d63fa981a619e40a9f3de9bf",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-search-engines-resources.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-search-engines-resources.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-search-engines-resources.html",
+      "sha256": "51d3ad0006ad34cb3db2e7678591a116a0d2d8072d4696379fdaf1842e780888",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-selenium-atoms.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-selenium-atoms.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-selenium-atoms.html",
+      "sha256": "a78c97b7929a122d3f347cebe7a66a5564ab7c5e1b7400c45ecf0ef0a30c5f2e",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-simdutf-unicode-transcoder.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-simdutf-unicode-transcoder.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-simdutf-unicode-transcoder.html",
+      "sha256": "964945c4b5080f0354a4d0e2338cbe349928041a8df175a35ce95424b845304a",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-sizzle.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-sizzle.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-sizzle.html",
+      "sha256": "8d1c6934194ed4ccdbaa5c3efa0aced34996daca752d51bbc453103a5fd8eb92",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-snappy-a-fast-compressor-decompressor.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-snappy-a-fast-compressor-decompressor.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-snappy-a-fast-compressor-decompressor.html",
+      "sha256": "1e3ef97bb61d528e0a8356683c7c23069f24f76fa263ffbcf57122d6a9dd4466",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-source-map-scopes-codec.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-source-map-scopes-codec.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-source-map-scopes-codec.html",
+      "sha256": "2247d07d4c0a9df3ba59f06259bea50ba9bb6b9af42cc0b23a9bdbaf323a2d49",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-speech-dispatcher.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-speech-dispatcher.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-speech-dispatcher.html",
+      "sha256": "2a515f06fd68e53e5df3bf5975717c7788d5f07b1cda68d530dd1d7a26420832",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-spir-v-headers.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-spir-v-headers.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-spir-v-headers.html",
+      "sha256": "226174c02d5d4f7c30b00b8d42d005f68774cc5b4920e0adaceb91ec4456dcb6",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-spir-v-tools.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-spir-v-tools.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-spir-v-tools.html",
+      "sha256": "652e34e326c911609f86cbb7d14433634e3b1364324e3ee09143617b9f2e5d2b",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-spl-sqrt-floor.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-spl-sqrt-floor.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-spl-sqrt-floor.html",
+      "sha256": "e30894ebff76e1a4b213652d1027127b4185f0a2c7b51ec2ec5ef4982f8dfcf9",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-sqlite.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-sqlite.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-sqlite.html",
+      "sha256": "989e6dd19d6321b2cc6c9ac3cfb3d76ffda548bcb148058c4ea649ab2c206a62",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-the-chromium-project.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-the-chromium-project.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-the-chromium-project.html",
+      "sha256": "13cbe8c0462c2b4a122c5ebff09007c188c44a18121a5982c0a83e70c2c8dd8b",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-the-diff-match-and-patch-libraries-offer-robust-algorithms-to-perform-the-operations-required-for-synchronizing-plain-text.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-the-diff-match-and-patch-libraries-offer-robust-algorithms-to-perform-the-operations-required-for-synchronizing-plain-text.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-the-diff-match-and-patch-libraries-offer-robust-algorithms-to-perform-the-operations-required-for-synchronizing-plain-text.html",
+      "sha256": "bb9eb3b94120b46175e2a8ac59bf8408bc17c83a1f7a8b0c837fbf55690f222c",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-the-itu-g-722-codec-encode-and-decode-part.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-the-itu-g-722-codec-encode-and-decode-part.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-the-itu-g-722-codec-encode-and-decode-part.html",
+      "sha256": "73bd919ab2c9ae7f9decc748a468dbbc98fa8342f4c94c863520aceff74cec3f",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-third-party-web.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-third-party-web.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-third-party-web.html",
+      "sha256": "4eaa1c3169ad6b2566f68b3bed0ff9fb18cae5ba0bbef865e31c0b18907a6016",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-uri-template-parser.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-uri-template-parser.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-uri-template-parser.html",
+      "sha256": "36210bcdacb58c981df225370495ed4771407b6ab4c8d9a7f4cc56c09e5e4c59",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-url-pattern-library.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-url-pattern-library.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-url-pattern-library.html",
+      "sha256": "2f90200ef5d424ad35d3e12e4075d92e93a781882390d1e393c471a795cd850b",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-v8-fork-of-fdlibm.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-v8-fork-of-fdlibm.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-v8-fork-of-fdlibm.html",
+      "sha256": "ab1e96109e811981e3f7ab8c3f82a5ae3b4ad5cc5f5ad4287a8755b03dd656c4",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-volk-meta-loader-for-vulkan-api.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-volk-meta-loader-for-vulkan-api.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-volk-meta-loader-for-vulkan-api.html",
+      "sha256": "d0d297f651eab76168c4b76445be2c16b438c5be2b7c7f06fec345798b37e285",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-vscode-web-custom-data.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-vscode-web-custom-data.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-vscode-web-custom-data.html",
+      "sha256": "720938f6e60ffb028f70233f027120256f0a3adec29262158e2b7bd9558191e9",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-vulkan-api-headers.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-vulkan-api-headers.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-vulkan-api-headers.html",
+      "sha256": "b4f88c69af31605bc03482ccb5353b3241601f62b7e25a02a340e28846a68562",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-vulkan-loader-components.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-vulkan-loader-components.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-vulkan-loader-components.html",
+      "sha256": "032f88f54611fc57d81c451a6d50aa597a7effebf209657b95c564e427ca9bfa",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-vulkanmemoryallocator.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-vulkanmemoryallocator.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-vulkanmemoryallocator.html",
+      "sha256": "17e3797d2d881d9e8ac30fe7c62200f951dc7ab25ea92ebfcdfd5fdf97ffd50c",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-wasmparser.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-wasmparser.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-wasmparser.html",
+      "sha256": "5bfb23066e176690b618267f8f7a65fd09230eca4bff8bbbda221ce3f5b0ceba",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-web-vitals.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-web-vitals.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-web-vitals.html",
+      "sha256": "8736348bb9c39b85fc7b2efb68e46b22ba35417c89db742ee8417511883fafbb",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-webkit.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-webkit.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-webkit.html",
+      "sha256": "d6ad393d8eee692e3619e6f10dcfd20dae83e3b4b3ff193d8bd265985c8fa1e9",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-webm-container-parser-and-writer.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-webm-container-parser-and-writer.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-webm-container-parser-and-writer.html",
+      "sha256": "77c7be7af8fdb90df410b21aee64e5a0c61ee6130f8c59e033a3ef911f008bbe",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-webp-image-encoder-decoder.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-webp-image-encoder-decoder.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-webp-image-encoder-decoder.html",
+      "sha256": "62ad2bb710ac5b3ca8bcef85a14ad13a2723c3f2485491e5dff8c4d1c755d920",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-webrtc.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-webrtc.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-webrtc.html",
+      "sha256": "79d6b4a15f841807db6def1c8a4007d6de954c54a27cab1011e0e1dd0124545f",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-wicked-good-xpath.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-wicked-good-xpath.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-wicked-good-xpath.html",
+      "sha256": "ce62f6cc6068c882c4363a9e217f5100b8c5c0b2aad84812ebaca74215f40578",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-woff2.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-woff2.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-woff2.html",
+      "sha256": "1016ff17423143320c62998304b9e8b440ab54e4d4fbc41192fd5928d6f40bcc",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-wuffs-wrangling-untrusted-file-formats-safely.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-wuffs-wrangling-untrusted-file-formats-safely.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-wuffs-wrangling-untrusted-file-formats-safely.html",
+      "sha256": "8b3115967bdb5b829a70a53ba365d98e73174c7225e877e86f39008cd6943ed1",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-xdg-user-dirs.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-xdg-user-dirs.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-xdg-user-dirs.html",
+      "sha256": "8dbe975556ab14e4df0b996aff742fe5b0503245969d536f5db12e7c62496849",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-zlib.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-zlib.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-zlib.html",
+      "sha256": "0ce43614dbc2627cf8892dcc26289a5c323e8cd5173dab43c76de5cb84efb9e3",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-zod.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-zod.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-zod.html",
+      "sha256": "b555d9939dad0c0b77c97103977031945cebe0ef6286231995db776b3c0b4ce3",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtwebengine-3rdparty-zstandard.txt",
+      "url": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-zstandard.html",
+      "resolvedURL": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-zstandard.html",
+      "sha256": "5ece4e77f6c6c60dfd0ff80d2976c909115e3c74bbe495a9f51c7b3bcd3dc73c",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-blake2.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-blake2.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-blake2.html",
+      "sha256": "995980a6366e288a17551fbe84d1c0be223009f34b4e202034fcf01de7b8787f",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-doubleconversion.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-doubleconversion.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-doubleconversion.html",
+      "sha256": "0047783da1369301b29969c8bc68d619486d2149d1128a94684afa2a8e436634",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-easing.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-easing.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-easing.html",
+      "sha256": "6826555995eeda6bafa06a39140853a56af6d822bf62ec517b0a070e663609dc",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-forkfd.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-forkfd.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-forkfd.html",
+      "sha256": "08bef014efb143154851c4a1f56c0285e9e97840db1f265f8313742fb208b96e",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-md4.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-md4.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-md4.html",
+      "sha256": "572c3777834080292fccabd0350e4e3f752f3797cfcc0227e7d73f47e2320f28",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-md5.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-md5.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-md5.html",
+      "sha256": "ee964154ab66afec5a6a938fb9c8781b5d59e1505a7b6113daea26dcbe4b514d",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-pcre2-sljit.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-pcre2-sljit.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-pcre2-sljit.html",
+      "sha256": "0964e642755b354d3f676e6c1904fea8af3d2b01ff904ad332458f03ac0aa428",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-pcre2.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-pcre2.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-pcre2.html",
+      "sha256": "fa1473f29afb3c83eb930c31cc58c80d01fe690f04aae08a09949f3a4910768f",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-qeventdispatcher-cf.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-qeventdispatcher-cf.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-qeventdispatcher-cf.html",
+      "sha256": "f6dafd9acfcbd15c0419ae36944f5efaf51291784738ad09e59ce7350f593430",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-rfc6234.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-rfc6234.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-rfc6234.html",
+      "sha256": "41127d8d0bed67561513d0993e899d35e2536dcf7c36d7dc9f1c8ceb5c89f4f8",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-sha1.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-sha1.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-sha1.html",
+      "sha256": "e5e08f8678a2db1c9f069a0200346c0a530bbc7a060f9483c7554c3c24d66096",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-sha3-endian.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-sha3-endian.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-sha3-endian.html",
+      "sha256": "1db985916f1b138013ee6e042f5ca55ab05beffbe77aeb94a507cff01d45c2f2",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-sha3-keccak.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-sha3-keccak.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-sha3-keccak.html",
+      "sha256": "75faf215dbfd02adfc55e8bb6a05266492335fd4dc38addc269acb6b2305410c",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-siphash.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-siphash.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-siphash.html",
+      "sha256": "114d8cbfd574fcdeef63031266053cd5cd3df738724d1a52f22d2480ffe371b2",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-tika-mimetypes.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-tika-mimetypes.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-tika-mimetypes.html",
+      "sha256": "ab43b1ff1c646b1a16dbcb813ceebe091f2d9c81fc42b5d9a8c41dd5f254f144",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-tinycbor.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-tinycbor.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-tinycbor.html",
+      "sha256": "36fb63f1baae6ba5e245e8bc1de57f17ebf26feea1eeed6542f7ce762ed1483f",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-tlexpected.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-tlexpected.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-tlexpected.html",
+      "sha256": "8714dca07efb335b0e6bbbc8f7833b102e713fa87df1f4bc80601be85cdac5bd",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-unicode-character-database.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-unicode-character-database.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-unicode-character-database.html",
+      "sha256": "43fae258b1f1503cd9e29df056ac0cf6b1a220e57b9bdd8c33981f7741f13775",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-unicode-cldr.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-unicode-cldr.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-unicode-cldr.html",
+      "sha256": "b5bd2cf0d683cc117267346c796186e7040670184ad9bb4e1bcb20f3cfae3780",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtcore-attribution-zlib.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtcore-attribution-zlib.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtcore-attribution-zlib.html",
+      "sha256": "2e6413f2ea41585d008198ace6563665b4e739e0a1dc61435ea21e9250141d7e",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-aglfn.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-aglfn.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-aglfn.html",
+      "sha256": "1b05ab7db6919fc8f67f7286392016497ca7589cb59435b1c62a5d50eadc6d9b",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-android-native-style.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-android-native-style.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-android-native-style.html",
+      "sha256": "96545dcf6dcc6faa2947245cb2a1c827d3d96ce699811bd904caa2df95200bda",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-cocoa-platform-plugin.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-cocoa-platform-plugin.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-cocoa-platform-plugin.html",
+      "sha256": "fa4a477e89709d934d48db81a2c5494b7667df5358b31348b284acd34a6280e3",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-d3d12memoryallocator.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-d3d12memoryallocator.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-d3d12memoryallocator.html",
+      "sha256": "799e20275e2057e88512063921f8aa1a35aee4d0e1027849990e098c7ed926b1",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-dejayvu.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-dejayvu.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-dejayvu.html",
+      "sha256": "829668413edb13c80975d5efa53447f022752b73da240408f4557d0b2d28dae9",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-emoji-segmenter.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-emoji-segmenter.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-emoji-segmenter.html",
+      "sha256": "bf6ce2a924881a7b05210ccefb4190e74bfc7b14806d556cc596f1b6123c289a",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-freetype-bdf.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-freetype-bdf.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-freetype-bdf.html",
+      "sha256": "a377476545a926960f2cceb4c7868d4614953355ca8a6c9485e41b81a951dd2a",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-freetype-pcf.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-freetype-pcf.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-freetype-pcf.html",
+      "sha256": "dd8a0dd32c70072aef829bd87a6f794da78b311b40e9fc90499c8591e2efc7f4",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-freetype-zlib.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-freetype-zlib.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-freetype-zlib.html",
+      "sha256": "7f550734b1fef455be0e4ba5391cd810ef51b0a0f59e642950b073016580edc2",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-freetype.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-freetype.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-freetype.html",
+      "sha256": "b864ac8720dbe8173c8bd16fa901401330d49b6617034f785084bf1713e07dc5",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-grayraster.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-grayraster.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-grayraster.html",
+      "sha256": "74f0b656767857b1b00c1e3939c10b788ce618a9488b4364c65b0b4a05e61f0b",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-harfbuzz-ng.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-harfbuzz-ng.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-harfbuzz-ng.html",
+      "sha256": "2eeb274305d8e0467ec8512c7bd1516a40e9f96bb99ebdc71cb11cfef2845898",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-icc-srgb-color-profile.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-icc-srgb-color-profile.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-icc-srgb-color-profile.html",
+      "sha256": "1d486c4dc30e9d9070ffb49721fdd3028b75897c6bf0b39beec7cc0e29e5b34a",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-libjpeg.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-libjpeg.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-libjpeg.html",
+      "sha256": "df97cbe84c02694bb9606f777ff333b33581807cbd84bb530cc15e070e8a2ce6",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-libpng.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-libpng.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-libpng.html",
+      "sha256": "591578a09a301a6f48803deffabbd1f39569d8f08ae3812c40d9b0d52302650d",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-md4c.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-md4c.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-md4c.html",
+      "sha256": "d8044e9be3b2645ea3c05584f9bc7c2fa12e1504951cb45aa4e100c135a47fbe",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-opengl-es2-headers.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-opengl-es2-headers.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-opengl-es2-headers.html",
+      "sha256": "5a541782aa6d3a0d224c23a6fb8d09963ce06139da66c12a7f98b1c6bc448e9c",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-opengl-headers.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-opengl-headers.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-opengl-headers.html",
+      "sha256": "0a7c857ba7ff783c1d092cb0c5a69358c5b2a9abc52356b5b5ee882d6d2ba33f",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-pixman.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-pixman.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-pixman.html",
+      "sha256": "85016ae2009d1f0db552305b0d7bd64f442fcc7b2b2e4f62141e7e108cd154a8",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-rhi-miniengine-d3d12-mipmap.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-rhi-miniengine-d3d12-mipmap.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-rhi-miniengine-d3d12-mipmap.html",
+      "sha256": "293a14cd3c6ac3933561e3e350868b3a329ae6bd2faa3df9c57c455ab76c0ddc",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-smooth-scaling-algorithm.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-smooth-scaling-algorithm.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-smooth-scaling-algorithm.html",
+      "sha256": "44796e42f6272806e9d6aa20a7cf265626021e23ad227069779bd63a91625ec3",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-vulkan-xml-spec.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-vulkan-xml-spec.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-vulkan-xml-spec.html",
+      "sha256": "fea5920ce3ce9e9c13cd790b0ff682a9851926557dd724b48e66b181b8bc6168",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-vulkanmemoryallocator.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-vulkanmemoryallocator.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-vulkanmemoryallocator.html",
+      "sha256": "523832e3f858454d2f15d51496e5a1d5960467536e8f1314acbb48e944589443",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-webgradients.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-webgradients.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-webgradients.html",
+      "sha256": "909451e1c86a0360361d5da64cff3e950ee4cf5a18d9621505e2216872af084c",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-wintab.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-wintab.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-wintab.html",
+      "sha256": "428a29b8a7a07e14a62f7c469303a78c337615d3b928779d0d50e9794a37420a",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-xcb-xinput.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-xcb-xinput.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-xcb-xinput.html",
+      "sha256": "59414af63c8dd71f3a9c8741a1962c36804130d38a91e9ea44e9a8ca81bc8d40",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtgui-attribution-xserverhelper.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtgui-attribution-xserverhelper.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtgui-attribution-xserverhelper.html",
+      "sha256": "c4ea08e144f08f8fcf5223b560228cb56f67067ee25f2b98c35839184dcb6cb1",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtnetwork-attribution-libpsl.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtnetwork-attribution-libpsl.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtnetwork-attribution-libpsl.html",
+      "sha256": "50692ec2c471377bc0fe62d58ac5e4bc86443842bb6b5caa2824a7e9913fbe1d",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtnetwork-attribution-psl-data.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtnetwork-attribution-psl-data.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtnetwork-attribution-psl-data.html",
+      "sha256": "f2c57a035fdfbaa3064a284ce7cba1a6869eabb8e6fa591d642c4985418f7544",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtqml-attribution-masm.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtqml-attribution-masm.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtqml-attribution-masm.html",
+      "sha256": "21ba15edd18e5ce207ba026dcb7f20fd9e2520acdbafb831e300411118d30de2",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "qtquick-attribution-yoga.txt",
+      "url": "https://doc.qt.io/qt-6.12/qtquick-attribution-yoga.html",
+      "resolvedURL": "https://doc.qt.io/qt-6.12/qtquick-attribution-yoga.html",
+      "sha256": "ecf04fdc4a19476d2ec385b7fd72f1bd10f1ce84e5989e198268a3f72ee76b40",
+      "mode": "publisher-page text; license wording retained"
+    },
+    {
+      "file": "GFDL-1.3-no-invariants-only.txt",
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/LICENSES/GFDL-1.3-no-invariants-only.txt",
+      "resolvedURL": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/LICENSES/GFDL-1.3-no-invariants-only.txt",
+      "sha256": "110535522396708cea37c72a802c5e7e81391139f5f7985631c93ef242b206a4",
+      "mode": "verbatim; publisher-documentation license"
+    }
+  ],
+  "indexes": {
+    "QtCore": "https://doc.qt.io/qt-6.12/qtcore-index.html",
+    "QtGui": "https://doc.qt.io/qt-6.12/qtgui-index.html",
+    "QtNetwork": "https://doc.qt.io/qt-6.12/qtnetwork-index.html",
+    "QtWidgets": "https://doc.qt.io/qt-6.12/qtwidgets-index.html",
+    "QtQml": "https://doc.qt.io/qt-6.12/qtqml-index.html",
+    "QtQuick": "https://doc.qt.io/qt-6.12/qtquick-index.html",
+    "QtSvg": "https://doc.qt.io/qt-6.12/qtsvg-index.html",
+    "QtPositioning": "https://doc.qt.io/qt-6.12/qtpositioning-index.html",
+    "QtWebChannel": "https://doc.qt.io/qt-6.12/qtwebchannel-index.html",
+    "QtWebEngine": "https://doc-snapshots.qt.io/qtwebengine/qtwebengine-licensing.html"
+  }
+}

@@ -1,0 +1,187 @@
+Source: https://doc-snapshots.qt.io/qtwebengine/qtwebengine-3rdparty-spl-sqrt-floor.html
+
+spl sqrt floor
+
+
+
+Project Homepage
+
+
+/*
+ * Written by Wilco Dijkstra, 1996. The following email exchange establishes the
+ * license.
+ *
+ * From: Wilco Dijkstra &lt;Wilco.Dijkstra@ntlworld.com&gt;
+ * Date: Fri, Jun 24, 2011 at 3:20 AM
+ * Subject: Re: sqrt routine
+ * To: Kevin Ma &lt;kma@google.com&gt;
+ * Hi Kevin,
+ * Thanks for asking. Those routines are public domain (originally posted to
+ * comp.sys.arm a long time ago), so you can use them freely for any purpose.
+ * Cheers,
+ * Wilco
+ *
+ * ----- Original Message -----
+ * From: &quot;Kevin Ma&quot; &lt;kma@google.com&gt;
+ * To: &lt;Wilco.Dijkstra@ntlworld.com&gt;
+ * Sent: Thursday, June 23, 2011 11:44 PM
+ * Subject: Fwd: sqrt routine
+ * Hi Wilco,
+ * I saw your sqrt routine from several web sites, including
+ * http://www.finesse.demon.co.uk/steven/sqrt.html.
+ * Just wonder if there&#x27;s any copyright information with your Successive
+ * approximation routines, or if I can freely use it for any purpose.
+ * Thanks.
+ * Kevin
+ * /
+
+
+
+
+
+
+© 2026 The Qt Company Ltd.
+   Documentation contributions included herein are the copyrights of
+   their respective owners.     The documentation provided herein is licensed under the terms of the    GNU Free Documentation    License version 1.3 as published by the Free Software Foundation.     Qt and respective logos are     trademarks of The Qt Company Ltd. in Finland and/or other countries
+   worldwide. All other trademarks are property of their respective owners. 
+
+
+                    
+                
+                
+                    
+                                            
+                                    
+            
+        
+    
+
+
+
+    
+        
+            
+                
+                    
+                    
+                    
+                
+                
+                    
+                    
+                    
+                    
+                
+                
+                        Contact Us
+                
+
+            
+            
+                
+
+                        
+
+  
+Qt Group
+   
+    
+Our Story
+
+    
+Brand
+
+    
+News
+
+    
+Careers
+
+    
+Investors
+
+    
+Qt Products
+
+    
+Software Quality Products
+
+   
+
+  
+Licensing
+   
+    
+License Agreement
+
+    
+Open Source
+
+    
+Plans and pricing
+
+    
+Download
+
+    
+FAQ
+
+   
+
+  
+Learn Qt
+   
+    
+For Learners
+
+    
+For Students and Teachers
+
+    
+Qt Documentation
+
+    
+Qt Forum
+
+   
+
+  
+Support & Services
+   
+    
+Professional Services
+
+    
+Customer Success
+
+    
+Support Services
+
+    
+Partners
+
+    
+Qt World
+
+   
+
+ 
+
+      
+   
+
+        
+            
+                
+                    
+ 
+  
+© 2026 The Qt Company
+
+  
+Feedback
+
+ 
+
+                    
+Qt Group includes The Qt Company Oy and its global subsidiaries and affiliates.

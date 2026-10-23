@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+  <title>映序 · 原版效果对照</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="vendor/design-systems/lens/tokens.css">
+  <link rel="stylesheet" href="vendor/design-systems/lens/components.css">
+  <link rel="stylesheet" href="css/effects-lab.css">
+  <link rel="stylesheet" href="css/appearance.css">
+  <script src="qt/qwebchannel.js"></script>
+  <script type="module" src="js/effects-lab.js"></script>
+</head>
+<body>
+  <header class="lab-chrome"><a class="lab-brand" href="#top">映序 <span>效果验收</span></a><nav><a href="#comparison">材质对照</a><a href="#gallery">18 类原版控件</a></nav><label class="theme-quick"><select id="theme-quick" data-theme-select aria-label="界面主题"><option value="system">跟随系统</option><option value="light">浅色</option><option value="dark">深色</option></select></label><span class="lab-preview-tag">开发预览 · 不访问文件</span></header>
+  <main id="top" class="lab-main">
+    <section class="lab-heading"><div><span class="lab-eyebrow">LENS · ORIGINAL SOURCE</span><h1>让玻璃，真正成为透镜。</h1><p>原版材质、真实纹理折射与弹性反馈，在同一个桌面窗口中比较。</p></div><div class="source-proof"><strong>19 个原文件</strong><span>与 GitHub blob 哈希一致</span><code title="7a424c93b9be13cf835b91ea67495fec2ec0584e">7a424c9 · MIT</code></div></section>
+    <section id="comparison" aria-labelledby="comparison-title">
+      <div class="lab-section-heading"><h2 id="comparison-title">三种材质，直接对照</h2><div class="lab-toggles"><select id="lab-scene" aria-label="原版与增强版的背景"><option value="workbench">映序纹理</option><option value="aurora">原版极光</option><option value="sunset">原版日落</option><option value="ocean">原版海洋</option><option value="grid">标定网格</option></select><label><input id="lab-enabled" type="checkbox" checked>玻璃</label><label><input id="lab-reduced" type="checkbox">减少动态</label><label><input id="lab-audio" type="checkbox">原版音效</label></div></div>
+      <div class="comparison-grid">
+        <article class="comparison-card"><header><span class="comparison-index">01</span><div><h3>阶段 6 简化版</h3><p>本项目原实现</p></div></header><div id="legacy-stage" class="comparison-stage legacy-stage"><div id="legacy-surface" class="legacy-surface"><strong>山海之间 · 第一季</strong><p>12 个视频 · 字幕审阅</p><button class="lab-button" id="legacy-press" type="button">试按反馈</button></div></div><footer>浅色装饰背景，折射不够明显。</footer></article>
+        <article class="comparison-card"><header><span class="comparison-index">02</span><div><h3>Lens 原版 · Thick</h3><p>上游默认材质参数</p></div></header><div id="original-stage" class="comparison-stage"></div><footer>原版渲染器、材质模型与弹性手势。</footer></article>
+        <article class="comparison-card enhanced-card"><header><span class="comparison-index">03</span><div><h3>映序 · 增强适配</h3><p>同一原版渲染器</p></div><span class="recommended-tag">拟采用</span></header><div id="enhanced-stage" class="comparison-stage"></div><footer>降低雾化，增强背景折射的辨识度。</footer></article>
+      </div>
+      <div class="comparison-caption"><p>背景由应用绘制，玻璃采样这张纹理；文字保持独立、清晰。可按住控件体验形变与回弹。</p><output id="comparison-feedback" aria-live="polite">点击任意试按按钮，检查反馈。</output></div>
+    </section>
+    <section id="gallery" class="gallery-section" aria-labelledby="gallery-title">
+      <div class="lab-section-heading"><div><h2 id="gallery-title">原版控件目录</h2><p>全部 18 类工厂均来自原文件，共享一个画布，仅显示当前控件；退出时统一释放。</p></div><button id="open-lens-dialog" class="lab-button" type="button">检查弹窗内玻璃</button></div>
+      <div class="gallery-layout">
+        <nav id="component-nav" class="component-nav" aria-label="原版控件选择"></nav>
+        <div class="gallery-preview"><div class="gallery-meta"><div><h3 id="component-title"></h3><code id="component-name"></code></div><div><button id="demo-variant" class="lab-button" type="button" hidden>切换变体</button><button id="demo-run" class="lab-button" type="button">演示变化</button><button id="demo-reset" class="lab-button" type="button">重置</button></div></div><div id="gallery-stage" class="gallery-stage"></div><div class="gallery-readout"><span id="component-use"></span><output id="component-value" aria-live="polite">等待交互</output></div></div>
+      </div>
+    </section>
+    <section class="audit-note"><h2>复用边界可核对</h2><p>此页使用原版 Lens 的材质、手势、控件与合成声音。原文件保持不变，主题、生命周期和业务映射由适配层负责。主题切换改编 Overture 虹膜过渡；粒子沿用映序实现，余下效果按项目清单逐项接入。</p><p>右上角切换完整应用主题并保存偏好。场景选择保留原版配色，旧简化列保留浅色对照；本页不会选择、扫描、移动或重命名文件。</p></section>
+  </main>
+  <dialog id="lens-dialog" aria-labelledby="lens-dialog-title"><div class="lab-dialog-heading"><h2 id="lens-dialog-title" tabindex="-1" data-initial-focus>弹窗中的原版材质</h2><button class="lab-button" data-close type="button">关闭</button></div><div id="dialog-stage" class="dialog-stage"></div><p class="lab-dialog-note">画布位于弹窗内部，检查顶层显示、焦点与关闭时的释放。</p></dialog>
+  <canvas id="legacy-particles" hidden aria-hidden="true"></canvas>
+</body>
+</html>

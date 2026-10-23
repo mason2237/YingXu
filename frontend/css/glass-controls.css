@@ -1,0 +1,52 @@
+/* All semantic buttons share an optical shell; native layout/labels survive. */
+html[data-liquid-buttons=true] button.liquid-button {
+  --liquid-light-x:50%;--liquid-light-y:0%;
+  position:relative;isolation:isolate;border:1px solid color-mix(in srgb,var(--glass-border) 74%,transparent);
+  border-radius:8px;background:color-mix(in srgb,var(--glass-base) 86%,transparent);
+  color:var(--glass-ink);backdrop-filter:blur(9px) saturate(1.15);
+  box-shadow:inset 0 1px 0 #ffffffb3,inset 0 -1px 1px #6185bd1c,0 1px 2px #263a5710;
+  transition:background-color 130ms,border-color 130ms,box-shadow 130ms;
+}
+html[data-liquid-buttons=true] button.liquid-button::before {
+  content:'';position:absolute;inset:1px;z-index:-1;border-radius:inherit;pointer-events:none;
+  background:
+    radial-gradient(ellipse 120% 95% at 22% 128%,#8faddd73 0%,#c2d7f25c 62%,transparent 65%),
+    radial-gradient(ellipse 95% 110% at 95% -26%,#ffffffed 0%,#ffffff92 63%,transparent 66%),
+    radial-gradient(ellipse at var(--liquid-light-x) var(--liquid-light-y),#ffffffc9 0%,#ffffff38 35%,transparent 70%);
+  opacity:.86;
+}
+html[data-liquid-buttons=true] button.liquid-button:hover:enabled {border-color:var(--focus-line);box-shadow:inset 0 1px 0 #ffffffde,0 1px 4px #356de622;}
+html[data-liquid-buttons=true] button.liquid-button.primary {background:var(--blue);color:var(--on-accent);border-color:color-mix(in srgb,var(--blue) 65%,var(--glass-line));}
+html[data-liquid-buttons=true] button.liquid-button.primary::before {opacity:.22;}
+html[data-liquid-buttons=true] button.liquid-button.stop-task {color:var(--danger);border-color:var(--danger-line);background:var(--danger-tint);}
+html[data-liquid-buttons=true] button.liquid-button[data-liquid-renderer=webgl]:enabled {background:transparent!important;backdrop-filter:none;}
+html[data-liquid-buttons=true] button.liquid-button[data-liquid-renderer=webgl].primary:enabled {color:#fff!important;}
+html[data-liquid-buttons=true] button.liquid-button[data-liquid-renderer=webgl]::before {opacity:.13;}
+html[data-liquid-buttons=true] .workspace-lens-stage button.liquid-button[data-liquid-renderer=webgl]:enabled {background:color-mix(in srgb,var(--glass-base) 42%,transparent)!important;}
+html[data-liquid-buttons=true] .workspace-lens-stage button.liquid-button::before {opacity:.68;}
+html[data-theme=dark][data-liquid-buttons=true] button.liquid-button {background:color-mix(in srgb,var(--glass-base) 92%,transparent);box-shadow:inset 0 1px 0 #d6e8ff59,inset 0 -1px 1px #080d1c44,0 1px 3px #00000022;}
+html[data-theme=dark][data-liquid-buttons=true] button.liquid-button::before {opacity:.24;}
+html[data-theme=dark][data-liquid-buttons=true] button.liquid-button.primary {background:#356de6;color:#fff;}
+html[data-liquid-buttons=true] button.liquid-button:disabled {backdrop-filter:none;box-shadow:inset 0 1px 0 #ffffff26;}
+button.liquid-button[data-jelly] {--jelly-base:translate(0,0);transform:var(--jelly-base) var(--jelly-matrix,matrix(1,0,0,1,0,0));transform-origin:center;}
+button.liquid-button[data-held=true] {cursor:grabbing;}
+button.liquid-button.jelly-moving {will-change:transform;}
+button.liquid-button:focus-visible {outline:2px solid var(--blue);outline-offset:3px;}
+html[data-reduced=true] button.liquid-button {transition:none;}
+.modal-liquid-dock {flex-shrink:0;}
+.modal-liquid-dock .dialog-footer {position:relative;z-index:1;background:transparent;}
+.task-optical-stage.lg-stage {background:transparent!important;color:var(--ink);font:inherit;overflow:visible;border-radius:0;}
+.task-optical-stage .lg-progress {position:relative;}
+.task-optical-stage .lg-progress-heading {font:12px/1.5 "Segoe UI", "Microsoft YaHei UI",sans-serif;gap:12px;color:var(--muted);}
+.task-optical-stage .lg-progress-value {color:var(--blue);}
+.task-optical-stage#loading-progress .lg-progress-track {height:30px;min-height:30px;margin:14px 0 8px;border-radius:16px;border:1px solid var(--glass-border);background:var(--surface-soft);}
+.task-optical-stage#loading-progress.webgl-ready:not(.opaque) .lg-progress-track {background:transparent;}
+.task-optical-stage#loading-progress .lg-progress-fill {inset:3px;border-radius:12px;background:linear-gradient(180deg,#a0ecff24,#a9f0ff88 47%,#e4fcff 50%,#89daef33);background-color:color-mix(in srgb,var(--blue) 35%,transparent);transition:transform 200ms ease-out;}
+.task-optical-stage#loading-progress :is(.lg-progress-fiber,.lg-optic-rim,.lg-progress-emitter) {display:block;}
+.task-optical-stage#loading-progress.webgl-ready:not(.opaque) :is(.lg-progress-fill,.lg-progress-emitter) {visibility:hidden;}
+.task-optical-stage#loading-progress.webgl-ready:not(.opaque) .lg-progress-fiber {display:none;}
+.task-optical-stage#loading-progress.opaque :is(.lg-progress-fill,.lg-progress-emitter) {visibility:visible;}
+.loading-indeterminate {height:12px;border:1px solid var(--glass-border);border-radius:8px;background:var(--surface-soft);box-shadow:inset 0 1px 0 var(--glass-line);}
+.loading-indeterminate > span {border-radius:inherit;background:linear-gradient(90deg,transparent,var(--blue),#c2e6ff,transparent);}
+html[data-reduced=true] .task-optical-stage .lg-progress-fiber path {animation:none!important;}
+@media(forced-colors:active) {html[data-liquid-buttons=true] button.liquid-button {background:ButtonFace!important;color:ButtonText!important;border:1px solid ButtonText;backdrop-filter:none;}html[data-liquid-buttons=true] button.liquid-button::before {display:none;}}

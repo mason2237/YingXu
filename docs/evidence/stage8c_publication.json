@@ -1,0 +1,72 @@
+{
+  "version": "0.8.0-rc.2",
+  "date": "2026-10-23",
+  "license": {
+    "identifier": "PolyForm-Noncommercial-1.0.0",
+    "officialTextSha256": "ffcca38841adb694b6f380647e15f17c446a4d1656fed51a1e2041d064c94cc8",
+    "unaltered": true,
+    "noticeDocuments": 183,
+    "webEngineNoticeDocuments": 125
+  },
+  "audit": {
+    "filesChecked": 372,
+    "historyObjectsChecked": 377,
+    "currentFindings": {},
+    "historicalFindings": {
+      "developer_path": 62
+    },
+    "emailCandidateFiles": [],
+    "trackedGeneratedFiles": [],
+    "historyRewritten": false,
+    "commitMetadataFindings": [],
+    "sensitiveFilenameCandidates": []
+  },
+  "validation": {
+    "reusedBusinessTests": 32,
+    "reusedBackendTests": 14,
+    "reusedBoundaryTests": 11,
+    "reusedRealSourceE2E": true,
+    "newPackagedStartupPassed": true,
+    "pageVisible": true,
+    "glassButtons": 40,
+    "activeOpticalCanvases": 3,
+    "javascriptErrors": [],
+    "singleObservedStartupSeconds": 1.302,
+    "cleanWindowsTested": false,
+    "computerUseCalls": 0,
+    "nativeTitleReadback": "Legacy PowerShell encoding loss observed in test logger; checker now emits UTF-8."
+  },
+  "bundledQtModules": [
+    "Qt6Core.dll",
+    "Qt6Gui.dll",
+    "Qt6Network.dll",
+    "Qt6OpenGL.dll",
+    "Qt6Positioning.dll",
+    "Qt6PrintSupport.dll",
+    "Qt6Qml.dll",
+    "Qt6QmlMeta.dll",
+    "Qt6QmlModels.dll",
+    "Qt6QmlWorkerScript.dll",
+    "Qt6Quick.dll",
+    "Qt6QuickWidgets.dll",
+    "Qt6SerialPort.dll",
+    "Qt6Svg.dll",
+    "Qt6WebChannel.dll",
+    "Qt6WebEngineCore.dll",
+    "Qt6WebEngineWidgets.dll",
+    "Qt6Widgets.dll"
+  ],
+  "reuseBasis": {
+    "changedPythonFromRc1": [
+      "yingxu/version.py"
+    ],
+    "unchangedFrontendFiles": 53,
+    "coreAndBridgeSourcesUnchanged": true
+  },
+  "binaryArtifact": {
+    "zipBytes": 163642594,
+    "zipSha256": "889a141fa8cd0ed08c1d4a10cdef1503ae93098c207efa10a0911fd2b58079d0",
+    "exeSha256": "42c5162b61cf36da3706330edf5d0f3abaf57377c9840f36d9141186bf8c8873",
+    "testedExecutableMatchesFinal": true
+  }
+}

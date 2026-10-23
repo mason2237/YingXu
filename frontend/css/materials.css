@@ -1,0 +1,24 @@
+/* Vapor is below the entire DOM/virtual list; file glyphs are never blurred. */
+.list-mist {position:absolute;pointer-events:none;z-index:0;display:block;}
+.list-pane[data-mist=webgl2] .list-scroll {z-index:1;background:transparent;}
+.list-pane[data-mist=webgl2] .file-row {background:transparent;}
+.list-pane[data-mist=webgl2] .file-row:hover {background:color-mix(in srgb,var(--surface-hover) 18%,transparent);}
+.list-pane[data-mist=webgl2] .file-row[aria-selected=true] {background:color-mix(in srgb,var(--blue-tint) 22%,transparent);}
+.list-pane[data-mist=webgl2] :is(.file-extension,.file-subtitle,.match-score) {color:#4f607a;}
+html[data-theme=dark] .list-pane[data-mist=webgl2] :is(.file-extension,.file-subtitle,.match-score) {color:#c0cbdb;}
+.list-heading,.list-caption {position:relative;z-index:2;}
+.list-caption {background:var(--surface);}
+.empty-state {z-index:3;}
+.liquid-actions-stage.lg-stage {background:transparent!important;color:var(--ink);isolation:isolate;overflow:visible;font:inherit;border-radius:0;}
+.liquid-actions-stage .lg-canvas {pointer-events:none;}
+.liquid-actions-stage .liquid-action {border:1px solid var(--glass-line);border-radius:9px;box-shadow:inset 0 1px 0 #ffffff66;color:var(--glass-ink);}
+.liquid-actions-stage.webgl-ready:not(.opaque) .liquid-action:enabled {background:transparent;box-shadow:inset 0 1px 0 #ffffff36;}
+.liquid-actions-stage.webgl-ready:not(.opaque) .liquid-action.primary:enabled {color:#ffffff;border-color:#adcaff80;}
+.liquid-actions-stage .liquid-action.primary:disabled,
+.liquid-actions-stage.fallback .liquid-action.primary,
+.liquid-actions-stage.opaque .liquid-action.primary {background:var(--blue)!important;color:var(--on-accent)!important;}
+.liquid-actions-stage .liquid-action.secondary:disabled,
+.liquid-actions-stage.fallback .liquid-action.secondary,
+.liquid-actions-stage.opaque .liquid-action.secondary {background:var(--surface-soft)!important;color:var(--secondary)!important;border-color:var(--control-line);}
+.liquid-actions-stage .liquid-action:focus-visible {outline-offset:3px;}
+html[data-theme=dark] .liquid-actions-stage .liquid-action {box-shadow:inset 0 1px 0 #c8ddff33;}

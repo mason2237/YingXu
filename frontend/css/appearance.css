@@ -1,0 +1,39 @@
+/* Semantic application tokens override vendor tokens, never edit original Lens. */
+:root {
+  --lg-color-text: var(--ink); --lg-color-muted: var(--muted); --lg-color-accent: var(--blue);
+  --lg-color-focus: var(--blue); --lg-color-page: var(--page); --lg-color-success: var(--success);
+  --lg-surface-solid: var(--surface-soft); --lg-surface-fallback: var(--glass-fallback);
+}
+html[data-theme=dark] .lg-stage {--lg-surface-shadow: inset 0 1px 0 #c5d9ff30, inset 1px 0 0 #c5d9ff14, 0 12px 24px -12px #0008;}
+.workspace-lens-stage, .filter-lens-stage {color: var(--ink);}
+.lg-stage.fallback .lg-surface {background: var(--glass-fallback);}
+/* Explicit source scenes retain their original light/dark presentation. */
+.comparison-stage, .gallery-stage, .dialog-stage {--lens-secondary: #496181; --glass-fallback: #f5f8fbd9; --lg-surface-solid: #eef2f8; --lg-color-text: #22252b; --lg-color-success: #236442;}
+.comparison-stage[data-scene=ocean], .gallery-stage[data-scene=ocean], .dialog-stage[data-scene=ocean] {--lens-secondary: #d4e5fc; --glass-fallback: #233e59eb; --lg-surface-solid: #263e59; --lg-color-text: #f2f7fc; --lg-color-success: #d8f6e5;}
+.comparison-stage .sample-panel > p, .comparison-stage .sample-actions span,
+.dialog-stage .sample-panel > p, .dialog-stage .sample-actions span {color: var(--lens-secondary);}
+.legacy-stage {color: #202837; --secondary: #526176; --surface: #ffffff; --focus-line: #a9bfee; --surface-hover: #f1f6ff;}
+.workspace-lens-stage .lg-surface {color: var(--ink);}
+html[data-theme=dark] :is(.workspace-lens-stage,.filter-lens-stage)[data-scene=ocean] {background: var(--glass-base); color: var(--ink);}
+.filter-lens-stage .status-filters button.selected {color: var(--blue); outline-color: var(--focus-line);}
+.theme-quick {display: inline-flex; align-items: center; gap: 6px; padding: 1px 7px 1px 10px; border: 1px solid var(--line); border-radius: 7px; flex-shrink: 0;}
+.theme-quick::before {content: ''; width: 13px; height: 13px; border: 1.4px solid var(--muted); border-radius: 50%; background: linear-gradient(90deg, var(--muted) 50%, transparent 50%);}
+.theme-quick select {max-width: 120px; min-height: 32px; border: 0; padding: 4px 2px; color: var(--secondary); font-size: 12px; background: transparent; cursor: pointer;}
+.theme-quick:focus-within {outline: 2px solid var(--blue); outline-offset: 2px;}
+.theme-quick select:focus-visible {outline: none;}
+.theme-setting {display: flex; align-items: center; justify-content: space-between; gap: 18px; border-top: 1px solid var(--line); padding: 15px 0;}
+.theme-setting strong {font-size: 14px; font-weight: 550; display: block;}
+.theme-setting small {display: block; color: var(--muted); margin-top: 4px; font-size: 12px;}
+.theme-setting select {border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; color: var(--ink); background: var(--surface-soft); font-size: 13px; max-width: 130px;}
+#appearance-dialog {overflow-y: auto; scrollbar-gutter: stable;}
+option {color: var(--ink); background: var(--surface);}
+input {accent-color: var(--blue);}
+* {scrollbar-width: thin; scrollbar-color: var(--scroll-thumb) transparent;}
+::selection {background: var(--selection); color: var(--ink);}
+.ov-vt::view-transition-old(root), .ov-vt::view-transition-new(root) {animation: none; mix-blend-mode: normal;}
+.ov-vt::view-transition-old(root) {z-index: 1;}
+.ov-vt::view-transition-new(root) {z-index: 2;}
+::view-transition-group(root) {animation-duration: 180ms;}
+::view-transition {pointer-events: none;}
+html[data-reduced=true] {scroll-behavior: auto;}
+@media(max-width:960px) {.chrome-actions {gap: 6px;}.chrome-actions .preview-badge {display: none;}.lab-chrome nav {display: none;}}

@@ -1,0 +1,18 @@
+Required Notice: Copyright 2026 YingXu project authors and contributors.
+
+The project's original code and project-owned assets are provided under the
+unmodified PolyForm Noncommercial License 1.0.0 in LICENSE. Commercial use of
+those original portions requires separate prior authorization from their
+copyright holders. Contact the repository maintainers through this project's
+GitHub Issues for authorization requests; no personal contact data is embedded.
+
+Existing author and third-party copyright notices remain with their files.
+No ownership of third-party software is claimed by the project contributors.
+Third-party components retain their own licenses as described in
+THIRD_PARTY_NOTICES.md and licenses/. The project's noncommercial restriction
+does not relicense or restrict rights granted for those independent components.
+
+Qt/PySide libraries remain dynamically linked and replaceable. No project
+restriction prohibits modification of the LGPL-covered library portions or
+reverse engineering needed to debug such library modifications. See the LGPL
+texts and the library replacement instructions in docs/DEPENDENCIES.md.

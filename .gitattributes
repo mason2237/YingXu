@@ -1,0 +1,6 @@
+# Keep audited upstream files byte-identical to their recorded Git blobs.
+frontend/vendor/design-systems/lens/** text eol=lf
+
+# Keep downloaded legal texts byte-identical, independent of core.autocrlf.
+LICENSE -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
+licenses/*.txt -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab

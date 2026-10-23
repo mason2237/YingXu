@@ -1,0 +1,188 @@
+{
+  "version": "0.8.0-rc.1",
+  "date": "2026-10-23",
+  "packagedStartup": {
+    "seconds": 1.327,
+    "conditions": "single launch, same machine, Windows-only child PATH; not a cold-start benchmark",
+    "visible": "visible",
+    "responding": true,
+    "processWorkingSetBytes": 393310208,
+    "processCount": 2,
+    "workingSetScope": "one snapshot, app plus enumerated descendants, not stable private memory",
+    "buttons": 40,
+    "glassButtons": 40,
+    "documentAssetReferences": 13,
+    "javascriptErrors": 0,
+    "nativeTitleVisibleToLauncher": false,
+    "installationPathCoverage": "Extracted final ZIP into Chinese, space, ampersand and apostrophe directory"
+  },
+  "dpiSimulation": [
+    {
+      "scaleFactor": "1",
+      "startupSeconds": 3.015,
+      "scanSeconds": 22.406,
+      "videoFiles": 1000,
+      "subtitleFiles": 1,
+      "screen": {
+        "availableWidth": 2560,
+        "availableHeight": 1392
+      },
+      "initial": {
+        "width": 1280,
+        "height": 860,
+        "dpr": 1,
+        "overflow": false,
+        "listHeight": 371.375,
+        "listBottom": 750,
+        "renderedRows": 12,
+        "rows": 1000,
+        "buttons": 44,
+        "glassButtons": 44,
+        "fixtureAPI": "undefined",
+        "heartbeat": 449
+      },
+      "minimum": {
+        "width": 900,
+        "height": 620,
+        "dpr": 1,
+        "overflow": false,
+        "listHeight": 145.375,
+        "listBottom": 510,
+        "renderedRows": 8,
+        "rows": 1000,
+        "buttons": 43,
+        "glassButtons": 43,
+        "fixtureAPI": "undefined",
+        "heartbeat": 475
+      },
+      "mediaUnchanged": true
+    },
+    {
+      "scaleFactor": "1.25",
+      "startupSeconds": 2.391,
+      "scanSeconds": 1.515,
+      "videoFiles": 12,
+      "subtitleFiles": 1,
+      "screen": {
+        "availableWidth": 2048,
+        "availableHeight": 1114
+      },
+      "initial": {
+        "width": 1280,
+        "height": 860,
+        "dpr": 1.25,
+        "overflow": false,
+        "listHeight": 372.3500061035156,
+        "listBottom": 750.2000122070312,
+        "renderedRows": 12,
+        "rows": 12,
+        "buttons": 44,
+        "glassButtons": 44,
+        "fixtureAPI": "undefined",
+        "heartbeat": 29
+      },
+      "minimum": {
+        "width": 900,
+        "height": 620,
+        "dpr": 1.25,
+        "overflow": false,
+        "listHeight": 146.35000610351562,
+        "listBottom": 510.20001220703125,
+        "renderedRows": 8,
+        "rows": 12,
+        "buttons": 43,
+        "glassButtons": 43,
+        "fixtureAPI": "undefined",
+        "heartbeat": 55
+      },
+      "mediaUnchanged": true
+    },
+    {
+      "scaleFactor": "1.5",
+      "startupSeconds": 2.344,
+      "scanSeconds": 1.938,
+      "videoFiles": 12,
+      "subtitleFiles": 1,
+      "screen": {
+        "availableWidth": 1707,
+        "availableHeight": 928
+      },
+      "initial": {
+        "width": 1280,
+        "height": 860,
+        "dpr": 1.5,
+        "overflow": false,
+        "listHeight": 372.72918701171875,
+        "listBottom": 750.3333740234375,
+        "renderedRows": 12,
+        "rows": 12,
+        "buttons": 44,
+        "glassButtons": 44,
+        "fixtureAPI": "undefined",
+        "heartbeat": 40
+      },
+      "minimum": {
+        "width": 900,
+        "height": 620,
+        "dpr": 1.5,
+        "overflow": false,
+        "listHeight": 146.7291717529297,
+        "listBottom": 510.33335876464844,
+        "renderedRows": 8,
+        "rows": 12,
+        "buttons": 43,
+        "glassButtons": 43,
+        "fixtureAPI": "undefined",
+        "heartbeat": 64
+      },
+      "mediaUnchanged": true
+    },
+    {
+      "scaleFactor": "2",
+      "startupSeconds": 2.265,
+      "scanSeconds": 1.235,
+      "videoFiles": 12,
+      "subtitleFiles": 1,
+      "screen": {
+        "availableWidth": 1280,
+        "availableHeight": 696
+      },
+      "initial": {
+        "width": 1248,
+        "height": 632,
+        "dpr": 2,
+        "overflow": false,
+        "listHeight": 143.359375,
+        "listBottom": 522,
+        "renderedRows": 9,
+        "rows": 12,
+        "buttons": 44,
+        "glassButtons": 44,
+        "fixtureAPI": "undefined",
+        "heartbeat": 25
+      },
+      "minimum": {
+        "width": 900,
+        "height": 620,
+        "dpr": 2,
+        "overflow": false,
+        "listHeight": 145.359375,
+        "listBottom": 510,
+        "renderedRows": 5,
+        "rows": 12,
+        "buttons": 43,
+        "glassButtons": 43,
+        "fixtureAPI": "undefined",
+        "heartbeat": 51
+      },
+      "mediaUnchanged": true
+    }
+  ],
+  "artifacts": {
+    "exeBytes": 1788939,
+    "exeSha256": "c1cc526901f3ec38e8e9afe9b2d862a75075667b6eb57a7bb218f217b5b3c14d",
+    "zipBytes": 204306734,
+    "zipSha256": "753175c29e94208c6382c95fb6d85bbd2969002b55a6d24aeb0f1ebaec3881f5",
+    "unpackedBytes": 510971087
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "repository": "ruiqichenbiec/design-systems",
+  "commit": "7a424c93b9be13cf835b91ea67495fec2ec0584e",
+  "license": "MIT; ../LICENSE",
+  "files": [
+    {
+      "upstream": "lens/lab/design-system/components.js",
+      "local": "components.js",
+      "gitBlob": "f54077a834217825374baeba3510947f89416653",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/component-patterns.js",
+      "local": "component-patterns.js",
+      "gitBlob": "e19df605f2b990131b39da275fed4a30c4fdee54",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/optical-components.js",
+      "local": "optical-components.js",
+      "gitBlob": "209213b9a8f25aa99d99d46637d9f6cefb179b17",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/card-list.js",
+      "local": "card-list.js",
+      "gitBlob": "fb89b72a5098714b8db79190da98120e89ce1d35",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/tokens.css",
+      "local": "tokens.css",
+      "gitBlob": "cbce5c041c08b1dca3e43b76ba5d3c84eca9ec03",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/component-catalog.js",
+      "local": "component-catalog.js",
+      "gitBlob": "9fc78506d73a5b65741fe2a0c6acb68a24f2583c",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/internal/lens-surface.js",
+      "local": "internal/lens-surface.js",
+      "gitBlob": "bfd3465aa55ab4d34d0c8b61e50b9c57db43e2b1",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/internal/context-budget.js",
+      "local": "internal/context-budget.js",
+      "gitBlob": "46de04aa6e2ca2881541362ed2b4b49541739bde",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/internal/optics.js",
+      "local": "internal/optics.js",
+      "gitBlob": "8809cd25b88415682fb1cf5d8314638e4e88d045",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/internal/optical-motion.js",
+      "local": "internal/optical-motion.js",
+      "gitBlob": "3d37dd5bddaf0778e58f66cc6fd49f97edf6cb92",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/internal/jelly.js",
+      "local": "internal/jelly.js",
+      "gitBlob": "0fe9d73e808ef7ad108c6c5e0a45415b8b3e5ceb",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/internal/jelly-physics.js",
+      "local": "internal/jelly-physics.js",
+      "gitBlob": "8c598685d2aa563fbf653122f7aaa7f9b5496443",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/sound.js",
+      "local": "sound.js",
+      "gitBlob": "4356bdd2a52fbffd14fc2344b8269ce1aa2d722d",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/components.css",
+      "local": "components.css",
+      "gitBlob": "cbb9f43ba16e711a2b2b8d342c51e0f0363f3190",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/runtime.js",
+      "local": "runtime.js",
+      "gitBlob": "8fedb7b7bca9aa7892ff4607897aafed1914ac30",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/tokens.js",
+      "local": "tokens.js",
+      "gitBlob": "c965438d5aa6d2f923b384c0cf2377109f292fd9",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/internal/renderer.js",
+      "local": "internal/renderer.js",
+      "gitBlob": "d18e22dfbb1eecfd04fb47bb4ad09d52d30ceb4f",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/index.js",
+      "local": "index.js",
+      "gitBlob": "1eff206ca13b25ca405aa26d2e124d9a7b1bd53e",
+      "mode": "unchanged"
+    },
+    {
+      "upstream": "lens/lab/design-system/focus.js",
+      "local": "focus.js",
+      "gitBlob": "95cb6d36463de100b08731bc9f2763e41db6c690",
+      "mode": "unchanged"
+    }
+  ]
+}

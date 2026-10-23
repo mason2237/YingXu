@@ -6,7 +6,7 @@
 
 ## 下载与运行
 
-在本仓库的 **Releases** 页面下载 `YingXu-0.8.0-rc.2-windows-x64.zip`，完整解压后运行 `YingXu/YingXu.exe`。请保留旁边的 `_internal` 文件夹，不能只复制 EXE。
+在 [Releases 页面](https://github.com/mason2237/YingXu/releases/tag/v0.8.0-rc.2)下载 [Windows x64 运行包](https://github.com/mason2237/YingXu/releases/download/v0.8.0-rc.2/YingXu-0.8.0-rc.2-windows-x64.zip)，完整解压后运行 `YingXu/YingXu.exe`。请保留旁边的 `_internal` 文件夹，不能只复制 EXE。
 
 - 运行包自带 Python/Qt 所需组件，不需要另装 Python、Node 或浏览器，也不依赖开发服务器。
 - 当前 Windows 11 x64 环境已完成启动和核心流程验证。**未进行干净 Windows 系统测试**；其他设备的显示效果和兼容性可能不同。程序未签名。

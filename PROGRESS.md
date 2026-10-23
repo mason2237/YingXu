@@ -4,7 +4,7 @@
 
 ## 当前阶段及授权
 
-- 最新授权：准备 GitHub 公开源码与 Releases 基本发布物；取消干净 Windows 验收门槛，控制许可/测试范围。原创部分按用户明确选择采用官方原文 PolyForm Noncommercial 1.0.0，非商业使用，商业用途需单独授权。保留“余量不足先保存停止”和“少检查、少电脑控制”的约定。
+- 最新授权：用户明确要求发布，并确认公开仓库 `mason2237/YingXu`，已完成设备登录授权；阶段 8d 已公开源码和 `v0.8.0-rc.2` 预发布版。取消干净 Windows 验收门槛，控制许可/测试范围。原创部分按用户明确选择采用官方原文 PolyForm Noncommercial 1.0.0，非商业使用，商业用途需单独授权。保留“余量不足先保存停止”和“少检查、少电脑控制”的约定。
 - 主计划 `docs/DESIGN_PLAN.md`；接口约定 `docs/WEB_UI_MIGRATION.md`；本轮记录 `docs/STAGE8C_PUBLICATION.md`；公开步骤 `docs/PUBLISHING.md`。全部历史测试/阶段记录与 Git 提交保留。
 - 阶段 4：变更预览、确认执行、结果和本地记录已实现；验证见 `docs/STAGE4_VERIFICATION.md`，代码恢复点 `d3db0fe` / `stage4-complete`。
 - 阶段 3：匹配与审阅功能已完成；记录见 `docs/STAGE3_VERIFICATION.md`。
@@ -13,7 +13,16 @@
 - 阶段 5：独立 Web 宿主、本地资源、双向通信、核心只读样本、验证和技术试包已完成；完整用户整理仍可使用第四阶段 Qt 工作台。
 - 阶段 6：本地 Web 工作台、虚拟列表、候选/预览/记录、受控玻璃/粒子、可交互测试适配器已完成。只使用显式示例入口；真实文件接入和最终打包尚未实施。
 
-## 8c：GitHub 基本发布准备（本轮）
+## 8d：GitHub 公开发布（当前完成）
+
+- 公开仓库：[mason2237/YingXu](https://github.com/mason2237/YingXu)；预发布版：[v0.8.0-rc.2](https://github.com/mason2237/YingXu/releases/tag/v0.8.0-rc.2)，2026-10-23 发布。三个资产为 Windows 完整运行包、对应源码 ZIP 和 SHA256SUMS。
+- 从 8c 的干净源码 ZIP 建立独立仓库，初始公开提交 `71005b2245b3eb5d3ae1c6e50ef947d9db8e6b98`，对应原本地快照 `c3ea9a73eb569fd30eb87b5651fa14b6c4251767`；Release 标签固定在该初始提交。原仓库完整历史留在本地，未推送旧路径历史。
+- 使用无登录凭据的公开请求确认仓库/Release 可见、`draft=false` / `prerelease=true`、标签提交正确、LICENSE 字节相同；GitHub 返回的两个 ZIP 及校验文件 SHA256 均匹配本地。未重新构建或改变应用代码，未重复既有应用测试，也未进行干净 Windows 系统测试。
+- README 增加真实下载入口；发布结果见 `docs/STAGE8D_GITHUB_RELEASE.md`、`docs/evidence/stage8d_github_publication.json`。8c 的测试、输出 ZIP、旧提交及恢复标签完整保留。发布资产不因本次文档更新重新打包，校验值保持不变。
+- 本地恢复提交消息 `docs: record public GitHub release`，标签 `stage8d-published`；公开仓库另追加发布链接和记录的文档提交，不移动 Release 标签。发布辅助脚本/状态只在被忽略的 `work/public-release/`，不包含明文凭据；认证由系统 Git Credential Manager 保存。
+- 当前交付已完成。后续按用户新需求修改功能；维护公开仓库时从其 `main` 继续，勿将原开发仓库历史合并/推送过去。未实现撤销、EXE 未签名及非干净系统验证的边界不变。
+
+## 8c：GitHub 基本发布准备（历史完成记录）
 
 - 原创部分采用官方 PolyForm Noncommercial 1.0.0，根 LICENSE 不改条款，与官方文本 SHA256 相同。NOTICE 使用项目作者/贡献者的通用署名，不把提交工具名冒充版权人；第三方原有署名保持。
 - 更新 README、运行包说明、依赖与 LGPL 库替换说明、Release 文案。明确当前 Windows 已验证、没有做干净系统测试；该项不阻塞本轮，也不继续追加跨屏/万级性能/签名要求。
@@ -316,7 +325,7 @@ $YingXuPython = (Get-Command python).Source
 多 DPI、跨显示器与干净 Windows 环境尚未验证；当前测试覆盖本机实际窗口和两种窗口尺寸。
 旧版 UI 的限制仍存在于 legacy 入口，不应将新版布局验证理解为旧界面已修复。
 
-## 下次继续
+## 第五阶段结束时的交接（历史记录）
 
 1. 先读本文件、`docs/DESIGN_PLAN.md` 和 `docs/WEB_UI_MIGRATION.md`，核对 Git 状态；无需重新全量审查前四阶段或参考仓库。
 2. 等待用户验收阶段 5 并明确确认阶段 6；随后完成现代 Web 工作台、局部玻璃/粒子及结构化数据交互，不提前接入用户文件执行。
@@ -326,4 +335,4 @@ $YingXuPython = (Get-Command python).Source
 6. 若未来实现安全撤销，先增加执行后文件身份记录，再验证目标被替换、原路径占用和部分失败，不直接倒序重命名。
 7. 每阶段保存、验证、更新 PROGRESS 并提交，汇报后暂停。
 
-当前停在第五阶段验收点，**尚未进入第六阶段**。
+上述交接对应第五阶段完成时点。当前进度以文件顶部的阶段 8d 发布记录为准。

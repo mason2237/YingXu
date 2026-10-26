@@ -2,7 +2,7 @@
   "date": "2026-10-26",
   "stage": "20C",
   "version": "0.10.0-rc.1",
-  "status": "local_candidate_verified_publication_pending",
+  "status": "published",
   "buildSourceCommit": "4058f32f481f519f74376a165e845c8956da2ffd",
   "unitTestsPassed": 13,
   "checks": {
@@ -62,5 +62,78 @@
   "screenshots": {
     "workspace": "Real packaged window using synthetic media, displayed path anonymized before capture.",
     "online": "PrintWindow capture bound to the helper HWND/PID; desktop-region capture discarded."
+  },
+  "publication": {
+    "repository": "mason2237/YingXu",
+    "tag": "v0.10.0-rc.1",
+    "publicSourceCommit": "01abf23911e80c142395617c073a44edda30df1e",
+    "url": "https://github.com/mason2237/YingXu/releases/tag/v0.10.0-rc.1",
+    "draft": false,
+    "prerelease": true,
+    "publishedAt": "2026-10-26T04:19:39Z",
+    "assets": [
+      {
+        "name": "SHA256SUMS.txt",
+        "size": 199,
+        "digest": "sha256:8e8c0d017628a4011d9e939a4822a4954c0bfd8bf5fa088466f67376f64e305a",
+        "state": "uploaded",
+        "browser_download_url": "https://github.com/mason2237/YingXu/releases/download/v0.10.0-rc.1/SHA256SUMS.txt"
+      },
+      {
+        "name": "YingXu-0.10.0-rc.1-source.zip",
+        "size": 13457411,
+        "digest": "sha256:e7952a85e6c1cf0e361a752d678d1a89581f49dee51064a28db073fc06aaa396",
+        "state": "uploaded",
+        "browser_download_url": "https://github.com/mason2237/YingXu/releases/download/v0.10.0-rc.1/YingXu-0.10.0-rc.1-source.zip"
+      },
+      {
+        "name": "YingXu-0.10.0-rc.1-windows-x64.zip",
+        "size": 334158346,
+        "digest": "sha256:635714efe901f67e8287d34372115546fba18ef67809273c6b10049da2d313b2",
+        "state": "uploaded",
+        "browser_download_url": "https://github.com/mason2237/YingXu/releases/download/v0.10.0-rc.1/YingXu-0.10.0-rc.1-windows-x64.zip"
+      }
+    ]
+  },
+  "publicVerification": {
+    "passed": true,
+    "checks": {
+      "releasePage": {
+        "status": 200,
+        "anonymous": true
+      },
+      "repositoryReadme": {
+        "status": 200,
+        "anonymous": true
+      },
+      "tagLicense": {
+        "status": 200,
+        "anonymous": true,
+        "sha256": "ffcca38841adb694b6f380647e15f17c446a4d1656fed51a1e2041d064c94cc8"
+      },
+      "SHA256SUMS.txt": {
+        "status": 200,
+        "anonymous": true,
+        "bytes": 199
+      },
+      "YingXu-0.10.0-rc.1-source.zip": {
+        "status": 200,
+        "anonymous": true,
+        "bytes": 13457411
+      },
+      "YingXu-0.10.0-rc.1-windows-x64.zip": {
+        "status": 200,
+        "anonymous": true,
+        "bytes": 334158346
+      }
+    },
+    "largeAssetsRedownloaded": false
+  },
+  "localSourceSnapshot": "de3385b9d4065fd091b1df7752d67a2a0014ed51",
+  "publicVersionTagCommit": "01abf23911e80c142395617c073a44edda30df1e",
+  "runtimeSourceExport": {
+    "filesVerified": 103,
+    "onlyLfCrLfDifferences": 71,
+    "codeDifferences": 0
   }
 }

@@ -1,5 +1,7 @@
 # 产品级 UI/UX 重构约定
 
+2026-10-26 阶段 20C 已按用户明确授权完成并发布 [0.10.0-rc.1](https://github.com/mason2237/YingXu/releases/tag/v0.10.0-rc.1)。独立 EXE/本机核心流程、冻结助手、许可、公开内容与资产摘要核对通过；详细功能/更新及验证边界已写入 README/Release。保留 rc.12，未做干净系统测试；当前任务完成，见 `STAGE20C_RELEASE.md`。下方各次等待授权是历史记录。
+
 2026-10-26 续接：独立 Windows PresentMon 补验通过，增强/简化各 3×30 秒实际呈现均达门槛，见 `STAGE20A_ELECTRON.md` 与 `evidence/stage20a-presentation.json`。不改系统设置、不提权应用。用户已条件授权 A 全通过后接续 B，本轮先提交 A 验证再迁移完整功能，C 打包/发布仍等待确认；下方“另行确认 B”为此前约定，以本条更新。
 
 ## 2026-10-26：渲染架构对比（用户已确认 A/B/C）

@@ -11,7 +11,8 @@
 ## 当前发布结果
 
 - 公开源码：[mason2237/YingXu](https://github.com/mason2237/YingXu)。
-- 预发布版：[v0.8.0-rc.2](https://github.com/mason2237/YingXu/releases/tag/v0.8.0-rc.2)，含 Windows x64 ZIP、对应源码 ZIP 和 SHA256SUMS。
+- 当前预发布版：[v0.10.0-rc.1](https://github.com/mason2237/YingXu/releases/tag/v0.10.0-rc.1)，含 Electron Windows x64 ZIP、对应源码 ZIP 和 SHA256SUMS。源码标签 `01abf23911e80c142395617c073a44edda30df1e`，资产/匿名核对见 [阶段 C](STAGE20C_RELEASE.md)。
+- [v0.8.0-rc.2](https://github.com/mason2237/YingXu/releases/tag/v0.8.0-rc.2) 保留为首次公开发行历史，不移动旧标签或覆盖旧资产。
 - 资产上传后核对 GitHub SHA256，并以匿名请求验证公开可见、标签提交与 LICENSE；详见 [发布记录](STAGE8D_GITHUB_RELEASE.md)。
 - 发布采用独立干净历史，原开发仓库未配置公开远程。后续从公开仓库 `main` 维护或同步选定源文件；不要推送原开发仓库的旧分支/标签。发布标签保持对应应用源码提交，后续文档提交不改已发布 ZIP。
 

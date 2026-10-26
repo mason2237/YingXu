@@ -34,21 +34,30 @@ class ReviewRow:
     video: Path
     matches: list[ReviewMatch] = field(default_factory=list)
     skipped: bool = False
+    embedded: dict = field(default_factory=dict)
+    embedded_ignored: bool = False
+
+    @property
+    def uses_embedded(self):
+        return bool(self.embedded.get("satisfied") and not self.embedded_ignored and not self.matches)
 
 
 class ReviewPlan:
     def __init__(self, videos: list[Path], subtitles: list[Path], move: bool = False,
-                 *, should_stop=None, progress=None):
+                 *, should_stop=None, progress=None, embedded=None):
         self.videos = tuple(videos)
         self.subtitles = tuple(subtitles)
         self.move = move
-        self.rows = [ReviewRow(video) for video in videos]
+        # Only explicitly imported cache files use the video directory when move=False.
+        self.imported = {}
+        self.rows = [ReviewRow(video, embedded=(embedded or {}).get(path_key(video), {})) for video in videos]
         self._seed(should_stop, progress)
         self._replan(should_stop)
 
     def _seed(self, should_stop=None, progress=None):
         report = (lambda done, total: progress(done, total, "matching")) if progress else None
-        for row, item in zip(self.rows, build_plan(list(self.videos), list(self.subtitles), self.move,
+        eligible = [row for row in self.rows if not row.uses_embedded]
+        for row, item in zip(eligible, build_plan([row.video for row in eligible], list(self.subtitles), self.move,
                                                  should_stop=should_stop, progress=report)):
             if item["subtitle"]:
                 row.matches.append(ReviewMatch(item["subtitle"], score=item["score"]))
@@ -85,11 +94,34 @@ class ReviewPlan:
             check_cancelled(should_stop)
             for match in row.matches:
                 self._owners[path_key(match.source)] = index
-                match.target = destination_for(row.video, match.source, reserved, self.move)
+                match.target = destination_for(row.video, match.source, reserved,
+                                               self.move or path_key(match.source) in self.imported)
                 reserved.add(path_key(match.target))
 
     def owner(self, subtitle: Path) -> int | None:
         return self._owners.get(path_key(subtitle))
+
+    def add_imports(self, entries):
+        """Register prepared files; only an unambiguous empty row gets a pending match."""
+        grouped = {}
+        new_paths = []
+        known = {path_key(sub) for sub in self.subtitles}
+        for path, metadata in entries:
+            if path_key(path) in known:
+                raise ValueError("这份字幕已经导入。")
+            known.add(path_key(path))
+            self.imported[path_key(path)] = metadata
+            new_paths.append(path)
+            grouped.setdefault(metadata["rowIndex"], []).append(path)
+        self.subtitles += tuple(new_paths)
+        assigned = 0
+        for index, paths in grouped.items():
+            row = self.rows[index]
+            if len(paths) == 1 and not row.matches and not row.skipped and not row.uses_embedded:
+                row.matches.append(ReviewMatch(paths[0], score=similarity(row.video, paths[0]), manual=True))
+                assigned += 1
+        self._replan()
+        return assigned
 
     def candidates(self, index: int):
         row = self.rows[index]
@@ -113,6 +145,8 @@ class ReviewPlan:
         if replace is not None:
             row.matches = [match for match in row.matches if match.source != replace]
         row.matches.append(ReviewMatch(subtitle, score=similarity(row.video, subtitle), manual=True))
+        if row.embedded.get("satisfied"):
+            row.embedded_ignored = True
         row.skipped = False
         self._replan()
 
@@ -132,10 +166,22 @@ class ReviewPlan:
     def skip(self, index: int, value: bool = True):
         self.rows[index].skipped = value
 
+    def use_embedded(self, index: int, use: bool):
+        row = self.rows[index]
+        if not row.embedded.get("satisfied"):
+            raise ValueError("当前内嵌字幕语言尚未符合要求，请先核对语言设置并重新扫描。")
+        row.embedded_ignored = not use
+        if use:
+            row.matches.clear()
+        row.skipped = False
+        self._replan()
+
     def state(self, index: int) -> str:
         row = self.rows[index]
         if row.skipped:
             return "已跳过"
+        if row.uses_embedded:
+            return "已符合"
         if not row.matches:
             return "未匹配"
         if any(not match.confirmed and (match.manual or match.score < AUTO_APPLY_THRESHOLD)

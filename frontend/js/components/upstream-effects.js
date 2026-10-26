@@ -5,12 +5,15 @@ import {appearance} from '../appearance.js';
 import {LiquidActions, ModalLiquidActions} from './liquid-actions.js';
 import {GlassControls} from './glass-controls.js';
 import {ListMist} from './list-mist.js';
+import {desktopHost, isDesktopHost} from '../channel.js';
 
 const TOOLBAR_MATERIAL = Object.freeze({refraction: .48, blur: .08, dispersion: .12});
 const TOOLBAR_STANDARD = Object.freeze({refraction: .32, blur: .10, dispersion: .06});
+const materialKey = state => [state.resolvedTheme,state.glassEnabled,state.particlesEnabled,state.reducedMotion,state.strength,state.mistEnabled].join('|');
 
 export class Effects {
   constructor(host, canvas) {
+    this.appearanceKey = materialKey(appearance.state);
     Object.assign(this, {glassEnabled: appearance.state.glassEnabled, particlesEnabled: appearance.state.particlesEnabled,
       manualReduced: appearance.state.reducedMotion, strength: appearance.state.strength, mistEnabled: appearance.state.mistEnabled});
     this.motion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -47,6 +50,9 @@ export class Effects {
     this.motion.addEventListener('change', () => this.configure(), {signal: this.abort.signal});
     appearance.addEventListener('change', () => {
       const state = appearance.state;
+      const key = materialKey(state);
+      if (key === this.appearanceKey) {this.onChange?.();return;}
+      this.appearanceKey = key;
       Object.assign(this, {glassEnabled: state.glassEnabled, particlesEnabled: state.particlesEnabled,
         manualReduced: state.reducedMotion, strength: state.strength, mistEnabled: state.mistEnabled});
       this.allRuntimes.forEach(runtime => runtime.setTheme(state.resolvedTheme));
@@ -55,11 +61,32 @@ export class Effects {
     document.addEventListener('visibilitychange', () => {if (document.hidden) this.particles.stop();}, {signal: this.abort.signal});
     window.addEventListener('pagehide', () => this.destroy(), {once: true, signal: this.abort.signal});
     this.configure();
+    desktopHost().then(host => {
+      if (this.abort.signal.aborted) return;
+      this.setOverlayActive = host.setOverlayActive;
+      this.updateSuspension();
+    }).catch(()=>{});
   }
   get reduced() {return this.motion.matches || this.manualReduced;}
   get allRuntimes() {return [...this.runtimes,...this.actions.map(action => action.runtime),this.modalActions?.runtime,this.progressRuntime].filter(Boolean);}
-  updateSuspension() {this.mist.suspended = this.taskBusy || Boolean(document.querySelector('dialog[open]'));if (this.mist.suspended) {this.mist.stop();this.particles.stop();}else this.mist.wake(450);}
-  setTaskBusy(value) {this.taskBusy = value;this.updateSuspension();}
+  updateSuspension() {
+    const overlay = Boolean(document.querySelector('dialog[open]'));
+    const native = isDesktopHost();
+    if (overlay) {clearTimeout(this.resumeTimer);this.overlaySettling = false;}
+    else if (native && this.hadOverlay) {
+      this.overlaySettling = true;
+      clearTimeout(this.resumeTimer);
+      this.resumeTimer = setTimeout(()=>{this.overlaySettling=false;this.updateSuspension();},120);
+    }
+    this.hadOverlay = overlay;
+    const held = overlay || Boolean(this.overlaySettling);
+    this.setOverlayActive?.(held);
+    [...this.runtimes,...this.actions.map(action=>action.runtime),this.progressRuntime].filter(Boolean)
+      .forEach(runtime=>runtime.setOccluded(native && held));
+    this.mist.suspended = this.taskBusy || held;
+    if (this.mist.suspended) {this.mist.stop();this.particles.stop();}else this.mist.wake(450);
+  }
+  setTaskBusy(value) {if (this.taskBusy === value) return;this.taskBusy = value;this.updateSuspension();}
   syncFilter(status) {
     if (status !== this.activeFilter) {this.activeFilter = status; this.choice.setValue(status);}
   }
@@ -91,5 +118,5 @@ export class Effects {
       actions: this.actions.map(action => action.stats()),buttons:this.buttons.stats(),dialog:this.modalActions.actions?.stats() || null,mist: this.mist.stats(),
     };
   }
-  destroy() {this.particles.stop();this.buttons.destroy();this.modalActions.destroy();this.progressRuntime?.destroy(); this.choice.destroy(); this.runtimes.forEach(runtime => runtime.destroy()); this.actions.forEach(action => action.destroy()); this.mist.destroy(); this.abort.abort();}
+  destroy() {clearTimeout(this.resumeTimer);this.particles.stop();this.buttons.destroy();this.modalActions.destroy();this.progressRuntime?.destroy(); this.choice.destroy(); this.runtimes.forEach(runtime => runtime.destroy()); this.actions.forEach(action => action.destroy()); this.mist.destroy(); this.abort.abort();}
 }

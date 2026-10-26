@@ -40,7 +40,7 @@ class AppearanceTests(unittest.TestCase):
         self.assertEqual(methods, {'changed(QString)', 'getState()', 'update(QString)'})
 
     def test_all_preferences_survive_new_controller(self):
-        values = dict(theme='dark', glassEnabled=False, strength='standard', particlesEnabled=False, reducedMotion=True, mistEnabled=False)
+        values = dict(theme='dark', glassEnabled=False, strength='standard', particlesEnabled=False, reducedMotion=True, mistEnabled=False, lighting='soft', nativeHdr=False)
         self.assertTrue(self.update(values)['ok'])
         restored = AppearanceBridge(self.hints, settings=self.settings)
         self.assertEqual(restored.preferences, values)
@@ -49,7 +49,7 @@ class AppearanceTests(unittest.TestCase):
 
     def test_invalid_updates_are_atomic_and_never_add_capabilities(self):
         patches = [[], {}, None, {'path': 'C:/secret'}, {'theme': 'dark', 'file.write': True},
-                   {'theme': '<script>'}, {'theme': []}, {'strength': 'max'}, {'glassEnabled': 1}, {'reducedMotion': 'false'}, {'mistEnabled': 1}]
+                   {'theme': '<script>'}, {'theme': []}, {'strength': 'max'}, {'glassEnabled': 1}, {'reducedMotion': 'false'}, {'mistEnabled': 1}, {'lighting': True}, {'lighting': 'native-hdr'}, {'lighting': []}]
         for patch in patches:
             with self.subTest(patch=patch):
                 self.assertFalse(self.update(patch)['ok'])
@@ -69,6 +69,16 @@ class AppearanceTests(unittest.TestCase):
         self.update({'theme': 'dark'})
         self.update({'theme': 'dark'})
         self.assertEqual(len(self.events), 1)
+
+    def test_older_preferences_gain_lighting_without_changing_existing_values(self):
+        previous = {key: value for key, value in DEFAULTS.items() if key != 'lighting'}
+        previous['theme'] = 'dark'
+        self.settings.setValue(SETTINGS_KEY, json.dumps(previous))
+        restored = AppearanceBridge(self.hints, settings=self.settings)
+        self.assertEqual(restored.preferences, {**previous, 'lighting': 'enhanced'})
+        for mode in ('off', 'soft', 'enhanced'):
+            self.assertTrue(self.update({'lighting': mode})['ok'])
+        self.assertIn('root.dataset.lighting = state.lighting', bootstrap_source(restored.state()))
 
     def test_failed_save_reports_error_and_keeps_previous_state(self):
         class FailingSettings:

@@ -1,4 +1,0 @@
-# Dedicated offline Web workspace/build environment; prebuilt wheels only.
-PySide6==6.12.0
-PyInstaller==6.17.0
-pyinstaller-hooks-contrib==2026.8

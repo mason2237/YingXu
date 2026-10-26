@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-26",
+  "stage": "20B",
+  "status": "complete_waiting_for_C_approval",
+  "stageAGateCommit": "06fa7c7",
+  "electron": "45.0.0",
+  "mainWindow": "Electron BrowserWindow; shared local frontend; restricted IPC",
+  "python": "QCoreApplication and original WorkspaceBridge/WorkspaceService/QThread",
+  "onlineWindow": "Separate Qt SubtitleBrowser process; no remote QWebChannel or Electron business IPC",
+  "settingsMigration": false,
+  "formalQtEntryRetained": true,
+  "rc12Retained": true,
+  "newThirdPartyDependencies": false,
+  "unitTests": {
+    "newFullHost": 7,
+    "previewRegression": 6,
+    "totalPassed": 13
+  },
+  "integration": {
+    "electronGui": {
+      "passed": true,
+      "checks": [
+        "full_host_real_scan_and_enabled_capabilities",
+        "skip_restore_candidates_manual_assignment_and_confirmation",
+        "readonly_preview_reload_new_consent_execute_once_and_history_two_success",
+        "separate_native_online_window_opened_for_unmatched_queue_without_search",
+        "normal_shutdown_waits_for_python_and_online_helper"
+      ],
+      "errors": [],
+      "networkSearchRequested": false
+    },
+    "onlineHandoff": {
+      "passed": true,
+      "networkRequested": false,
+      "checks": [
+        "native_queue_title_only_query_remote_has_no_channel_file_access_or_upload",
+        "async_registration_checked_auto_unzip_real_import_pending_review_media_unchanged",
+        "return_to_electron_fixed_history_action"
+      ]
+    },
+    "dropAndFailure": {
+      "passed": true,
+      "checks": [
+        "native_directory_drop_uses_real_File_path_and_scans_without_modification",
+        "backend_exit_disables_actions_clear_message_no_automatic_restart_or_media_change"
+      ]
+    },
+    "windowlessPythonGui": {
+      "passed": true,
+      "checks": [
+        "full_host_real_scan_and_enabled_capabilities",
+        "skip_restore_candidates_manual_assignment_and_confirmation",
+        "readonly_preview_reload_new_consent_execute_once_and_history_two_success",
+        "separate_native_online_window_opened_for_unmatched_queue_without_search",
+        "normal_shutdown_waits_for_python_and_online_helper"
+      ],
+      "errors": [],
+      "networkSearchRequested": false,
+      "pythonRuntime": "pythonw.exe"
+    }
+  },
+  "businessAlgorithmsRewritten": false,
+  "filesModifiedBeforeExplicitConsent": false,
+  "osPreferencesChanged": false,
+  "networkWebsiteRetested": false,
+  "exeBuilt": false,
+  "githubPushed": false,
+  "limitations": [
+    "Online UI remains a separate Qt process and retains its startup/memory/package cost.",
+    "Actual website/captcha/download availability was not rechecked; local synthetic ZIP handoff was verified.",
+    "No new EXE, clean-Windows test or repeat of the full performance/settings suite.",
+    "Native save-dialog presentation was not driven by the GUI probe; real exclusive export was verified through the Host native callback."
+  ],
+  "next": [
+    "Wait for stage C approval.",
+    "Freeze and dispatch Python backend, subtitle helper and MediaInfo helper entrypoints.",
+    "Package Electron plus required Python/Qt resources; use application data directories.",
+    "Verify standalone EXE on current Windows only; preserve rc.12; do not publish automatically."
+  ]
+}

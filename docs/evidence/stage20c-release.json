@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-26",
+  "stage": "20C",
+  "version": "0.10.0-rc.1",
+  "status": "local_candidate_verified_publication_pending",
+  "buildSourceCommit": "4058f32f481f519f74376a165e845c8956da2ffd",
+  "unitTestsPassed": 13,
+  "checks": {
+    "packagedGui": {
+      "passed": true,
+      "checks": [
+        "full_host_real_scan_and_enabled_capabilities",
+        "skip_restore_candidates_manual_assignment_and_confirmation",
+        "readonly_preview_reload_new_consent_execute_once_and_history_two_success",
+        "separate_native_online_window_opened_for_unmatched_queue_without_search",
+        "normal_shutdown_waits_for_python_and_online_helper"
+      ],
+      "errors": [],
+      "networkSearchRequested": false,
+      "pythonRuntime": "frozen",
+      "packaged": true,
+      "developerPathsRemoved": true
+    },
+    "defaultDataAndFailure": {
+      "passed": true,
+      "checks": [
+        "default_user_data_directory_and_theme_persistence_without_profile_override",
+        "native_directory_drop_uses_real_File_path_and_scans_without_modification",
+        "backend_exit_disables_actions_clear_message_no_automatic_restart_or_media_change"
+      ],
+      "packaged": true,
+      "developerPathsRemoved": true
+    },
+    "frozenMediaReader": {
+      "passed": true,
+      "checks": [
+        "actual_windowed_exe_inherited_pipes_and_bundled_dll_without_developer_PATH",
+        "actual_mkv_mp4_languages_unknown_and_separate_dual_tracks",
+        "no_extraction_no_video_changes_no_new_media_files"
+      ],
+      "physicalFramesVerified": false,
+      "replies": 4,
+      "stderrEmpty": true
+    }
+  },
+  "profile": "%LOCALAPPDATA%/YingXu/Electron",
+  "cleanWindowsTested": false,
+  "signed": false,
+  "websiteDownloadRetested": false,
+  "extraPerformanceSuiteRepeated": false,
+  "osHdrOrPermissionsChanged": false,
+  "rc12Retained": true,
+  "thirdPartyLicenseFiles": 204,
+  "runtimeFileCount": 646,
+  "runtimeBytesBeforeFinalDocs": 797197626,
+  "sourceHygiene": {
+    "filesCheckedBeforeFinalEvidence": 446,
+    "secretMatches": 0,
+    "personalPathMatches": 0,
+    "trackedGeneratedFiles": 0
+  },
+  "screenshots": {
+    "workspace": "Real packaged window using synthetic media, displayed path anonymized before capture.",
+    "online": "PrintWindow capture bound to the helper HWND/PID; desktop-region capture discarded."
+  }
+}

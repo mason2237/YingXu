@@ -17,3 +17,17 @@ html[data-workspace-mode=local] .folder-copy strong {overflow:hidden;text-overfl
 html[data-workspace-mode=local][data-drag-folder=true] .collection {outline:2px solid var(--blue);outline-offset:-3px;background:var(--blue-tint);}
 @media(max-width:1280px) {html[data-workspace-mode=local] .workflow {display:none;}}
 @media(max-width:960px) {html[data-workspace-mode=local] .folder-toolbar {gap:8px;padding-left:12px;padding-right:12px;}html[data-workspace-mode=local] .folder-toolbar button {font-size:12px;padding-left:9px;padding-right:9px;}.history-chooser {max-width:360px;}}
+
+/* Miuix-inspired proportions, implemented here without a Compose runtime.
+   Keep the established theme, glass controls and motion preferences. */
+html[data-workspace-mode=local] {--radius:14px;}
+html[data-workspace-mode=local]:not([data-theme=dark]) {--page:#f3f4f6;--surface-soft:#f6f7f9;--ink:#202228;--blue:#3478ef;}
+html[data-workspace-mode=local] .page-heading {align-items:center;gap:16px;}
+html[data-workspace-mode=local] .page-heading > div:first-child {margin-right:auto;}
+html[data-workspace-mode=local] .page-heading h1 {font-size:28px;letter-spacing:0;}
+html[data-workspace-mode=local] .collection, html[data-workspace-mode=local] .folder-toolbar {border-radius:18px;}
+html[data-workspace-mode=local] .search-field, html[data-workspace-mode=local] .subtitle-detail {border-radius:12px;}
+html[data-workspace-mode=local] .detail-actions {flex-wrap:wrap;}
+html[data-workspace-mode=local] .online-current {width:100%;justify-content:center;margin-top:4px;}
+#online-subtitles-button {flex-shrink:0;min-height:40px;border-radius:14px;}
+@media(max-width:1000px) {html[data-workspace-mode=local] .page-heading .overview {display:none;}}

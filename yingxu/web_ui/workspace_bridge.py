@@ -14,9 +14,9 @@ class WorkspaceBridge(QObject):
     reply = Signal(str)
     event = Signal(str)
 
-    def __init__(self, parent=None, *, history=None):
+    def __init__(self, parent=None, *, history=None, embedded_settings=None, service_type=WorkspaceService):
         super().__init__(parent)
-        self.service = WorkspaceService(self,history=history)
+        self.service = service_type(self,history=history,embedded_settings=embedded_settings)
         self.service.changed.connect(lambda kind,payload:self._push(kind,payload))
         self.session_id = None;self.sequence = 0;self.closing = False
         self._cache = OrderedDict();self._pending = {}
@@ -50,8 +50,9 @@ class WorkspaceBridge(QObject):
                 if self.session_id:raise ProtocolError("ALREADY_CONNECTED","页面已连接。")
                 self.session_id = uuid4().hex;self.service.new_page(self.session_id)
                 data = {"sessionId":self.session_id,"capabilities":sorted(ACTIONS),"state":self.service.state()}
-            elif request.action in {"folder.choose","result.export","file.reveal","file.copyName"}:
+            elif request.action in {"folder.choose","result.export","file.reveal","file.copyName","subtitle.open"}:
                 self.service.require_idle()
+                if request.action == "subtitle.open": self.service.subtitle_tasks(request.params)
                 if request.action.startswith("file."): self.service.registered_path(request.params["fileId"])
                 if request.action == "result.export" and request.params["recordId"] not in self.service.records:
                     raise ProtocolError("NOT_FOUND","整理记录不可用。")

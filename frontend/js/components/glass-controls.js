@@ -1,11 +1,11 @@
 import {JellyController} from '../../vendor/design-systems/lens/internal/jelly.js';
 
 const OWNED = '.workspace-lens-stage,.filter-lens-stage,.liquid-actions-stage';
+const STRUCTURAL = '.list-heading button,.inspector-heading button';
 
-// Every semantic button gets the same optical shell. Small/text/icon controls
-// use CSS glass; existing action groups retain original Lens GPU refraction.
+// Action buttons use glass; table headings and pane controls remain flat.
 // One upstream spring controller covers all remaining controls, including
-// dynamically generated candidates, history, commands and popover buttons.
+// dynamically generated candidates, history and popover buttons.
 export class GlassControls {
   constructor(options) {
     this.options = options;this.dead = false;this.frame = 0;this.cache = new WeakMap();this.buttons = [];
@@ -40,12 +40,21 @@ export class GlassControls {
   refresh() {
     if (this.dead) return;
     this.buttons = [...document.querySelectorAll('button')];
-    const live = new Set(this.buttons.filter(button => !button.closest(OWNED)));
+    this.controls = this.buttons.filter(button => !button.matches(STRUCTURAL));
+    for (const button of this.buttons) if (button.matches(STRUCTURAL)) {
+      button.dataset.glassRole = 'structural';
+      // DOMTokenList.remove writes class even when the token is absent. That
+      // write feeds our observer and otherwise schedules another refresh forever.
+      if (button.classList.contains('liquid-button')) button.classList.remove('liquid-button');
+      if (button.dataset.liquidRenderer !== undefined) delete button.dataset.liquidRenderer;
+    }
+    const live = new Set(this.controls.filter(button => !button.closest(OWNED)));
     for (const [element,body] of this.jelly.bodies) if (!live.has(element)) {
       if (this.jelly.gesture?.body === body) this.jelly.cancel(true);
       this.cache.set(element,body);this.jelly.bodies.delete(element);
     }
-    for (const button of this.buttons) {
+    for (const button of this.controls) {
+      button.dataset.glassRole = 'action';
       if (!button.classList.contains('liquid-button')) button.classList.add('liquid-button');
       const renderer = button.matches('[data-glass]') && button.closest('.webgl-ready:not(.opaque)') ? 'webgl' : 'css';
       if (button.dataset.liquidRenderer !== renderer) button.dataset.liquidRenderer = renderer;
@@ -63,6 +72,6 @@ export class GlassControls {
     const intensity = reduced || !enabled ? 0 : .72;
     if (this.jelly.intensity !== intensity) {this.jelly.setIntensity(intensity);if (!intensity) this.jelly.cancel(true);}
   }
-  stats() {return {buttons:this.buttons.length,bodies:this.jelly.bodies.size,gpu:this.buttons.filter(button => button.dataset.liquidRenderer === 'webgl').length};}
+  stats() {return {buttons:this.controls.length,total:this.buttons.length,structural:this.buttons.length-this.controls.length,bodies:this.jelly.bodies.size,gpu:this.controls.filter(button => button.dataset.liquidRenderer === 'webgl').length};}
   destroy() {this.dead = true;cancelAnimationFrame(this.frame);this.observer.disconnect();this.abort.abort();this.jelly.destroy();}
 }

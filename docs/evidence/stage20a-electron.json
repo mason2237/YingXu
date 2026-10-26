@@ -1,0 +1,323 @@
+{
+  "date": "2026-10-26",
+  "stage": "20A",
+  "baseline": "228773c95e8ab9c1c786354ad0d8b026f11826f0",
+  "electron": "45.0.0",
+  "protocol": 1,
+  "viewport": {
+    "width": 1280,
+    "height": 860,
+    "scale": 1
+  },
+  "display": {
+    "width": 2560,
+    "height": 1440,
+    "refreshHz": 180,
+    "systemHdr": true,
+    "sdrWhiteNits": 240
+  },
+  "workload": {
+    "videos": 300,
+    "subtitles": 300,
+    "inputHz": 60,
+    "repeats": 3,
+    "secondsPerRepeat": 30,
+    "phases": [
+      "hover",
+      "drag",
+      "scroll"
+    ]
+  },
+  "variants": [
+    {
+      "host": "qt",
+      "effects": "full",
+      "phases": {
+        "hover": {
+          "rafFps": {
+            "min": 59.8,
+            "max": 60
+          },
+          "p95MsMax": 16.8,
+          "over25PercentMax": 0.17,
+          "inputEvents": {
+            "min": 600,
+            "max": 600
+          }
+        },
+        "drag": {
+          "rafFps": {
+            "min": 59.8,
+            "max": 60
+          },
+          "p95MsMax": 16.8,
+          "over25PercentMax": 0.17,
+          "inputEvents": {
+            "min": 600,
+            "max": 600
+          }
+        },
+        "scroll": {
+          "rafFps": {
+            "min": 60,
+            "max": 60
+          },
+          "p95MsMax": 16.8,
+          "over25PercentMax": 0,
+          "inputEvents": {
+            "min": 600,
+            "max": 600
+          }
+        }
+      },
+      "longTasks": 0,
+      "chromiumCpuSecondsPer30s": [
+        21.83,
+        23.22,
+        25.68
+      ],
+      "chromiumWorkingSetMiB": [
+        688.64,
+        885,
+        1083.72
+      ],
+      "chromiumPrivateMiB": [
+        729.37,
+        938.09,
+        1137.97
+      ],
+      "observedReadyMs": 3763,
+      "chromiumDrawAndSwap": {
+        "count": 1818,
+        "rateHz": 59.88,
+        "p95Ms": 22.13,
+        "medianMs": 16.73,
+        "independentPresentationVerified": false
+      }
+    },
+    {
+      "host": "qt",
+      "effects": "moderate",
+      "phases": {
+        "hover": {
+          "rafFps": {
+            "min": 59.7,
+            "max": 60
+          },
+          "p95MsMax": 16.8,
+          "over25PercentMax": 0.33,
+          "inputEvents": {
+            "min": 600,
+            "max": 601
+          }
+        },
+        "drag": {
+          "rafFps": {
+            "min": 59.8,
+            "max": 60
+          },
+          "p95MsMax": 16.7,
+          "over25PercentMax": 0.17,
+          "inputEvents": {
+            "min": 600,
+            "max": 600
+          }
+        },
+        "scroll": {
+          "rafFps": {
+            "min": 59.7,
+            "max": 59.9
+          },
+          "p95MsMax": 16.8,
+          "over25PercentMax": 0.5,
+          "inputEvents": {
+            "min": 600,
+            "max": 600
+          }
+        }
+      },
+      "longTasks": 0,
+      "chromiumCpuSecondsPer30s": [
+        20.41,
+        22.88,
+        23.8
+      ],
+      "chromiumWorkingSetMiB": [
+        641.82,
+        822.93,
+        983.24
+      ],
+      "chromiumPrivateMiB": [
+        661.8,
+        848.48,
+        1008.9
+      ],
+      "observedReadyMs": 3810,
+      "chromiumDrawAndSwap": {
+        "count": 1803,
+        "rateHz": 59.87,
+        "p95Ms": 21.91,
+        "medianMs": 16.72,
+        "independentPresentationVerified": false
+      }
+    },
+    {
+      "host": "electron",
+      "effects": "full",
+      "phases": {
+        "hover": {
+          "rafFps": {
+            "min": 180,
+            "max": 180
+          },
+          "p95MsMax": 5.7,
+          "over25PercentMax": 0,
+          "inputEvents": {
+            "min": 600,
+            "max": 600
+          }
+        },
+        "drag": {
+          "rafFps": {
+            "min": 179.1,
+            "max": 180
+          },
+          "p95MsMax": 5.7,
+          "over25PercentMax": 0.11,
+          "inputEvents": {
+            "min": 600,
+            "max": 600
+          }
+        },
+        "scroll": {
+          "rafFps": {
+            "min": 143.5,
+            "max": 150.83
+          },
+          "p95MsMax": 11.2,
+          "over25PercentMax": 0,
+          "inputEvents": {
+            "min": 600,
+            "max": 600
+          }
+        }
+      },
+      "longTasks": 0,
+      "chromiumCpuSecondsPer30s": [
+        16.84,
+        15,
+        15.2
+      ],
+      "chromiumWorkingSetMiB": [
+        849.64,
+        767.49,
+        774.92
+      ],
+      "chromiumPrivateMiB": [
+        713.21,
+        623.36,
+        632.72
+      ],
+      "observedReadyMs": 1227,
+      "chromiumDrawAndSwap": {
+        "count": 5415,
+        "rateHz": 178.45,
+        "p95Ms": 5.77,
+        "medianMs": 5.56,
+        "independentPresentationVerified": false
+      }
+    },
+    {
+      "host": "electron",
+      "effects": "moderate",
+      "phases": {
+        "hover": {
+          "rafFps": {
+            "min": 180,
+            "max": 180.02
+          },
+          "p95MsMax": 5.7,
+          "over25PercentMax": 0,
+          "inputEvents": {
+            "min": 600,
+            "max": 600
+          }
+        },
+        "drag": {
+          "rafFps": {
+            "min": 179.19,
+            "max": 180
+          },
+          "p95MsMax": 5.7,
+          "over25PercentMax": 0.06,
+          "inputEvents": {
+            "min": 600,
+            "max": 600
+          }
+        },
+        "scroll": {
+          "rafFps": {
+            "min": 145.75,
+            "max": 146.06
+          },
+          "p95MsMax": 11.2,
+          "over25PercentMax": 0,
+          "inputEvents": {
+            "min": 600,
+            "max": 600
+          }
+        }
+      },
+      "longTasks": 0,
+      "chromiumCpuSecondsPer30s": [
+        16.63,
+        15.08,
+        15.08
+      ],
+      "chromiumWorkingSetMiB": [
+        831.51,
+        760.94,
+        767.43
+      ],
+      "chromiumPrivateMiB": [
+        657.25,
+        580.69,
+        659.88
+      ],
+      "observedReadyMs": 1214,
+      "chromiumDrawAndSwap": {
+        "count": 5346,
+        "rateHz": 177.9,
+        "p95Ms": 5.7,
+        "medianMs": 5.55,
+        "independentPresentationVerified": false
+      }
+    }
+  ],
+  "warnings": [
+    "rAF measures page updates, not physical display rate.",
+    "Chromium DrawAndSwap measures intermediate composition, not independently verified scanout.",
+    "CDP-reported Chromium process footprint excludes a separate Python child in Electron; it is not whole-app memory.",
+    "Recorded startup points differ: Qt includes initial fixture scanning; Electron is measured before folder selection. Do not compare them as cold-start speed.",
+    "No GPU utilization percentage was measured. Earlier ETW denial was resolved by elevating only PresentMon for bounded captures; see stage20a-presentation.json."
+  ],
+  "migrationGate": {
+    "passed": true,
+    "reason": "Independent Windows presented-frame gate now passes for full and moderate (3x30s each); HDR and functional gates were already verified.",
+    "supplement": "stage20a-presentation.json"
+  },
+  "mediaModified": false,
+  "osPreferencesChanged": false,
+  "physicalPeakMeasured": false,
+  "hdr": {
+    "configured": true,
+    "actualOutputVerified": true,
+    "method": "Windows Graphics Capture window",
+    "samples": [
+      2.99935,
+      14.85677,
+      75.91667
+    ],
+    "abovePaperWhiteRatio": 25.311
+  }
+}

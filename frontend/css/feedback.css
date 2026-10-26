@@ -1,7 +1,4 @@
 /* Reading surfaces use DOM/CSS. No additional WebGL contexts or idle loops. */
-.command-launch {border-color:var(--line);gap:7px;font-size:12px;min-height:34px;padding:4px 9px;}
-.command-launch svg {width:15px;height:15px;}
-.command-launch kbd {font-size:9px;}
 dialog {box-shadow:0 12px 42px var(--dialog-shadow);}
 .dialog-heading {border-bottom:1px solid var(--line);background:var(--surface-raised);margin-bottom:18px;}
 .compact-dialog .dialog-heading {border:0;background:transparent;margin:0;}
@@ -10,24 +7,11 @@ dialog {box-shadow:0 12px 42px var(--dialog-shadow);}
 .candidate-list,#history-content {min-height:0;}
 .notice {align-items:flex-start;}
 .notice > [data-icon],.notice > svg {flex-shrink:0;margin-top:2px;}
-.command-dialog {width:590px;max-height:calc(100vh - 70px);}
-.command-heading {display:flex;align-items:center;gap:12px;padding:15px 18px;border-bottom:1px solid var(--line);}
-.command-heading > [data-icon] {color:var(--blue);}
-.command-heading input {flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--ink);font-size:16px;padding:5px 0;}
-.command-heading input:focus-visible {outline:none;}
-.command-heading input::placeholder {color:var(--soft);}
-.command-list {max-height:min(430px,calc(100vh - 230px));overflow-y:auto;padding:8px;scrollbar-gutter:stable;}
-.command-option {width:100%;display:flex;justify-content:flex-start;gap:12px;min-height:44px;padding:10px 12px;font-size:14px;font-weight:450;border-radius:6px;}
-.command-option > span:first-child {color:var(--muted);}
-.command-option .command-label {flex:1;min-width:0;text-align:left;color:var(--secondary);}
-.command-option[aria-selected=true],.command-option:hover:enabled {background:var(--blue-tint);}
-.command-option[aria-selected=true] .command-label,.command-option[aria-selected=true] > span:first-child {color:var(--blue);}
-.command-option .command-arrow {opacity:0;color:var(--blue);}
-.command-option[aria-selected=true] .command-arrow {opacity:1;}
-.command-option:disabled {opacity:.45;}
+/* Keep optical color/rims, without a backdrop-filter/transform layer per row. */
+html[data-workspace-mode=local] dialog button.liquid-button {
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+}
 .command-empty {padding:28px 18px;color:var(--muted);font-size:14px;line-height:1.8;}
-.command-footer {display:flex;justify-content:space-between;gap:16px;padding:12px 19px;border-top:1px solid var(--line);color:var(--soft);font-size:11px;background:var(--surface-soft);}
-.command-footer kbd {margin-right:3px;}
 .loading-state {position:absolute;inset:43px 0 32px;z-index:4;display:grid;place-items:center;background:var(--surface);padding:24px;}
 .loading-copy {width:min(340px,100%);text-align:center;}
 .loading-symbol {display:inline-grid;place-items:center;width:42px;height:42px;color:var(--blue);background:var(--blue-tint);border-radius:10px;margin-bottom:15px;}
@@ -72,5 +56,5 @@ dialog {box-shadow:0 12px 42px var(--dialog-shadow);}
 html[data-reduced=true] .loading-indeterminate > span {animation:none;transform:translateX(90%);}
 html[data-reduced=true] .toast [data-notice-timer] {display:none;}
 @media(prefers-reduced-motion:reduce) {.loading-indeterminate > span {animation:none;transform:translateX(90%);}.toast [data-notice-timer] {display:none;}}
-@media(max-width:960px) {.command-launch {padding:4px 7px;}.command-launch kbd {display:none;}.command-dialog {max-width:calc(100vw - 40px);}.command-footer kbd {display:inline;}.toast[popover] {bottom:76px;max-width:calc(100vw - 36px);}.inspector-dialog {width:352px;}}
+@media(max-width:960px) {.toast[popover] {bottom:76px;max-width:calc(100vw - 36px);}.inspector-dialog {width:352px;}}
 @media(max-height:720px) {.loading-state {padding:12px;}.loading-symbol {display:none;}#loading-progress {margin-top:10px;}}

@@ -5,7 +5,7 @@ import re
 
 VERSION = 1
 MAX_MESSAGE_BYTES = 8192
-ACTIONS = frozenset({"app.hello", "app.state", "app.ping", "diagnostics.runSample"})
+ACTIONS = frozenset({"app.hello", "app.state", "app.ping"})
 IDENTIFIER = re.compile(r"[A-Za-z0-9_-]{1,64}\Z")
 
 
@@ -45,7 +45,7 @@ def decode_request(raw, *, actions=ACTIONS, validate_params=None):
         raise ProtocolError("PROTOCOL_MISMATCH", "通信版本不一致，请重新打开应用。", request_id=rid)
     action, params = obj.get("action"), obj.get("params")
     if not isinstance(action, str) or action not in actions:
-        raise ProtocolError("ACTION_UNAVAILABLE", "当前阶段不提供此操作。", request_id=rid)
+        raise ProtocolError("ACTION_UNAVAILABLE", "未提供此操作。", request_id=rid)
     if not isinstance(params, dict):
         raise ProtocolError("INVALID_REQUEST", "操作参数必须为对象。", request_id=rid)
     allowed = {"message"} if action == "app.ping" else set()

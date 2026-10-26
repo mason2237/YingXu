@@ -78,6 +78,16 @@ class Document(HTMLParser):
 def main():
     DESTINATION.mkdir(exist_ok=True)
     entries = []
+    # Keep the already reviewed license members from pinned binary wheels.
+    # They are not HTML pages to crawl or scripts to execute.
+    sources = DESTINATION / "SOURCES.json"
+    if sources.is_file():
+        for entry in json.loads(sources.read_text(encoding="utf-8"))["documents"]:
+            if entry.get("mode") == "verified-wheel-member":
+                path = (DESTINATION / entry["file"]).resolve()
+                if not path.is_relative_to(DESTINATION.resolve()) or hashlib.sha256(path.read_bytes()).hexdigest() != entry["sha256"]:
+                    raise ValueError("Pinned wheel license changed")
+                entries.append(entry)
     for name, url in DOCUMENTS.items():
         data, resolved = download(url)
         if b"<html" in data[:500].lower() or len(data) < 1000:

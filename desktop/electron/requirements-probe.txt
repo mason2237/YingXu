@@ -1,0 +1,12 @@
+# Optional capture diagnostics only; never add to the app's requirements-lock.
+# python -m pip install --only-binary=:all: --target work/tools/hdr-python -r desktop/electron/requirements-probe.txt
+winrt-runtime==4.0.3
+winrt-Windows.Graphics.Capture==4!10.0.28000.2705
+winrt-Windows.Graphics.Capture.Interop==4.0.0
+winrt-Windows.Graphics.DirectX==4!10.0.28000.2705
+winrt-Windows.Graphics.DirectX.Direct3D11==4!10.0.28000.2705
+winrt-Windows.Graphics.DirectX.Direct3D11.Interop==4.1.0
+winrt-Windows.Graphics==4!10.0.28000.2705
+winrt-Windows.Foundation==4!10.0.28000.2705
+winrt-Windows.Foundation.Collections==4!10.0.28000.2705
+typing_extensions==4.16.0

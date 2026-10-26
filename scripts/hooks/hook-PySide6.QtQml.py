@@ -1,8 +1,9 @@
-"""This Widgets/HTML application does not import any QML documents.
+"""Collect native QtQml dependencies; the build stages an explicit QML allowlist.
 
 Retain the native QtQml dependency discovered by the standard Qt helper, but
 do not collect every installed QML plugin (including unrelated GPL modules).
-No installed PyInstaller or third-party source file is modified.
+The native HDR host uses Basic Controls and WebEngine QML only. No installed
+PyInstaller or third-party source file is modified.
 """
 from PyInstaller.utils.hooks.qt import add_qt6_dependencies
 

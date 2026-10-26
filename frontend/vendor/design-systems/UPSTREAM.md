@@ -4,10 +4,20 @@ Upstream: https://github.com/ruiqichenbiec/design-systems
 Commit: 7a424c93b9be13cf835b91ea67495fec2ec0584e
 License: MIT, Copyright (c) 2026 DayDreamInAReverie. Full text: LICENSE.
 
+Stage 16 removes the application command palette and its adapted commandList
+helper. Toast/Tooltip and their attribution remain. Settings dismissal now uses
+a 140ms opacity-only fade with matching backdrop tint, painted-frame settling,
+reopen cancellation and reduced-motion fallback; other desktop dialogs keep
+their existing immediate lifecycle. Original Lens source files remain intact.
+
 - focus.js: copied unchanged from lens/lab/design-system/focus.js.
 - modal.js: adapted from the modal helper in overture/src/overlays.js. Removed
   showcase data, audio, iris/GPU dependencies; shortened transitions and added
   focus restoration and a generation guard for interrupted closes.
+  Native Qt desktops additionally use immediate dialog open/close to avoid
+  top-layer blur/transform surface churn; browser previews retain short motion.
+  Native overlay wheel scrolling is committed on the main thread so its text
+  and Qt HDR source texture stay in step; standard page scrolling is unchanged.
 - lens/: 19 unchanged Lens ES modules and styles, including the original
   GlassRenderer, JellyController, 18 public component factories, optical
   controls, sound synthesis and their complete local dependency closure.
@@ -50,3 +60,8 @@ No new third-party source or license is introduced by those two adapters.
 The workspace, preview adapter, virtual list, icons and transient particles
 are this project's implementation. No photos, fonts, three.js, repository
 build tools, whole showcase pages or external assets are copied.
+
+Stage 20A updates the already adapted modal.js and theme-transition.js to
+consult the project's shared desktop-host capability instead of checking
+Qt globals directly. Focus, close timing and transition policy are preserved
+for both hosts. The 19 recorded upstream Lens source files remain unchanged.

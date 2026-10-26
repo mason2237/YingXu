@@ -1,15 +1,15 @@
 // One QWebChannel per page. Requests are never retried automatically.
-import {desktopChannel} from './channel.js';
+import {desktopHost} from './channel.js';
 export class BridgeClient extends EventTarget {
   constructor() { super(); this.pending = new Map(); this.sessionId = null; this.sequence = 0; }
 
   async connect() {
-    if (!globalThis.qt?.webChannelTransport || !globalThis.QWebChannel) {
-      throw new Error('本地桌面通信不可用，请通过映序桌面入口打开。');
-    }
-    const channel = await desktopChannel();this.bridge = channel.objects.bridge;
+    const host = await desktopHost();this.bridge = host.workspace;
     if (!this.bridge) throw new Error('当前入口未提供本地文件功能。');
-    this.bridge.reply.connect(raw => this.onReply(raw));this.bridge.event.connect(raw => this.onEvent(raw));
+    this.unsubscribe = [this.bridge.onReply(raw => this.onReply(raw)),this.bridge.onEvent(raw => this.onEvent(raw))];
+    if (this.bridge.onDisconnect) this.unsubscribe.push(this.bridge.onDisconnect(message => {
+      this.dispose();this.dispatchEvent(new CustomEvent('disconnect',{detail:message}));
+    }));
     const hello = await this.call('app.hello');
     this.sessionId = hello.sessionId;
     return hello.state;
@@ -23,7 +23,10 @@ export class BridgeClient extends EventTarget {
         reject(new Error('状态待同步，请重新连接；操作不会自动重试。'));
       }, timeout) : null;
       this.pending.set(requestId, {resolve, reject, timer});
-      this.bridge.request(JSON.stringify({v: 1, requestId, sessionId: this.sessionId, action, params}));
+      Promise.resolve(this.bridge.request(JSON.stringify({v: 1, requestId, sessionId: this.sessionId, action, params}))).catch(error => {
+        if (!this.pending.delete(requestId)) return;
+        clearTimeout(timer);reject(error);
+      });
     });
   }
 
@@ -43,5 +46,5 @@ export class BridgeClient extends EventTarget {
     this.dispatchEvent(new CustomEvent('state', {detail: event}));
   }
 
-  dispose() {for (const pending of this.pending.values()) {clearTimeout(pending.timer);const error = new Error('页面已关闭，操作不会自动重试。');error.code = 'CLOSING';pending.reject(error);}this.pending.clear();}
+  dispose() {for (const stop of this.unsubscribe || []) {try {stop();} catch {}}this.unsubscribe = [];for (const pending of this.pending.values()) {clearTimeout(pending.timer);const error = new Error('连接已关闭，操作不会自动重试。');error.code = 'CLOSING';pending.reject(error);}this.pending.clear();}
 }

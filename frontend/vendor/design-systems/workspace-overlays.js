@@ -1,4 +1,4 @@
-// Adapted from Overture Toast, CommandPalette and Tooltip in overture/src/overlays.js.
+// Adapted from Overture Toast and Tooltip in overture/src/overlays.js.
 // MIT © 2026 DayDreamInAReverie; upstream commit and changes: UPSTREAM.md.
 // Removes showcase actions/audio/media; adds IME, cancellation and native top-layer handling.
 const floatInto = (panel, origin) => {
@@ -52,48 +52,6 @@ export function transientNotice(panel, {reduced = () => false, paint = () => {}}
   return {show,hide, refreshMotion() {if (!panel.hidden) {const remaining = held ? left : Math.max(0,left-(performance.now()-since)); panel.getAnimations().forEach(animation => animation.cancel()); arm(remaining);}},
     stats: () => ({visible:!panel.hidden,paused:held}),
     destroy() {generation++;clearTimeout(timer);meter?.cancel();panel.getAnimations().forEach(animation => animation.cancel());conceal(panel);abort.abort();}};
-}
-
-export function commandList(input, list, {actions, run, render, onError = () => {}}) {
-  const abort = new AbortController(), signal = abort.signal;
-  let filtered = [], index = -1, composing = false, running = false;
-  function choose(next, direction = 1) {
-    index = -1;
-    for (let attempt=0;attempt<filtered.length;attempt++) {
-      const position = (next+attempt*direction+filtered.length*2)%filtered.length;
-      if (!filtered[position].disabled) {index = position;break;}
-    }
-    list.querySelectorAll('[role=option]').forEach((option,i) => option.setAttribute('aria-selected',String(i===index)));
-    if (index < 0) input.removeAttribute('aria-activedescendant');
-    else {const option = list.children[index]; input.setAttribute('aria-activedescendant',option.id); if (input.closest('dialog')?.open) option.scrollIntoView({block:'nearest'});}
-  }
-  async function activate(action) {
-    if (!action || action.disabled || running) return;
-    running = true;
-    try {await run(action);} catch (error) {onError(error);} finally {running = false;}
-  }
-  function draw() {
-    const query = input.value.trim().toLocaleLowerCase();
-    filtered = actions().filter(action => `${action.label} ${action.keywords || ''}`.toLocaleLowerCase().includes(query));
-    list.replaceChildren();
-    filtered.forEach((action,i) => {
-      const option = render(action); option.id = `command-option-${i}`; option.type = 'button'; option.role = 'option'; option.tabIndex = -1;
-      option.disabled = Boolean(action.disabled); option.setAttribute('aria-disabled',String(Boolean(action.disabled)));
-      option.addEventListener('click', () => activate(action)); list.append(option);
-    });
-    if (!filtered.length) {const empty = document.createElement('p'); empty.className = 'command-empty'; empty.role = 'status'; empty.textContent = '没有找到操作，试试“字幕”“预览”或“外观”。';list.append(empty);}
-    choose(0);
-  }
-  input.addEventListener('compositionstart', () => {composing = true;}, {signal});
-  input.addEventListener('compositionend', () => {composing = false;draw();}, {signal});
-  input.addEventListener('input', () => {if (!composing) draw();}, {signal});
-  input.addEventListener('keydown', event => {
-    if (composing || event.isComposing || event.keyCode === 229 || !filtered.length) return;
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {event.preventDefault();const direction = event.key === 'ArrowDown' ? 1 : -1;choose(index+direction,direction);}
-    else if (event.key === 'Home' || event.key === 'End') {event.preventDefault();choose(event.key === 'Home' ? 0 : filtered.length-1,event.key === 'Home' ? 1 : -1);}
-    else if (event.key === 'Enter') {event.preventDefault();activate(filtered[index]);}
-  }, {signal});
-  return {reset() {input.value = '';composing = false;input.setAttribute('aria-expanded','true');draw();},destroy() {abort.abort();}};
 }
 
 export function tooltips({reduced = () => false} = {}) {

@@ -8,6 +8,11 @@ export class LocalAdapter extends EventTarget {
       if (message.type === 'folder.changed' && message.payload.dropped) this.dispatchEvent(new Event('folderdrop'));
       if (message.type === 'app.error') this.dispatchEvent(new CustomEvent('error',{detail:message.payload.message}));
     });
+    this.client.addEventListener('disconnect',event => {
+      this.closed = true;clearTimeout(this.poll);
+      for (const group of this.waiters.values()) for (const waiter of group) waiter.reject(new Error(event.detail));
+      this.waiters.clear();this.dispatchEvent(new CustomEvent('disconnect',{detail:event.detail}));this.dispatchEvent(new CustomEvent('error',{detail:event.detail}));
+    });
     window.addEventListener('pagehide',() => {
       this.closed = true;clearTimeout(this.poll);this.client.dispose();
       for (const group of this.waiters.values()) for (const waiter of group) {const error = new Error('页面已关闭');error.code = 'CLOSING';waiter.reject(error);}

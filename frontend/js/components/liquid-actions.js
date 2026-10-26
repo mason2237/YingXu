@@ -75,7 +75,10 @@ export class LiquidActions {
       const w = rect.width + 2, h = rect.height + 2, r = Math.min(10, h / 2);
       return `M${x+r},${y}H${x+w-r}Q${x+w},${y} ${x+w},${y+r}V${y+h-r}Q${x+w},${y+h} ${x+w-r},${y+h}H${x+r}Q${x},${y+h} ${x},${y+h-r}V${y+r}Q${x},${y} ${x+r},${y}Z`;
     });
-    canvas.style.clipPath = paths.length ? `path("${paths.join(' ')}")` : 'inset(50%)';
+    const clip = paths.length ? `path("${paths.join(' ')}")` : 'inset(50%)';
+    // The Lens observer also watches this canvas. Writing the same clip on
+    // every render must not extend its animation window indefinitely.
+    if (this.clipPath !== clip) {this.clipPath = clip;canvas.style.clipPath = clip;}
   }
   artwork(ctx, {width, height, dpr}) {
     const dark = document.documentElement.dataset.theme === 'dark', parent = this.host.getBoundingClientRect();

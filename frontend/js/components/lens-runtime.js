@@ -56,7 +56,7 @@ export function drawToolbarArtwork(ctx, {width, height, dpr}) {
   ctx.bezierCurveTo(width * .3, height * .4, width * .68, height, width, height * .45); ctx.stroke();
 }
 
-// All optics, compositing and gestures come from unchanged Lens files.
+// Optical math and gesture physics come from the original Lens files.
 // This adapter only owns lifecycle, application preferences and diagnostics.
 export class LensRuntime {
   constructor(stage, {material = ENHANCED_MATERIAL, artwork = drawWorkbenchArtwork,
@@ -97,6 +97,10 @@ export class LensRuntime {
 
   start() {
     if (this.destroyed) return;
+    if (this.enabled && this.system) {
+      if (this.system.renderer?.lost) this.system.renderer.resumeGPU();
+      return;
+    }
     this.enabled = true; this.stage.classList.remove('opaque');
     if (this.system) {this.system.renderer?.set({opaque: false}); if (this.system.renderer?.lost) this.system.renderer.resumeGPU(); return;}
     this.system = createGlassSystem(this.stage, {
@@ -157,7 +161,10 @@ export class LensRuntime {
         gl.deleteBuffer(renderer.buffer); gl.deleteVertexArray(renderer.vao);
       };
       const render = renderer.render.bind(renderer);
-      renderer.render = now => {this.frames++; render(now);};
+      renderer.render = now => {
+        if (this.occluded) {renderer.frame = 0;renderer.lastTime = 0;return;}
+        this.frames++; render(now);
+      };
     }
     this.applyMotion();
   }
@@ -174,8 +181,26 @@ export class LensRuntime {
     }
   }
 
-  setReduced(value) {this.manualReduced = Boolean(value); this.applyMotion();}
-  setMaterial(value) {this.material = value; this.system?.setMaterial(value);}
+  setReduced(value) {
+    value = Boolean(value);
+    if (this.manualReduced === value) return;
+    this.manualReduced = value; this.applyMotion();
+  }
+  setOccluded(value) {
+    if (this.occluded === value) return;
+    this.occluded = value;
+    const renderer = this.system?.renderer;
+    if (value) {
+      if (renderer) {cancelAnimationFrame(renderer.frame);renderer.frame = 0;}
+      this.system?.jelly.cancel(true);
+    } else if (this.enabled) renderer?.invalidate(150);
+    // Freeze the existing canvas; do not hide it, retire its texture or lose
+    // its GPU context while a dialog is above it.
+  }
+  setMaterial(value) {
+    if (this.material === value || (typeof value === 'object' && JSON.stringify(this.material) === JSON.stringify(value))) return;
+    this.material = value; this.system?.setMaterial(value);
+  }
   setBackdrop(name) {
     if (!['workbench', 'aurora', 'sunset', 'ocean', 'grid'].includes(name)) throw new TypeError('Unknown backdrop');
     this.backdrop = name;
@@ -184,6 +209,7 @@ export class LensRuntime {
     this.system.setScene(name === 'workbench' ? this.theme === 'dark' ? 'ocean' : 'grid' : name);
   }
   setTheme(theme) {
+    if (this.theme === theme) return;
     this.theme = theme; this.setBackdrop(this.backdrop);
     const renderer = this.system?.renderer;
     if (this.enabled && renderer?.gl && !renderer.suspended && !renderer.lost && !document.hidden) {
@@ -196,7 +222,7 @@ export class LensRuntime {
   setAudio(value) {this.audioEnabled = Boolean(value); this.system?.sound.set({enabled: this.audioEnabled});}
 
   stop() {
-    if (!this.system) return;
+    if (!this.system || !this.enabled) return;
     this.enabled = false; this.stage.classList.add('opaque');
     this.system.renderer?.set({opaque: true});
   }

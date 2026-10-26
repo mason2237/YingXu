@@ -1,0 +1,442 @@
+{
+  "date": "2026-10-26",
+  "stage": "20A",
+  "electron": "45.0.0",
+  "method": "PresentMon 2.6.0 ETW: CPUStartQPCTime + DisplayLatency; displayed rows only",
+  "workload": {
+    "videos": 300,
+    "subtitles": 300,
+    "repeats": 3,
+    "secondsPerRepeat": 30,
+    "inputHz": 60,
+    "viewport": [
+      1280,
+      860
+    ],
+    "scale": 1,
+    "systemHdr": true
+  },
+  "thresholds": {
+    "fpsMin": 120,
+    "p95MsMax": 11.2,
+    "over25PercentBelow": 1,
+    "phaseCoverageMin": 0.95,
+    "edgeExclusionMs": 250
+  },
+  "variants": [
+    {
+      "effects": "full",
+      "streamSelection": "The unique swapchain covering every hover, drag and scroll phase; partial/idle overlay stream excluded.",
+      "qpcAnchorUncertaintyMs": 25.739,
+      "displayedPhases": [
+        {
+          "iteration": 1,
+          "phase": "hover",
+          "conclusive": true,
+          "displayedFrames": 1710,
+          "coverage": 0.99946,
+          "fps": 179.99,
+          "p95Ms": 5.6262,
+          "over25Percent": 0.0,
+          "maxMs": 5.8399,
+          "passed": true
+        },
+        {
+          "iteration": 1,
+          "phase": "drag",
+          "conclusive": true,
+          "displayedFrames": 1712,
+          "coverage": 0.99904,
+          "fps": 179.686,
+          "p95Ms": 5.6133,
+          "over25Percent": 0.0,
+          "maxMs": 11.1353,
+          "passed": true
+        },
+        {
+          "iteration": 1,
+          "phase": "scroll",
+          "conclusive": true,
+          "displayedFrames": 1703,
+          "coverage": 0.99932,
+          "fps": 178.949,
+          "p95Ms": 5.6288,
+          "over25Percent": 0.0,
+          "maxMs": 11.17,
+          "passed": true
+        },
+        {
+          "iteration": 2,
+          "phase": "hover",
+          "conclusive": true,
+          "displayedFrames": 1711,
+          "coverage": 0.99937,
+          "fps": 179.99,
+          "p95Ms": 5.635,
+          "over25Percent": 0.0,
+          "maxMs": 5.7593,
+          "passed": true
+        },
+        {
+          "iteration": 2,
+          "phase": "drag",
+          "conclusive": true,
+          "displayedFrames": 1709,
+          "coverage": 0.99941,
+          "fps": 179.791,
+          "p95Ms": 5.6298,
+          "over25Percent": 0.0,
+          "maxMs": 11.1123,
+          "passed": true
+        },
+        {
+          "iteration": 2,
+          "phase": "scroll",
+          "conclusive": true,
+          "displayedFrames": 1711,
+          "coverage": 0.99951,
+          "fps": 180.001,
+          "p95Ms": 5.6276,
+          "over25Percent": 0.0,
+          "maxMs": 5.6801,
+          "passed": true
+        },
+        {
+          "iteration": 3,
+          "phase": "hover",
+          "conclusive": true,
+          "displayedFrames": 1713,
+          "coverage": 0.99983,
+          "fps": 179.99,
+          "p95Ms": 5.6389,
+          "over25Percent": 0.0,
+          "maxMs": 5.7589,
+          "passed": true
+        },
+        {
+          "iteration": 3,
+          "phase": "drag",
+          "conclusive": true,
+          "displayedFrames": 1711,
+          "coverage": 0.9996,
+          "fps": 179.476,
+          "p95Ms": 5.627,
+          "over25Percent": 0.0,
+          "maxMs": 11.1904,
+          "passed": true
+        },
+        {
+          "iteration": 3,
+          "phase": "scroll",
+          "conclusive": true,
+          "displayedFrames": 1704,
+          "coverage": 0.99955,
+          "fps": 179.16,
+          "p95Ms": 5.6242,
+          "over25Percent": 0.0,
+          "maxMs": 16.599,
+          "passed": true
+        }
+      ],
+      "rafPhases": [
+        {
+          "iteration": 1,
+          "phases": {
+            "hover": {
+              "count": 1800,
+              "fps": 179.99,
+              "p95Ms": 5.7,
+              "over25Percent": 0,
+              "maxMs": 5.9
+            },
+            "drag": {
+              "count": 1798,
+              "fps": 179.2,
+              "p95Ms": 5.7,
+              "over25Percent": 0.06,
+              "maxMs": 33.3
+            },
+            "scroll": {
+              "count": 1492,
+              "fps": 148.95,
+              "p95Ms": 11.1,
+              "over25Percent": 0,
+              "maxMs": 11.3
+            }
+          },
+          "scrollEvents": 525
+        },
+        {
+          "iteration": 2,
+          "phases": {
+            "hover": {
+              "count": 1801,
+              "fps": 179.99,
+              "p95Ms": 5.7,
+              "over25Percent": 0,
+              "maxMs": 5.8
+            },
+            "drag": {
+              "count": 1801,
+              "fps": 180,
+              "p95Ms": 5.7,
+              "over25Percent": 0,
+              "maxMs": 5.9
+            },
+            "scroll": {
+              "count": 1384,
+              "fps": 138.4,
+              "p95Ms": 11.2,
+              "over25Percent": 0,
+              "maxMs": 11.3
+            }
+          },
+          "scrollEvents": 575
+        },
+        {
+          "iteration": 3,
+          "phases": {
+            "hover": {
+              "count": 1802,
+              "fps": 179.99,
+              "p95Ms": 5.7,
+              "over25Percent": 0,
+              "maxMs": 6.1
+            },
+            "drag": {
+              "count": 1806,
+              "fps": 180,
+              "p95Ms": 5.7,
+              "over25Percent": 0,
+              "maxMs": 7.7
+            },
+            "scroll": {
+              "count": 1392,
+              "fps": 139.12,
+              "p95Ms": 11.2,
+              "over25Percent": 0,
+              "maxMs": 11.3
+            }
+          },
+          "scrollEvents": 573
+        }
+      ],
+      "csvSha256": "f6d041415c2c21cdcbbfe6e2adc6e71aa3b991358e61f2bf232039a0f3c0ceb1",
+      "runSha256": "19c6806d51d6a93b83478516426fb590f3fe636ceffe653dee122938f14cf22f",
+      "passed": true
+    },
+    {
+      "effects": "moderate",
+      "streamSelection": "The unique swapchain covering every hover, drag and scroll phase; partial/idle overlay stream excluded.",
+      "qpcAnchorUncertaintyMs": 26.588,
+      "displayedPhases": [
+        {
+          "iteration": 1,
+          "phase": "hover",
+          "conclusive": true,
+          "displayedFrames": 1710,
+          "coverage": 0.99917,
+          "fps": 179.999,
+          "p95Ms": 5.6281,
+          "over25Percent": 0.0,
+          "maxMs": 5.7452,
+          "passed": true
+        },
+        {
+          "iteration": 1,
+          "phase": "drag",
+          "conclusive": true,
+          "displayedFrames": 1708,
+          "coverage": 0.99962,
+          "fps": 179.475,
+          "p95Ms": 5.6267,
+          "over25Percent": 0.0,
+          "maxMs": 11.1377,
+          "passed": true
+        },
+        {
+          "iteration": 1,
+          "phase": "scroll",
+          "conclusive": true,
+          "displayedFrames": 1666,
+          "coverage": 0.99941,
+          "fps": 174.855,
+          "p95Ms": 5.6327,
+          "over25Percent": 0.0,
+          "maxMs": 11.1879,
+          "passed": true
+        },
+        {
+          "iteration": 2,
+          "phase": "hover",
+          "conclusive": true,
+          "displayedFrames": 1710,
+          "coverage": 0.99922,
+          "fps": 179.986,
+          "p95Ms": 5.6309,
+          "over25Percent": 0.0,
+          "maxMs": 5.8669,
+          "passed": true
+        },
+        {
+          "iteration": 2,
+          "phase": "drag",
+          "conclusive": true,
+          "displayedFrames": 1709,
+          "coverage": 0.99898,
+          "fps": 179.79,
+          "p95Ms": 5.627,
+          "over25Percent": 0.0,
+          "maxMs": 11.111,
+          "passed": true
+        },
+        {
+          "iteration": 2,
+          "phase": "scroll",
+          "conclusive": true,
+          "displayedFrames": 1640,
+          "coverage": 0.99963,
+          "fps": 172.319,
+          "p95Ms": 5.6401,
+          "over25Percent": 0.0,
+          "maxMs": 22.2365,
+          "passed": true
+        },
+        {
+          "iteration": 3,
+          "phase": "hover",
+          "conclusive": true,
+          "displayedFrames": 1712,
+          "coverage": 0.99998,
+          "fps": 179.991,
+          "p95Ms": 5.6381,
+          "over25Percent": 0.0,
+          "maxMs": 5.8384,
+          "passed": true
+        },
+        {
+          "iteration": 3,
+          "phase": "drag",
+          "conclusive": true,
+          "displayedFrames": 1698,
+          "coverage": 0.99902,
+          "fps": 178.737,
+          "p95Ms": 5.6308,
+          "over25Percent": 0.0,
+          "maxMs": 16.6723,
+          "passed": true
+        },
+        {
+          "iteration": 3,
+          "phase": "scroll",
+          "conclusive": true,
+          "displayedFrames": 1660,
+          "coverage": 0.99934,
+          "fps": 174.735,
+          "p95Ms": 5.6343,
+          "over25Percent": 0.0603,
+          "maxMs": 27.7246,
+          "passed": true
+        }
+      ],
+      "rafPhases": [
+        {
+          "iteration": 1,
+          "phases": {
+            "hover": {
+              "count": 1800,
+              "fps": 180,
+              "p95Ms": 5.7,
+              "over25Percent": 0,
+              "maxMs": 5.8
+            },
+            "drag": {
+              "count": 1793,
+              "fps": 179,
+              "p95Ms": 5.7,
+              "over25Percent": 0.06,
+              "maxMs": 27.8
+            },
+            "scroll": {
+              "count": 1464,
+              "fps": 146,
+              "p95Ms": 11.2,
+              "over25Percent": 0,
+              "maxMs": 11.3
+            }
+          },
+          "scrollEvents": 528
+        },
+        {
+          "iteration": 2,
+          "phases": {
+            "hover": {
+              "count": 1801,
+              "fps": 179.98,
+              "p95Ms": 5.7,
+              "over25Percent": 0,
+              "maxMs": 5.8
+            },
+            "drag": {
+              "count": 1802,
+              "fps": 180,
+              "p95Ms": 5.7,
+              "over25Percent": 0,
+              "maxMs": 6
+            },
+            "scroll": {
+              "count": 1463,
+              "fps": 146.05,
+              "p95Ms": 11.2,
+              "over25Percent": 0,
+              "maxMs": 11.3
+            }
+          },
+          "scrollEvents": 576
+        },
+        {
+          "iteration": 3,
+          "phases": {
+            "hover": {
+              "count": 1801,
+              "fps": 179.99,
+              "p95Ms": 5.7,
+              "over25Percent": 0,
+              "maxMs": 6.1
+            },
+            "drag": {
+              "count": 1801,
+              "fps": 180,
+              "p95Ms": 5.7,
+              "over25Percent": 0,
+              "maxMs": 8.2
+            },
+            "scroll": {
+              "count": 1458,
+              "fps": 145.88,
+              "p95Ms": 11.2,
+              "over25Percent": 0,
+              "maxMs": 16.7
+            }
+          },
+          "scrollEvents": 574
+        }
+      ],
+      "csvSha256": "ea64edc56dac974edf36f62e8f01eff35f536ced7266d8f89e4a8dddcc87dd29",
+      "runSha256": "039dd1651a0b0ee42e8003667627d8b6fd10c5f63e320f88034b706dc40b88b5",
+      "passed": true
+    }
+  ],
+  "permissions": {
+    "onlyPresentMonElevated": true,
+    "applicationElevated": false,
+    "groupMembershipChanged": false,
+    "systemHdrChanged": false
+  },
+  "limitations": [
+    "No physical panel luminance or GPU utilization percentage measured.",
+    "Two earlier CDP input-timeout attempts were excluded; their partial captures are retained locally. Cause not established.",
+    "No independent Qt ETW capture; the frozen Qt rAF and Chromium comparison remains the earlier valid baseline."
+  ],
+  "passed": true
+}

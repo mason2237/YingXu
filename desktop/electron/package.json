@@ -1,0 +1,11 @@
+{
+  "name": "yingxu",
+  "productName": "映序",
+  "version": "0.10.0-rc.1",
+  "private": true,
+  "main": "main.cjs",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "engines": {"electron": "45.0.0"},
+  "scripts": {"start": "electron ."},
+  "devDependencies": {"electron": "45.0.0"}
+}

@@ -1,0 +1,75 @@
+{
+  "version": "0.9.0-rc.10",
+  "date": "2026-10-25",
+  "entry": "run.py",
+  "build": "scripts/build.py --zip",
+  "recoveryCommit": "fa357cca0a8ddef99b2d95302f0f0fd240f683ac",
+  "trackedRemovalTargets": 57,
+  "cleanup": {
+    "deletedTargets": 33,
+    "deletedLogicalBytes": 10802397325.0,
+    "retainedVersion": "0.9.0-rc.10",
+    "gitHistoryRetained": true,
+    "historicalGitBundleVerified": true,
+    "userMediaTouched": false,
+    "remoteReleasesChanged": false
+  },
+  "evidenceArchive": {
+    "archivedTargets": 247,
+    "images": "work/test-results/history-images",
+    "logs": "work/test-results/history-build-logs",
+    "overwrites": false
+  },
+  "binary": {
+    "version": "0.9.0-rc.10",
+    "entryScript": "run",
+    "nativeQtHostBundled": true,
+    "widgetsWebCompatibilityBundled": true,
+    "oldTkOrQtUiModulesBundled": false,
+    "oldDiagnosticModulesBundled": false,
+    "oldFrontendPagesBundled": false,
+    "businessModulesUnchanged": true
+  },
+  "tests": {
+    "corePassed": 63,
+    "webPassed": 56,
+    "nativeSourceWorkflowGroupsPassed": 5,
+    "widgetsSourceWorkflowGroupsPassed": 5,
+    "newExeStartupPassed": true,
+    "newExeMediaWorkflowRepeated": false,
+    "fullVisualVerificationPassed": false,
+    "visualProbeLimit": "Source screenshot/animation checks timed out; old rc.9 EXE also timed out waiting for frame readiness. Cause not established; no full visual pass claimed.",
+    "settingsCloseProbe": "Timed out waiting for overlay to settle; not claimed as passed",
+    "sandboxFirstAttemptPassed": false,
+    "normalPermissionUnitTestsPassed": true
+  },
+  "exeStartup": {
+    "width": 1280,
+    "height": 860,
+    "overflow": false,
+    "desktopBoot": "ready",
+    "fontLoaded": true,
+    "glassButtons": 36,
+    "structuralButtons": 4,
+    "buttons": 40,
+    "frameValidationPerformed": false,
+    "quickActionsAbsent": true,
+    "occlusionGuardPassedToChild": true
+  },
+  "reportedDisplayOutput": {
+    "host": "qt-quick",
+    "backend": "D3D11",
+    "swapchain": "HDRExtendedSrgbLinear",
+    "nativeHdrActive": true,
+    "systemHdrEnabled": true,
+    "bitsPerChannel": 10,
+    "sdrWhiteNits": 240,
+    "osSettingsChanged": false
+  },
+  "javascriptExceptions": [],
+  "consoleErrors": [],
+  "cleanWindowsTested": false,
+  "physicalHdrMeasured": false,
+  "uploaded": false,
+  "remoteReleasesChanged": false
+}

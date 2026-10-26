@@ -42,7 +42,7 @@ if __name__ == '__main__':
         (media/'映序.S01E0001.chs.srt').write_bytes(b'subtitle')
         before=files(media)
         settings=QSettings(str(root/'appearance.ini'),QSettings.Format.IniFormat)
-        window=WebWindow(workspace=True,appearance_settings=settings,history=HistoryStore(root/'history.jsonl'))
+        window=WebWindow(appearance_settings=settings,history=HistoryStore(root/'history.jsonl'))
         window.show()
         try:
             wait_for(lambda:window._loaded and ready(window),'Initial workspace startup')

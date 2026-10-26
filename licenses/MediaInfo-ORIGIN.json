@@ -1,0 +1,12 @@
+{
+  "package": "pymediainfo",
+  "version": "7.0.1",
+  "wheel": "pymediainfo-7.0.1-py3-none-win_amd64.whl",
+  "url": "https://files.pythonhosted.org/packages/e7/26/9d50c2a330541bc36c0ea7ce29eeff5b0c35c2624139660df8bcfa9ae3ce/pymediainfo-7.0.1-py3-none-win_amd64.whl",
+  "wheelSha256": "13224fa7590e198763b8baf072e704ea81d334e71aa32a469091460e243893c7",
+  "dll": "pymediainfo/MediaInfo.dll",
+  "dllSha256": "0b1fe249286901e57d4fc70a241322076f7b3e3d66324c30afdd3a70b66d1886",
+  "pythonLicense": "MIT",
+  "libraryLicense": "BSD-2-Clause",
+  "distribution": "official Windows wheel; no external scripts executed"
+}

@@ -75,7 +75,7 @@ if __name__ == '__main__':
         history = HistoryStore(root/'history'/'history.jsonl')
         settings = QSettings(str(root/'appearance.ini'),QSettings.Format.IniFormat)
         print('Creating real workspace window',flush=True)
-        window = WebWindow(workspace=True,appearance_settings=settings,history=history)
+        window = WebWindow(appearance_settings=settings,history=history)
         service = window.bridge.service
         with patch('yingxu.web_ui.window.QFileDialog.getExistingDirectory',return_value=str(media)),patch('yingxu.web_ui.window.QFileDialog.getSaveFileName',return_value=(str(report),'JSON')),patch('yingxu.web_ui.window.QDesktopServices.openUrl',side_effect=lambda url:opened.append(url.toLocalFile()) or True):
             window.show();print('Waiting for local page',flush=True)

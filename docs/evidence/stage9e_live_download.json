@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-24",
+  "runtime": "real Qt source application; production browser and import code",
+  "websiteResponsesMocked": false,
+  "query": "Interstellar 2014",
+  "zimuku": {
+    "result": "CAPTCHA required",
+    "downloaded": false
+  },
+  "subhd": {
+    "detail": "https://subhd.me/a/Cm0tsS",
+    "candidateCount": 20,
+    "downloadedFiles": 1,
+    "format": "ASS",
+    "bytes": 251040,
+    "sha256": "bb03ec628c9b34917af2eea828481634014a762ed567f74a5bb52ec555bbe9f6",
+    "downloadScheme": "same-origin blob",
+    "downloadButtonsClicked": 2,
+    "captchaSolved": false,
+    "imported": 1,
+    "associationState": "需确认",
+    "matchConfirmed": false,
+    "videoModified": false,
+    "subtitleWrittenBesideVideo": false
+  },
+  "remoteWebChannel": false,
+  "pythonErrors": [],
+  "workspaceJSErrors": [],
+  "automaticDownloadTriggerImplemented": false,
+  "limits": [
+    "Website download buttons still require interaction.",
+    "No timing or edition compatibility verified.",
+    "Zimuku still requires user CAPTCHA."
+  ]
+}

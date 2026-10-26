@@ -1,10 +1,10 @@
-"""Offline desktop shell for the local workspace and retained preview entries."""
+"""SDR Widgets WebEngine compatibility host for the current local workspace."""
 import logging
 import json
 from pathlib import Path
 import sys
 
-from PySide6.QtCore import QUrl, Qt, QTimer, Signal
+from PySide6.QtCore import QEvent, QUrl, Qt, QTimer, Signal
 from PySide6.QtGui import QColor, QIcon, QKeySequence, QShortcut, QDesktopServices
 from PySide6.QtWidgets import QApplication, QLabel, QMainWindow, QStackedWidget, QFileDialog
 from PySide6.QtWebChannel import QWebChannel
@@ -12,10 +12,12 @@ from PySide6.QtWebEngineCore import QWebEnginePage, QWebEngineProfile, QWebEngin
 from PySide6.QtWebEngineWidgets import QWebEngineView
 
 from .workspace_bridge import WorkspaceBridge
+from .native_actions import WorkspaceNativeActions
 from .protocol import ProtocolError
 from ..operations import StalePlan
 from ..version import VERSION
 from .appearance import AppearanceBridge, BACKGROUNDS, native_palette, set_titlebar_theme
+from .typography import ui_font
 from .resources import APP_URL, WORKSPACE_ASSETS, LocalOnlyRequests, LocalResources, register_scheme, resource_key
 
 
@@ -45,7 +47,7 @@ class WorkspaceView(QWebEngineView):
 
 
 class LocalPage(QWebEnginePage):
-    def __init__(self, profile, parent=None, document_key="/index.html"):
+    def __init__(self, profile, parent=None, document_key="/workspace.html"):
         super().__init__(profile, parent)
         self.console_errors = []
         self.document_key = document_key
@@ -63,102 +65,108 @@ class LocalPage(QWebEnginePage):
             logging.getLogger(__name__).warning("Local page error at line %s: %s", line, message)
 
 
-class WebWindow(QMainWindow):
-    def __init__(self, *, preview=False, effects=False, workspace=False, appearance_settings=None, history=None):
+class WebWindow(QMainWindow, WorkspaceNativeActions):
+    def __init__(self, *, appearance_settings=None, history=None):
         super().__init__()
-        if sum((preview,effects,workspace)) > 1:
-            raise ValueError("Choose one preview page")
-        self.workspace_mode = workspace
-        self.setWindowTitle("映序 · 字幕整理器" if workspace else "映序 · 原版效果对照" if effects else "映序 · 工作台预览" if preview else "映序 · Web 架构预览")
-        self.resize(1280 if preview or effects or workspace else 1120, 900 if effects else 860 if preview or workspace else 760)
-        # Qt sizes are logical pixels. A fixed 860px height extends beyond a
-        # 200% desktop; retain room for the native title bar and taskbar.
+        self.file_dialog_parent = self
+        self.subtitle_parent = self
+        self.workspace_mode = True
+        self.subtitle_browser = None
+        self._subtitle_import = None
+        self._native_theme = None
+        self.setFont(ui_font())
+        self.setWindowTitle('映序 · 字幕整理器')
+        self.resize(1280, 860)
         available = self.screen().availableGeometry()
-        max_width, max_height = max(640, available.width() - 32), max(420, available.height() - 64)
-        self.setMinimumSize(min(900 if preview or effects or workspace else 820, max_width),
-                            min(620 if preview or effects or workspace else 600, max_height))
+        max_width, max_height = (max(640, available.width() - 32), max(420, available.height() - 64))
+        self.setMinimumSize(min(900, max_width), min(620, max_height))
         self.resize(min(self.width(), max_width), min(self.height(), max_height))
         self._loaded = False
         self._closing = False
-        self.profile = QWebEngineProfile(self)  # Unnamed, off-the-record profile.
-        allowed = WORKSPACE_ASSETS if workspace else None
-        self.resources = LocalResources(self.profile,allowed=allowed)
-        self.requests = LocalOnlyRequests(self.profile,allowed=allowed)
-        self.profile.installUrlSchemeHandler(b"yingxu", self.resources)
+        self.profile = QWebEngineProfile(self)
+        allowed = WORKSPACE_ASSETS
+        self.resources = LocalResources(self.profile, allowed=allowed)
+        self.requests = LocalOnlyRequests(self.profile, allowed=allowed)
+        self.profile.installUrlSchemeHandler(b'yingxu', self.resources)
         self.profile.setUrlRequestInterceptor(self.requests)
         self.profile.downloadRequested.connect(lambda download: download.cancel())
         self.profile.setHttpCacheType(QWebEngineProfile.HttpCacheType.MemoryHttpCache)
         self.profile.setPersistentCookiesPolicy(QWebEngineProfile.PersistentCookiesPolicy.NoPersistentCookies)
-
-        self.view = WorkspaceView(self) if workspace else QWebEngineView(self)
+        self.view = WorkspaceView(self)
         self.view.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
-        document_key = "/effects.html" if effects else "/workspace.html" if preview or workspace else "/index.html"
+        document_key = '/workspace.html'
         self.page = LocalPage(self.profile, self.view, document_key)
         settings = self.page.settings()
-        for attribute in (QWebEngineSettings.WebAttribute.LocalContentCanAccessRemoteUrls,
-                          QWebEngineSettings.WebAttribute.LocalContentCanAccessFileUrls,
-                          QWebEngineSettings.WebAttribute.JavascriptCanOpenWindows,
-                          QWebEngineSettings.WebAttribute.PluginsEnabled,
-                          QWebEngineSettings.WebAttribute.PdfViewerEnabled,
-                          QWebEngineSettings.WebAttribute.FullScreenSupportEnabled):
+        for attribute in (QWebEngineSettings.WebAttribute.LocalContentCanAccessRemoteUrls, QWebEngineSettings.WebAttribute.LocalContentCanAccessFileUrls, QWebEngineSettings.WebAttribute.JavascriptCanOpenWindows, QWebEngineSettings.WebAttribute.PluginsEnabled, QWebEngineSettings.WebAttribute.PdfViewerEnabled, QWebEngineSettings.WebAttribute.FullScreenSupportEnabled):
             settings.setAttribute(attribute, False)
         self.page.permissionRequested.connect(lambda permission: permission.deny())
         self.view.setPage(self.page)
-        if workspace:
-            self.bridge = WorkspaceBridge(self,history=history)
-        else:
-            # Release builds can omit the diagnostic backend completely.
-            from .bridge import FoundationBridge
-            self.bridge = FoundationBridge(self)
+        self.bridge = WorkspaceBridge(self, history=history)
         self.channel = QWebChannel(self.page)
         self.appearance = None
-        self.titlebar_status = {"supported": False}
-        if preview or effects or workspace:
-            self.appearance = AppearanceBridge(QApplication.styleHints(), self, appearance_settings)
-            self.channel.registerObject("appearance", self.appearance)
-            self.page.setWebChannel(self.channel)
-            self.appearance.changed.connect(self.apply_appearance)
-        if workspace or (not preview and not effects):
-            self.channel.registerObject("bridge", self.bridge)
-            self.page.setWebChannel(self.channel)
+        self.titlebar_status = {'supported': False}
+        self.appearance = AppearanceBridge(QApplication.styleHints(), self, appearance_settings)
+        self.channel.registerObject('appearance', self.appearance)
+        self.page.setWebChannel(self.channel)
+        self.appearance.changed.connect(self.apply_appearance)
+        self.channel.registerObject('bridge', self.bridge)
+        self.page.setWebChannel(self.channel)
         self.view.loadStarted.connect(lambda: self.bridge.reset_page())
         self.view.loadFinished.connect(self.on_loaded)
+        self.bridge.service.idle.connect(self.finish_subtitle_import)
+        script = QWebEngineScript()
+        script.setName('yingxu-workspace-mode')
+        script.setInjectionPoint(QWebEngineScript.InjectionPoint.DocumentCreation)
+        script.setWorldId(QWebEngineScript.ScriptWorldId.MainWorld)
+        script.setRunsOnSubFrames(False)
+        script.setSourceCode("Object.defineProperty(globalThis,'__yingxuWorkspaceMode',{value:'local'});\n              (()=>{const apply=()=>{if(!document.documentElement)return false;document.documentElement.dataset.desktopBoot='pending';return true;};\n              if(!apply()){const observer=new MutationObserver(()=>{if(apply())observer.disconnect();});observer.observe(document,{childList:true,subtree:true});}})();")
+        self.page.scripts().insert(script)
+        self.bridge.service.native_requested.connect(lambda action, params, rid, sid: QTimer.singleShot(0, lambda: self.handle_native(action, params, rid, sid)))
+        self.view.setAcceptDrops(True)
+        self.view.folder_dropped.connect(lambda path: self.accept_drop(path))
+        self.view.drag_active.connect(lambda active: self.page.runJavaScript("document.documentElement.dataset.dragFolder='" + ('true' if active else 'false') + "';"))
+        self.page.renderProcessTerminated.connect(lambda *_args: self.bridge.reset_page())
         self.bridge.service.idle.connect(self.finish_close)
-        if workspace:
-            script = QWebEngineScript();script.setName("yingxu-workspace-mode")
-            script.setInjectionPoint(QWebEngineScript.InjectionPoint.DocumentCreation)
-            script.setWorldId(QWebEngineScript.ScriptWorldId.MainWorld);script.setRunsOnSubFrames(False)
-            script.setSourceCode("Object.defineProperty(globalThis,'__yingxuWorkspaceMode',{value:'local'});")
-            self.page.scripts().insert(script)
-            self.bridge.service.native_requested.connect(lambda action,params,rid,sid:
-                QTimer.singleShot(0,lambda:self.handle_native(action,params,rid,sid)))
-            self.view.setAcceptDrops(True)
-            self.view.folder_dropped.connect(lambda path:self.accept_drop(path))
-            self.view.drag_active.connect(lambda active:self.page.runJavaScript(
-                "document.documentElement.dataset.dragFolder='"+("true" if active else "false")+"';"))
-            self.page.renderProcessTerminated.connect(lambda *_args:self.bridge.reset_page())
-
         self.stack = QStackedWidget(self)
         self.stack.addWidget(self.view)
-        self.fallback = QLabel("本地页面未能加载。请检查前端资源后重新打开应用。", self)
+        self.fallback = QLabel('本地页面未能加载。请检查前端资源后重新打开应用。', self)
         self.fallback.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.fallback.setWordWrap(True)
         self.stack.addWidget(self.fallback)
         self.setCentralWidget(self.stack)
-        self.reload_shortcut = QShortcut(QKeySequence("Ctrl+R"), self)
+        self.stack.installEventFilter(self)
+        self.loading_cover = QLabel('映序\n正在准备工作台…', self.stack)
+        self.loading_cover.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.loading_cover.setFont(ui_font(14))
+        self.loading_cover.setAutoFillBackground(True)
+        self.loading_cover.setGeometry(self.stack.rect())
+        self.loading_cover.setVisible(True)
+        self.loading_cover.raise_()
+        self.ready_timer = QTimer(self)
+        self.ready_timer.setInterval(60)
+        self.ready_timer.timeout.connect(self.check_first_frame)
+        self._ready_checks = 0
+        self.bridge.service.idle.connect(self.schedule_subtitle_imports)
+        self.reload_shortcut = QShortcut(QKeySequence('Ctrl+R'), self)
         self.reload_shortcut.activated.connect(self.reload_page)
         if self.appearance:
             self.apply_appearance(self.appearance.getState())
-        self.view.setUrl(QUrl("yingxu://app" + document_key))
+        self.view.setUrl(QUrl('yingxu://app' + document_key))
 
     def apply_appearance(self, payload):
-        theme = json.loads(payload)["resolvedTheme"]
-        self.setPalette(native_palette(theme))
-        self.page.setBackgroundColor(QColor(BACKGROUNDS[theme]))
+        state = json.loads(payload)
+        theme = state["resolvedTheme"]
+        changed = theme != self._native_theme
+        if changed:
+            self.setPalette(native_palette(theme))
+            self.page.setBackgroundColor(QColor(BACKGROUNDS[theme]))
+            self._native_theme = theme
+            if self.isVisible(): self.titlebar_status = set_titlebar_theme(int(self.winId()), theme)
         for old in self.page.scripts().find("yingxu-appearance-bootstrap"):
             self.page.scripts().remove(old)
         self.page.scripts().insert(self.appearance.script())
-        self.titlebar_status = set_titlebar_theme(int(self.winId()), theme)
+        if self.subtitle_browser is not None:
+            self.subtitle_browser.set_theme(theme, state.get('lighting', 'enhanced'))
 
     def showEvent(self, event):
         super().showEvent(event)
@@ -168,57 +176,40 @@ class WebWindow(QMainWindow):
     def reload_page(self):
         self._loaded = False
         self.stack.setCurrentWidget(self.view)
+        if self.workspace_mode:
+            self.loading_cover.show();self.loading_cover.raise_()
         self.view.reload()
 
     def on_loaded(self, success):
         if success:
-            self._loaded = True
             self.stack.setCurrentWidget(self.view)
+            if self.workspace_mode:
+                self._ready_checks = 0;self.ready_timer.start()
+            else: self._loaded = True
         elif not self._loaded:
+            self.loading_cover.hide()
             self.stack.setCurrentWidget(self.fallback)
 
-    def finish_close(self):
-        if self._closing:
-            self.close()
+    def check_first_frame(self):
+        if self._closing: self.ready_timer.stop();return
+        self._ready_checks += 1
+        def received(ready):
+            if ready:
+                self.ready_timer.stop();self._loaded = True;self.loading_cover.hide()
+            elif self._ready_checks > 160:
+                self.ready_timer.stop();self.loading_cover.hide()
+                self.fallback.setText('工作台未能准备完成，请按 Ctrl+R 重试。')
+                self.stack.setCurrentWidget(self.fallback)
+        self.page.runJavaScript("document.documentElement?.dataset.desktopBoot==='ready'",received)
 
-    def accept_drop(self, path):
-        try:
-            self.bridge.service.accept_folder(path,dropped=True)
-        except (ProtocolError,OSError,ValueError,StalePlan) as error:
-            self.bridge.service.emit("app.error",{"message":error.message if isinstance(error,ProtocolError) else str(error)})
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        if hasattr(self,'loading_cover'): self.loading_cover.setGeometry(self.stack.rect())
 
-    def handle_native(self, action, params, rid, sid):
-        service = self.bridge.service;data = None;error = None
-        try:
-            if self.bridge.session_id != sid or self.bridge.closing:
-                return
-            if action == "folder.choose":
-                path = QFileDialog.getExistingDirectory(self,"选择包含视频与字幕的文件夹",str(service.folder or Path.home()))
-                if self.bridge.session_id != sid or self.bridge.closing:return
-                service.native_busy = False
-                data = {"cancelled":True} if not path else {"cancelled":False,"summary":service.accept_folder(path)}
-            elif action == "result.export":
-                path,_ = QFileDialog.getSaveFileName(self,"导出整理记录","映序整理记录.json","JSON 记录 (*.json)",options=QFileDialog.Option.DontConfirmOverwrite)
-                if self.bridge.session_id != sid or self.bridge.closing:return
-                service.native_busy = False
-                data = {"cancelled":True} if not path else service.export_record(params["recordId"],Path(path))
-            else:
-                path = service.registered_path(params["fileId"])
-                if action == "file.copyName":QApplication.clipboard().setText(path.name);data = {"copied":True}
-                elif action == "file.reveal":
-                    folder = path if path == service.folder else path.parent
-                    if not folder.is_dir():raise FileNotFoundError(f"所在文件夹已不存在：{folder}")
-                    if not QDesktopServices.openUrl(QUrl.fromLocalFile(str(folder))):
-                        raise ProtocolError("PATH_UNREADABLE","无法打开文件所在位置。")
-                    data = {"opened":True}
-        except ProtocolError as caught:error = caught
-        except PermissionError as caught:error = ProtocolError("PERMISSION_DENIED",str(caught))
-        except (OSError,ValueError,StalePlan) as caught:error = ProtocolError("PATH_UNREADABLE",str(caught))
-        except Exception:error = ProtocolError("INTERNAL_ERROR","原生操作未完成，请重试。")
-        finally:
-            service.native_busy = False
-            self.bridge.finish_native(rid,sid,data=data,error=error)
-            service.emit("native.idle")
+    def eventFilter(self,watched,event):
+        if watched is getattr(self,'stack',None) and event.type()==QEvent.Type.Resize and hasattr(self,'loading_cover'):
+            self.loading_cover.setGeometry(self.stack.rect())
+        return super().eventFilter(watched,event)
 
     def closeEvent(self, event):
         if self.bridge.service.worker:
@@ -231,6 +222,10 @@ class WebWindow(QMainWindow):
             event.ignore()
             return
         self.bridge.closing = True
+        if self.subtitle_browser is not None:
+            self.subtitle_browser.import_busy = False
+            self.subtitle_browser.close()
+            self.subtitle_browser = None
         self.page.setWebChannel(None)
         self.view.stop()
         self.page.deleteLater()
@@ -238,17 +233,18 @@ class WebWindow(QMainWindow):
         super().closeEvent(event)
 
 
-def main(*, preview=False, effects=False, workspace=False):
-    register_scheme()  # Must precede QApplication and all WebEngine objects.
+def main():
+    register_scheme()
     app = QApplication(sys.argv)
-    app.setApplicationName("映序" if workspace else "YingXu Web Foundation")
+    app.setApplicationName('映序')
     app.setApplicationVersion(VERSION)
-    app.setStyle("Fusion")
-    window = WebWindow(preview=preview, effects=effects,workspace=workspace)
-    icon = Path(__file__).resolve().parents[2] / "outputs" / "subtitle_organizer.ico"
-    if getattr(sys, "frozen", False):
-        icon = Path(sys._MEIPASS) / "subtitle_organizer.ico"
+    app.setStyle('Fusion')
+    window = WebWindow()
+    icon = Path(__file__).resolve().parents[2] / 'assets' / 'subtitle_organizer.ico'
+    if getattr(sys, 'frozen', False):
+        icon = Path(sys._MEIPASS) / 'subtitle_organizer.ico'
     if icon.is_file():
         window.setWindowIcon(QIcon(str(icon)))
     window.show()
+    window.activateWindow()
     return app.exec()

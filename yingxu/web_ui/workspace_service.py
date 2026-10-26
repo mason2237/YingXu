@@ -1,5 +1,6 @@
 """Python owns the review, frozen targets, one-use consent and background jobs."""
 from collections import OrderedDict
+from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
 from secrets import token_urlsafe, compare_digest
@@ -12,10 +13,13 @@ from PySide6.QtCore import QObject, Signal
 from ..core import collect_media, check_cancelled
 from ..review import ReviewPlan, path_key
 from ..operations import (HistoryStore, BatchResult, ItemResult, dir_mark,
-                          snapshot_from_review, run_batch, export_result)
+                          snapshot_from_review, run_batch, export_result, file_mark, StalePlan)
+from ..embedded_subtitles import ProbeSession, assess
+from ..subtitle_sources.imports import prepare_download, private_path
 from .protocol import ProtocolError
 from .workspace_data import ReviewData
 from .workspace_worker import WorkspaceWorker
+from .embedded_settings import EmbeddedSettings
 
 RESULT_LABELS = {"success":"成功", "error":"失败", "blocked":"已阻止", "cancelled":"未执行",
                  "skipped":"跳过", "unmatched":"未匹配", "unchanged":"无需变更"}
@@ -26,7 +30,7 @@ class WorkspaceService(QObject):
     idle = Signal()
     native_requested = Signal(str, object, str, str)
 
-    def __init__(self, parent=None, *, history=None):
+    def __init__(self, parent=None, *, history=None, embedded_settings=None):
         super().__init__(parent)
         self.history = history or HistoryStore()
         self.worker = None; self.job = None; self.native_busy = False
@@ -37,6 +41,9 @@ class WorkspaceService(QObject):
         self.snapshot = None; self.ticket = None; self.consumed = OrderedDict();self._preview_version = 0
         self.records = OrderedDict(); self.history_error = ""; self.last_result_id = None
         self.finished = False; self._complete = None
+        self.staged_downloads = {}
+        self.embedded_settings = EmbeddedSettings(embedded_settings)
+        self._embedded_cache = OrderedDict()
 
     @property
     def busy(self): return self.worker is not None or self.native_busy
@@ -85,6 +92,8 @@ class WorkspaceService(QObject):
             "displayPath":str(self.folder) if self.folder else "",
             "counts":self.data.counts if self.data else {"all":0},
             "subtitleCount":self.data.subtitle_count if self.data else 0,
+            "embeddedSatisfiedCount":sum(row.uses_embedded and not row.skipped for row in self.data.review.rows) if self.data else 0,
+            "embeddedOptions":dict(self.embedded_settings.options),
             "options":dict(self.options), "needsScan":bool(self.folder and not self.data),
             "folderPending":self.folder_pending, "finished":self.finished,
             "lastResultId":self.last_result_id,
@@ -102,6 +111,98 @@ class WorkspaceService(QObject):
         if not self.data or params.get("scanId") != self.data.scan_id or params.get(revision_key) != self.data.revision:
             raise ProtocolError("STALE_REVIEW","扫描或审阅版本已变化，请刷新列表或重新扫描。",retryable=True)
         return self.data
+
+    def subtitle_tasks(self, params, *, idle=True):
+        """Resolve online-search inputs solely from the current Python review."""
+        data = self.require_review(params, idle=idle)
+        indices = [data.index(params["rowId"])] if "rowId" in params else [
+            i for i, row in enumerate(data.review.rows) if not row.matches and not row.skipped and not row.uses_embedded]
+        if "rowId" in params and data.review.rows[indices[0]].uses_embedded:
+            raise ProtocolError("ALREADY_SATISFIED", "内嵌字幕已符合语言要求；如需外挂，请先选择“仍需外挂字幕”。")
+        if not indices:
+            raise ProtocolError("NOT_FOUND", "没有未匹配的视频。也可在匹配详情中为当前视频查找在线字幕。")
+        return [{"rowId": data.rows[i]["rowId"], "video": data.review.rows[i].video,
+                 "scanId": data.scan_id, "revision": data.revision} for i in indices]
+
+    def register_download(self, receipt, root):
+        """Native download callback only; no channel action accepts cache paths."""
+        if receipt.get("status") not in {"archive_pending", "subtitle_candidate"}:
+            raise ValueError("下载未通过格式初检。")
+        if not self.data or receipt.get("scanId") != self.data.scan_id:
+            raise ProtocolError("STALE_REVIEW", "下载对应的扫描已失效；文件保留在暂存目录。")
+        index = self.data.index(receipt["rowId"])
+        path = private_path(Path(receipt["stagingPath"]), root)
+        key = receipt["stagingId"]
+        if key not in self.staged_downloads:
+            if len(self.staged_downloads) >= 200:
+                raise ValueError("本次工作台已登记 200 份下载，请先完成整理。")
+            self.staged_downloads[key] = {"path":path, "root":Path(root), "mark":file_mark(path),
+                "scanId":self.data.scan_id, "rowId":receipt["rowId"], "used":False,
+                "videoMark":file_mark(self.data.review.rows[index].video)}
+        return key
+
+    def import_downloads(self, identifiers, params):
+        data = self.require_review(params)
+        if not identifiers or len(identifiers) > 20 or len(set(identifiers)) != len(identifiers):
+            raise ValueError("请选择 1–20 份未导入的下载，不能重复选择。")
+        selected = []
+        for key in identifiers:
+            entry = self.staged_downloads.get(key)
+            if not entry or entry["scanId"] != data.scan_id:
+                raise ProtocolError("STALE_REVIEW", "下载不属于当前扫描，未导入。")
+            if entry["used"]:
+                raise ProtocolError("ALREADY_IMPORTED", "这份下载已经导入，不能重复登记。")
+            selected.append((key, entry, data.index(entry["rowId"])))
+        self.invalidate_preview()
+
+        def work(worker):
+            entries, outcomes = [], []
+            total_bytes = 0
+            budget = {"bytes":128 * 1024 * 1024,"files":200}
+            for done, (key, entry, index) in enumerate(selected):
+                check_cancelled(worker.stop.is_set)
+                worker.report(done, len(selected), f"检查字幕 · {entry['path'].name}", "import")
+                try:
+                    if file_mark(data.review.rows[index].video) != entry["videoMark"]:
+                        raise StalePlan("视频已变化，请重新扫描。")
+                    files, skipped = prepare_download(entry["path"], entry["root"], entry["mark"],
+                                                      should_stop=worker.stop.is_set,budget=budget)
+                    size = sum(item.mark.size for item in files)
+                    if len(entries) + len(files) > 200 or total_bytes + size > 128 * 1024 * 1024:
+                        raise ValueError("本次导入超过 200 份字幕或 128 MiB 限制，请分批处理。")
+                    total_bytes += size
+                    for item in files:
+                        entries.append((item.path, {"rowIndex":index, "mark":item.mark,
+                            "stagingId":key, "originalName":item.original_name}))
+                    outcomes.append({"stagingId":key,"count":len(files),"skipped":skipped,"error":""})
+                except (OSError, ValueError, StalePlan) as error:
+                    outcomes.append({"stagingId":key,"count":0,"skipped":[],"error":str(error)})
+            check_cancelled(worker.stop.is_set)
+            review = deepcopy(data.review)
+            assigned = review.add_imports(entries) if entries else 0
+            warnings = list(data.scan_warnings)
+            for outcome in outcomes:
+                if outcome["error"]:
+                    warnings.append("在线字幕：" + outcome["error"])
+                warnings.extend("在线字幕：" + text for text in outcome["skipped"])
+            updated = ReviewData(review, self.register, scan_id=data.scan_id,
+                revision=data.revision + 1, warnings=warnings[:50])
+            updated.warning_count = data.warning_count + len(warnings) - len(data.scan_warnings)
+            worker.report(len(selected),len(selected),"字幕检查完成，等待审阅", "import")
+            return updated, {"outcomes":outcomes,"imported":len(entries),"assigned":assigned,
+                "unassigned":len(entries)-assigned,"rowId":selected[0][1]["rowId"]}
+
+        def complete(value):
+            updated, result = value
+            if self.data is not data:
+                raise ProtocolError("STALE_REVIEW", "审阅已变化，缓存文件保留，请重新导入。")
+            self.data = updated; self.revision = updated.revision
+            for outcome in result["outcomes"]:
+                if outcome["count"]:
+                    self.staged_downloads[outcome["stagingId"]]["used"] = True
+            return {**result,"revision":updated.revision}
+
+        return self.launch("import",work,complete,"正在检查下载内容；不会修改视频目录…")
 
     def launch(self, kind, work, complete, message):
         self.require_idle()
@@ -151,6 +252,7 @@ class WorkspaceService(QObject):
         self.invalidate_preview(); self.folder_pending = False; self.finished = False
         self.options = {"recursive":params["recursive"],"move":params["move"]}
         root, mark, options, revision = self.folder, self.folder_mark, dict(self.options), self.revision+1
+        embedded_options = dict(self.embedded_settings.options)
         def work(worker):
             errors = []; error_count = 0
             def warning(error):
@@ -171,10 +273,34 @@ class WorkspaceService(QObject):
                     except OSError as error: warning(error)
                 return accepted
             videos, subtitles = inside(videos), inside(subtitles)
+            embedded = {}
+            with ProbeSession(worker.stop.is_set) as reader:
+                for done, video in enumerate(videos):
+                    check_cancelled(worker.stop.is_set)
+                    if embedded_options["enabled"]:
+                        worker.report(done, len(videos), f"检查内嵌字幕 · {done+1} / {len(videos)}", "embedded")
+                        try:
+                            before = file_mark(video)
+                            key = (path_key(video), before)
+                            info = self._embedded_cache.get(key)
+                            if info is None:
+                                info = reader.probe(video)
+                                if file_mark(video) != before:
+                                    raise StalePlan("读取字幕轨道期间视频已变化，请重新扫描。")
+                                if info["status"] == "ok":
+                                    self._embedded_cache[key] = deepcopy(info)
+                                    self._embedded_cache.move_to_end(key)
+                                    while len(self._embedded_cache) > 512:self._embedded_cache.popitem(last=False)
+                            embedded[path_key(video)] = assess(info, embedded_options)
+                        except (OSError, StalePlan) as error:
+                            embedded[path_key(video)] = assess({"status":"error","tracks":[],"error":str(error)}, embedded_options)
+                    else:
+                        embedded[path_key(video)] = assess({"status":"disabled","tracks":[]}, embedded_options)
+                if reader.unavailable: warning("内嵌字幕读取组件不可用；未自动通过任何视频，请使用完整运行包。")
             if dir_mark(root) != mark: raise ProtocolError("PATH_UNREADABLE","扫描时文件夹已变化，请重新选择。")
             review = ReviewPlan(videos,subtitles,options["move"],should_stop=worker.stop.is_set,
                 progress=lambda done,total,phase: worker.report(done,total,
-                    f"{'计算匹配' if phase == 'matching' else '核对多语言字幕'} · {done} / {total}",phase))
+                    f"{'计算匹配' if phase == 'matching' else '核对多语言字幕'} · {done} / {total}",phase),embedded=embedded)
             check_cancelled(worker.stop.is_set)
             result = ReviewData(review,self.register,revision=revision,warnings=errors)
             result.warning_count = error_count
@@ -195,7 +321,15 @@ class WorkspaceService(QObject):
             self.ticket = {"sessionId":session_id,"scanId":scan_id,"revision":revision,
                            "snapshotId":snapshot.snapshot_id,"token":token_urlsafe(32)}
             return self.preview_info(include_token=True)
-        return self.launch("preview",lambda worker:snapshot_from_review(data.review),complete,"正在冻结文件变更并检查源文件…")
+        def freeze(worker):
+            for row in data.review.rows:
+                if row.skipped: continue
+                for match in row.matches:
+                    imported = data.review.imported.get(path_key(match.source))
+                    if imported and file_mark(match.source) != imported["mark"]:
+                        raise StalePlan("导入字幕在审阅后发生变化，请移除关联并重新下载导入。")
+            return snapshot_from_review(data.review)
+        return self.launch("preview",freeze,complete,"正在冻结文件变更并检查源文件…")
 
     def preview_info(self, *, include_token=False):
         snapshot = self.snapshot
@@ -302,6 +436,13 @@ class WorkspaceService(QObject):
 
     def dispatch(self, action, params, session_id):
         if action == "app.state": return self.state()
+        if action == "embedded.configure":
+            self.require_idle()
+            if params != self.embedded_settings.options:
+                self.embedded_settings.update(params)
+                self.data = None;self.revision += 1;self.finished = False
+                self.invalidate_preview();self.emit("review.invalidated")
+            return self.summary()
         if action == "scan.configure":
             self.require_idle()
             if params != self.options:

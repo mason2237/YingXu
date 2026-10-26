@@ -1,0 +1,152 @@
+/* SDR lighting/tone design. This does not request an HDR swapchain or OS mode. */
+:root {
+  --lighting-ambient: none;
+  --lighting-rim: transparent;
+  --lighting-shadow: none;
+}
+:root[data-lighting=soft][data-theme=dark] {
+  --lighting-ambient: radial-gradient(ellipse 60% 35% at 28% 0%, #235cc02e, transparent 80%), radial-gradient(ellipse 55% 30% at 76% 110%, #286ceb30, transparent 82%);
+  --lighting-rim: #8ab9fc35;
+  --lighting-shadow: inset 0 1px 0 #bad8ff16, 0 10px 35px -28px #000b;
+}
+:root[data-lighting=enhanced][data-theme=dark] {
+  --lighting-ambient: radial-gradient(ellipse 64% 38% at 27% -4%, #3274e864, transparent 78%), radial-gradient(ellipse 60% 34% at 76% 113%, #357bff6b, transparent 80%), radial-gradient(ellipse 26% 44% at -8% 49%, #4380d71c, transparent 78%);
+  --desktop-panel: linear-gradient(135deg, #263a54c4, #101d30e8 56%, #162944d4);
+  --desktop-control: linear-gradient(150deg, #3b56767d, #15273dba);
+  --desktop-button-line: #4d7196;
+  --line: #334e70;
+  --lighting-rim: #a3cdff8a;
+  --lighting-shadow: inset 0 1px 0 #c3dfff30, inset 0 -1px 0 #050b143d, 0 2px 5px #0004, 0 17px 42px -28px #010613e6, 0 0 32px -21px #448fff4d;
+}
+:root[data-lighting=soft][data-theme=light] {
+  --lighting-ambient: radial-gradient(ellipse 70% 45% at 28% -5%, #c0d7ff54, transparent 80%);
+  --lighting-rim: #ffffff;
+  --lighting-shadow: inset 0 1px 0 #fff, 0 9px 30px -25px #31598550;
+}
+:root[data-lighting=enhanced][data-theme=light] {
+  --lighting-ambient: radial-gradient(ellipse 65% 38% at 28% 0%, #a6c8ff70, transparent 80%), radial-gradient(ellipse 62% 36% at 76% 110%, #b7d3ff70, transparent 82%);
+  --desktop-panel: linear-gradient(135deg, #fffffff2, #e8f1ffbd 55%, #f7faffef);
+  --desktop-control: linear-gradient(150deg, #ffffffed, #dce9fc9c);
+  --lighting-rim: #fff;
+  --lighting-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 #adcaed40, 0 2px 4px #3153780a, 0 17px 38px -27px #31598560;
+}
+body {background: var(--lighting-ambient), var(--desktop-glow), var(--page);}
+.collection, .workspace-lens-stage {position: relative; box-shadow: var(--lighting-shadow);}
+.collection::before, .workspace-lens-stage::before {
+  content: ''; position: absolute; top: 0; left: 3%; right: 32%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lighting-rim), transparent);
+  z-index: 4; pointer-events: none;
+}
+.empty-state {background: transparent;}
+html[data-lighting=enhanced] .app-chrome {
+  background: linear-gradient(105deg, #14253c99, #1e3d6666 33%, #101b2c70 72%);
+  box-shadow: inset 0 -1px 0 #81b4ff15;
+}
+html[data-lighting=enhanced][data-theme=light] .app-chrome {
+  background: linear-gradient(105deg, #ffffffb3, #d7e7ff80 33%, #f3f7ffc7 72%);
+}
+html[data-lighting=enhanced] .brand-symbol {
+  box-shadow: inset 0 1px 1px #d1e8ff9c, 0 3px 9px #073eb850, 0 0 24px #236bff42;
+}
+html[data-lighting=enhanced] h1 {text-shadow: 0 2px 10px #03112a40;}
+html[data-lighting=enhanced][data-theme=light] h1 {text-shadow: 0 1px 0 #fff;}
+html[data-lighting=enhanced] .folder-symbol {
+  border-top-color: #8dbaff9c;
+  box-shadow: inset 0 1px 0 #bcdbff40, 0 3px 8px #00102c3d, 0 0 22px #357bff1c;
+}
+html[data-lighting=enhanced] .search-field {
+  background: linear-gradient(145deg, #2e46645c, #12233c8c);
+  border-top-color: #7796c078;
+  box-shadow: inset 0 1px 2px #040c1b38;
+}
+html[data-lighting=enhanced][data-theme=light] .search-field {
+  background: linear-gradient(145deg, #ffffffba, #e8f0fcab);
+  box-shadow: inset 0 1px 2px #4560820c;
+}
+html[data-lighting=enhanced] .empty-icon {
+  background: radial-gradient(circle at 35% 24%, #69a9ff2b, #2460c81a 50%, #1d49990a 74%);
+  box-shadow: inset 0 1px 0 #89baff0d, 0 0 33px #2672ed14;
+}
+html[data-lighting=enhanced] button.primary:enabled,
+html[data-lighting=enhanced] #scan-button:enabled,
+html[data-lighting=enhanced] #empty-action:enabled {
+  box-shadow: inset 0 1px 1px #d6edff8c, inset 0 -1px 0 #004ce84a, 0 3px 8px #0542c34f, 0 0 22px #236fff35;
+}
+html[data-lighting=enhanced] .liquid-actions-stage .lg-canvas {opacity: .5;}
+html[data-lighting=enhanced] .workspace-lens-stage .lg-canvas {opacity: .3;}
+
+/* Sort labels and pane controls are typography, not miniature glass pills. */
+.list-heading button, .inspector-heading button {
+  background: transparent; border: 0; box-shadow: none; border-radius: 4px;
+  padding: 2px 0; min-height: 28px; font-weight: 450; color: var(--muted);
+  transform: none;
+}
+.list-heading .heading-button {justify-content: flex-start; gap: 6px; font-size: 13px;}
+.list-heading .heading-button svg {width: 12px; height: 12px; opacity: .55;}
+.list-heading button::before, .list-heading button::after,
+.inspector-heading button::before, .inspector-heading button::after {display: none;}
+.list-heading button:hover:enabled, .inspector-heading button:hover:enabled {
+  background: transparent; color: var(--ink); box-shadow: none;
+}
+.list-heading button:hover svg {opacity: 1; color: var(--blue);}
+.list-heading button:active:enabled, .inspector-heading button:active:enabled {transform: none;}
+.list-heading button:focus-visible, .inspector-heading button:focus-visible {
+  outline: 2px solid var(--focus-line); outline-offset: 3px;
+}
+@media(forced-colors:active) {
+  body, .empty-state {background: Canvas;}
+  .collection::before, .workspace-lens-stage::before {display: none;}
+}
+
+/* Native desktop compositing: a tinted backdrop keeps the same hierarchy
+   without an ANGLE full-window backdrop-filter render pass. */
+html[data-workspace-mode=local] dialog::backdrop {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: #030a16b3;
+}
+html[data-workspace-mode=local][data-theme=light] dialog::backdrop {background:#15223e66;}
+html[data-workspace-mode=local] dialog {
+  background: var(--surface);
+  transform: none;
+  will-change: auto;
+}
+
+/* Bright colored details feed the native selective HDR highlight/halo pass.
+   Neutral text is not an emitter; none of these layers needs a new GPU canvas. */
+html[data-hdr-output=active][data-lighting=enhanced] {
+  --lighting-rim: #89d4ff;
+  --focus-line: #81d0ff;
+}
+html[data-hdr-output=active]:not([data-lighting=off]) dialog {
+  border-top-color: #87c9ffb3;
+  box-shadow: inset 0 1px 0 #97d9ff85, 0 0 0 1px #5498ed3d, 0 20px 70px #0008, 0 0 40px -20px #438dff6b;
+}
+html[data-hdr-output=active][data-lighting=enhanced] button.liquid-button:hover:enabled {
+  border-color: #8edcff;
+  box-shadow: inset 0 1px 0 #b4e8ff85, 0 0 15px -6px #53aaff8c;
+}
+html[data-hdr-output=active][data-lighting=enhanced] .search-field:focus-within {
+  border-color: #79c8ff;
+  box-shadow: inset 0 1px #9bdbff40, 0 0 17px -9px #479aff99;
+}
+/* Fade only the settings surface and its tint. Keep top-layer membership
+   until both have reached the underlying workspace, then remove the dialog. */
+html #appearance-dialog.is-closing::backdrop {
+  background:transparent;
+  transition:background-color 140ms ease-out;
+}
+html[data-reduced=true] #appearance-dialog.is-closing::backdrop {transition:none;}
+html[data-hdr-output=active][data-lighting=enhanced] .file-row[aria-selected=true] {
+  box-shadow: inset 2px 0 #72ceff, inset 0 1px #77c5ff1f;
+}
+html[data-hdr-output=active][data-lighting=enhanced] #loading-progress .lg-progress-fill {
+  background: linear-gradient(90deg, #358bff, #7bdcff);
+  box-shadow: 0 0 12px #50b8ff85;
+}
+html[data-hdr-output=active][data-lighting=enhanced] .loading-indeterminate > span {
+  background: linear-gradient(90deg, #3b8bff, #8ee4ff);
+}
+@media(forced-colors:active) {
+  html[data-workspace-mode=local] dialog {box-shadow:none;border-color:CanvasText;}
+}

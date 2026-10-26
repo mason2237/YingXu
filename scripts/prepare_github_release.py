@@ -34,12 +34,14 @@ def main():
     if hygiene["current"] or hygiene["sensitiveFilenameCandidates"] or hygiene["trackedGeneratedFiles"] or hygiene["emailCandidateFiles"]:
         raise RuntimeError("Review current public-file hygiene findings before exporting")
     commit = git("rev-parse", "HEAD").decode().strip()
-    built = ROOT / "outputs" / "stage8-release" / VERSION
+    built = ROOT / "outputs" / "releases" / VERSION
     package = built / f"YingXu-{VERSION}-windows-x64.zip"
     manifest = json.loads((built / "YingXu/BUILD_MANIFEST.json").read_text(encoding="utf-8"))
     if manifest["version"] != VERSION or manifest["applicationLicense"] != "PolyForm-Noncommercial-1.0.0":
         raise RuntimeError("Build version/license does not match the source")
-    for relative, expected in {**manifest["pythonSources"], **{f"frontend{key}": value for key, value in manifest["frontend"].items()}}.items():
+    runtime_sources = {**manifest["pythonSources"], **manifest.get('desktopSources', {}),
+                       **{f"frontend{key}": value for key, value in manifest["frontend"].items()}}
+    for relative, expected in runtime_sources.items():
         if sha(ROOT / relative) != expected:
             raise RuntimeError("Binary was built from different sources: " + relative)
     output = ROOT / "outputs" / "github-release" / VERSION
@@ -53,11 +55,22 @@ def main():
             raise RuntimeError("Local/generated files leaked into source export")
         if not any(item.endswith("/LICENSE") for item in names):
             raise RuntimeError("Source export missing project license")
+        # git archive honors core.autocrlf. Verify actual saved code, accepting
+        # only LF/CRLF conversion for known UTF-8 source formats, never binary edits.
+        line_endings = 0
+        for relative in runtime_sources:
+            saved = archive.read(f"YingXu-{VERSION}-source/{relative}")
+            current = (ROOT / relative).read_bytes()
+            if saved == current:continue
+            if Path(relative).suffix not in {'.py','.js','.cjs','.json','.css','.html','.svg'} or saved.replace(b'\r\n',b'\n') != current.replace(b'\r\n',b'\n'):
+                raise RuntimeError('Exported runtime source differs: ' + relative)
+            line_endings += 1
     shutil.copy2(package, output / package.name)
     shutil.copy2(ROOT / "release/RELEASE_NOTES.md", output)
     files = [output / package.name, source]
     (output / "SHA256SUMS.txt").write_text("".join(f"{sha(path)}  {path.name}\n" for path in files), encoding="utf-8")
     result = {"version": VERSION, "sourceCommit": commit, "applicationLicense": "PolyForm-Noncommercial-1.0.0",
+              "runtimeSourceFilesVerified": len(runtime_sources), "lfCrLfOnlyDifferences": line_endings,
               "cleanWindowsTested": False, "gitHistoryIncluded": False, "uploaded": False,
               "files": [{"name": path.name, "bytes": path.stat().st_size, "sha256": sha(path)} for path in files]}
     (output / "RELEASE_MANIFEST.json").write_text(json.dumps(result, indent=2), encoding="utf-8")

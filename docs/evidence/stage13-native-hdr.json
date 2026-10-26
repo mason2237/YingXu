@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-24",
+  "version": "0.9.0-rc.6",
+  "scope": "Current Windows only; no physical peak measurement or clean-machine test",
+  "hdr": {
+    "backend": "D3D11",
+    "swapchain": "HDRExtendedSrgbLinear",
+    "nativeHdrActive": true,
+    "systemHdrEnabled": true,
+    "bitsPerChannel": 10,
+    "sdrWhiteNits": 240,
+    "osSettingsChanged": false
+  },
+  "sdrPreferenceDisabledHdr": {
+    "swapchain": "SDR",
+    "nativeHdrActive": false,
+    "systemHdrEnabled": true,
+    "osSettingsChanged": false
+  },
+  "unitTestsPassed": 37,
+  "sourceWorkflowGroups": {"native": 5, "retainedWidgets": 5},
+  "sourceWorkflow": "Temporary media; controlled real Qt ZIP/direct download, import, candidates, confirmation, preview, execution deduplication, unchanged video bytes and retained downloads",
+  "stability": {
+    "hdrAndSdrPassed": true,
+    "checks": ["theme changes", "resize", "minimize and restore", "two reloads", "settings dialog"],
+    "hdrPresentedFrames": 91,
+    "sdrPresentedFrames": 101,
+    "pythonErrors": [],
+    "jsErrors": [],
+    "sceneGraphErrors": [],
+    "finalSharedImageWarningsObserved": false
+  },
+  "packagedStartup": {
+    "passed": true,
+    "actualHdrStateVerified": true,
+    "startupSecondsSingleCachedRun": 1.498,
+    "localResourceEntrypoints": 15,
+    "glassButtons": 38,
+    "structuralButtons": 4,
+    "viewport": [1280, 860],
+    "horizontalOverflow": false,
+    "jsErrors": [],
+    "consoleErrors": []
+  },
+  "packagedFullWorkflowThisVersion": {
+    "completed": false,
+    "reason": "Computer-use folder-dialog targeting failed; do not replace with source-test evidence"
+  },
+  "qmlRuntime": {"modules": 18, "files": 202, "plugins": 18, "style": "Basic"},
+  "cleanWindowsTested": false,
+  "uploaded": false
+}

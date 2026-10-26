@@ -1,27 +1,31 @@
 import {transitionTheme, cancelThemeTransition} from '../vendor/design-systems/theme-transition.js';
-import {desktopChannel} from './channel.js';
+import {desktopHost, isDesktopHost} from './channel.js';
 
 const defaults = {theme: 'system', resolvedTheme: 'light', systemTheme: 'light', glassEnabled: true,
-  strength: 'enhanced', particlesEnabled: true, reducedMotion: false, mistEnabled: true};
+  strength: 'enhanced', particlesEnabled: true, reducedMotion: false, mistEnabled: true, lighting: 'enhanced', nativeHdr: true};
 class Appearance extends EventTarget {
   constructor() {
     super();
     this.state = Object.freeze({...defaults, ...globalThis.__yingxuAppearance});
+    document.documentElement.dataset.lighting = this.state.lighting;
+    document.documentElement.dataset.hdrOutput = this.state.displayOutput?.nativeHdrActive ? 'active' : 'sdr';
     this.connected = false; this.version = 0; this.pendingOrigin = null;
     this.lastTransition = 'initial'; this.current = Promise.resolve();
     this.motion = matchMedia('(prefers-reduced-motion: reduce)');
     this.motion.addEventListener('change', () => {if (this.motion.matches) cancelThemeTransition();});
     this.ready = new Promise(resolve => {
-      if (!globalThis.qt?.webChannelTransport || !globalThis.QWebChannel) {resolve(false); return;}
-      desktopChannel().then(channel => {
-        this.bridge = channel.objects.appearance;
+      if (!isDesktopHost()) {resolve(false); return;}
+      desktopHost().then(async host => {
+        this.bridge = host.appearance;
         if (!this.bridge) {resolve(false); return;}
-        this.bridge.changed.connect(payload => this.receive(JSON.parse(payload), this.pendingOrigin));
-        this.bridge.getState(payload => {
-          this.connected = true; this.receive(JSON.parse(payload));
+        this.unsubscribe = this.bridge.subscribe(state => this.receive(state, this.pendingOrigin));
+        window.addEventListener('pagehide', () => this.unsubscribe?.(), {once:true});
+        {
+          const state = await this.bridge.getState();
+          this.connected = true; this.receive(state);
           document.documentElement.dataset.appearanceReady = 'true';
           this.dispatchEvent(new Event('connected')); resolve(true);
-        });
+        }
       }).catch(() => resolve(false));
     });
     window.addEventListener('pagehide', cancelThemeTransition, {once: true});
@@ -37,6 +41,8 @@ class Appearance extends EventTarget {
       const root = document.documentElement;
       root.dataset.theme = next.resolvedTheme; root.dataset.themePreference = next.theme;
       root.dataset.reduced = String(this.reduced);
+      root.dataset.lighting = next.lighting;
+      root.dataset.hdrOutput = next.displayOutput?.nativeHdrActive ? 'active' : 'sdr';
       this.dispatchEvent(new CustomEvent('change', {detail: this.state}));
       // Chromium pauses rAF while taking View Transition snapshots. The Lens
       // adapter flushes its new palette synchronously; never await rAF here.
@@ -48,11 +54,12 @@ class Appearance extends EventTarget {
   async update(patch, origin = null) {
     if (!await this.ready) return this.error('外观设置未连接，请重新打开应用。');
     this.pendingOrigin = origin;
-    return new Promise(resolve => this.bridge.update(JSON.stringify(patch), async payload => {
-      const response = JSON.parse(payload);
-      if (!response.ok) {this.pendingOrigin = null; this.error('无法保存外观设置，请检查本地设置的写入权限。'); resolve(false); return;}
-      await this.receive(response.state, origin); this.pendingOrigin = null; resolve(true);
-    }));
+    try {
+      const response = await this.bridge.update(patch);
+      if (!response.ok) return this.error('无法保存外观设置，请检查本地设置的写入权限。');
+      await this.receive(response.state, origin);return true;
+    } catch {return this.error('外观设置连接中断，请重新打开应用。');}
+    finally {this.pendingOrigin = null;}
   }
   error(message) {this.dispatchEvent(new CustomEvent('error', {detail: message})); return false;}
 }

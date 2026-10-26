@@ -1,5 +1,7 @@
 # Web UI 迁移审查与实施草案
 
+2026-10-24 当前增量（阶段十四）：主工作台为 Qt Quick 原生 HDR 宿主，旧 Widgets 容器保留。除既有 `bridge` / `appearance`，本地网页注册 `compositor`：只有 `setOverlayActive(bool)`、只读 `overlayActive` 和状态通知，用于弹窗期间按需刷新；不接收文件、命令、路径、URL，不保存偏好，也不向远程字幕网页注册。以下较早阶段的接口记录为当时实施历史。最新验证见 [STAGE14_MODAL_HDR.md](STAGE14_MODAL_HDR.md)。
+
 更新：2026-10-23。状态：**阶段 5、阶段 6 及 6.1/6.2/6.3a/6.3b 已完成；阶段 7 真实工作台已接通并完成定向验收，等待用户确认阶段 8**。本轮证据与未实测范围见 [STAGE7_VERIFICATION.md](STAGE7_VERIFICATION.md)。
 
 2026-10-21 r3.2 补充：用户要求尽可能采用参考仓库的全部适用效果，减少电脑控制。当前仅复用 focus/modal，玻璃自写；新增 6.1 原版效果全量清单/移植对照、6.2 完整明暗主题、6.3 覆盖补齐/验收。详情及每步检查点见 [DESIGN_PLAN.md](DESIGN_PLAN.md)。常规检查优先代码/API/程序内自动化，电脑控制仅用于必要原生交互和少量实际窗口抽查。

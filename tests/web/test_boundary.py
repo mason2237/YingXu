@@ -1,15 +1,12 @@
-"""Stage 5 boundary tests, run explicitly in .venv-web; no user files involved."""
+"""Shared protocol and production resource boundaries; no user files involved."""
 import json
 from pathlib import Path
 import unittest
-from unittest.mock import patch
 
-from PySide6.QtCore import QCoreApplication, QUrl
+from PySide6.QtCore import QUrl
 
-from yingxu.web_ui.bridge import FoundationBridge
 from yingxu.web_ui.protocol import ProtocolError, decode_request, encode_reply
 from yingxu.web_ui.resources import ASSETS, LocalOnlyRequests, frontend_root, resource_key
-from yingxu.web_ui.workers import inspect_sample
 
 
 def request(action="app.hello", rid="request-1", sid=None, params=None, **extra):
@@ -24,7 +21,7 @@ class ProtocolTests(unittest.TestCase):
                 decode_request(raw)
 
     def test_rejects_unknown_or_file_mutation_actions(self):
-        for action in ("organize.confirmAndStart", "os.system", "file.write", "__dict__"):
+        for action in ("organize.confirmAndStart", "os.system", "file.write", "__dict__", "diagnostics.runSample"):
             with self.subTest(action=action), self.assertRaises(ProtocolError) as caught:
                 decode_request(request(action))
             self.assertEqual(caught.exception.code, "ACTION_UNAVAILABLE")
@@ -44,58 +41,6 @@ class ProtocolTests(unittest.TestCase):
         result = json.loads(encode_reply(parsed.request_id, {"message": parsed.params["message"]}))
         self.assertEqual(result["data"]["message"], message)
         self.assertIsNone(result["error"])
-
-
-class BridgeTests(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.app = QCoreApplication.instance() or QCoreApplication([])
-
-    def setUp(self):
-        self.bridge = FoundationBridge()
-        self.replies = []
-        self.bridge.reply.connect(lambda raw: self.replies.append(json.loads(raw)))
-
-    def send(self, *args, **kwargs):
-        self.bridge.request(request(*args, **kwargs))
-        return self.replies[-1]
-
-    def hello(self):
-        return self.send()["data"]["sessionId"]
-
-    def test_only_request_slot_is_published_on_bridge(self):
-        meta = self.bridge.metaObject()
-        signatures = [bytes(meta.method(i).methodSignature()).decode()
-                      for i in range(meta.methodOffset(), meta.methodCount())]
-        self.assertEqual(set(signatures), {"request(QString)", "reply(QString)", "event(QString)"})
-
-    def test_session_is_required_and_reload_invalidates_old_session(self):
-        self.assertEqual(self.send("app.state")["error"]["code"], "STALE_SESSION")
-        sid = self.hello()
-        self.assertTrue(self.send("app.ping", rid="ping", sid=sid, params={"message": "你好"})["ok"])
-        self.bridge.reset_page()
-        self.assertEqual(self.send("app.state", rid="old", sid=sid)["error"]["code"], "STALE_SESSION")
-        self.assertNotEqual(self.hello(), sid)
-
-    def test_duplicate_request_cannot_start_a_second_task(self):
-        sid = self.hello()
-        with patch.object(self.bridge.service, "start_sample", return_value={"jobId": "job"}) as start:
-            first = self.send("diagnostics.runSample", rid="sample", sid=sid)
-            second = self.send("diagnostics.runSample", rid="sample", sid=sid)
-            self.assertEqual(first, second)
-            self.assertEqual(start.call_count, 1)
-            conflict = self.send("app.state", rid="sample", sid=sid)
-            self.assertEqual(conflict["error"]["code"], "REQUEST_ID_REUSED")
-
-    def test_busy_and_closing_reject_new_work(self):
-        sid = self.hello()
-        self.bridge.service.worker = object()
-        response = self.send("diagnostics.runSample", rid="busy", sid=sid)
-        self.assertEqual(response["error"]["code"], "BUSY")
-        self.bridge.service.worker = None
-        self.bridge.closing = True
-        response = self.send("app.ping", rid="closing", sid=sid, params={"message": "test"})
-        self.assertEqual(response["error"]["code"], "CLOSING")
 
 
 class ResourceTests(unittest.TestCase):
@@ -120,24 +65,10 @@ class ResourceTests(unittest.TestCase):
         interceptor = LocalOnlyRequests()
         for url, expected in (("https://example.com/script.js", True),
                               ("yingxu://app/operations.py", True),
-                              ("yingxu://app/js/app.js", False)):
+                              ("yingxu://app/js/workspace.js", False)):
             info = Info(url)
             interceptor.interceptRequest(info)
             self.assertEqual(info.blocked, expected)
-
-
-class ExistingCoreTests(unittest.TestCase):
-    def test_real_core_sample_reports_three_targets_without_mutation(self):
-        phases = []
-        result = inspect_sample(lambda phase, text: phases.append(phase))
-        self.assertEqual(phases, ["scanning", "matching"])
-        self.assertEqual((result["videoCount"], result["subtitleCount"]), (2, 3))
-        self.assertEqual(sum(len(row["subtitles"]) for row in result["rows"]), 3)
-        self.assertTrue(result["unchanged"])
-        self.assertFalse(result["executionAvailable"])
-        targets = [sub["targetName"] for row in result["rows"] for sub in row["subtitles"]]
-        self.assertIn("示例剧.S01E01.chs.srt", targets)
-        self.assertIn("示例剧.S01E01.eng.srt", targets)
 
 
 if __name__ == "__main__":

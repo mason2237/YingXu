@@ -8,6 +8,8 @@ GitHub Issues for authorization requests; no personal contact data is embedded.
 
 Existing author and third-party copyright notices remain with their files.
 No ownership of third-party software is claimed by the project contributors.
+Bundled Noto Sans SC: Copyright 2014-2021 Adobe, SIL Open Font License 1.1;
+see licenses/NotoSansSC-OFL.txt for the complete original notice and license.
 Third-party components retain their own licenses as described in
 THIRD_PARTY_NOTICES.md and licenses/. The project's noncommercial restriction
 does not relicense or restrict rights granted for those independent components.
@@ -16,3 +18,6 @@ Qt/PySide libraries remain dynamically linked and replaceable. No project
 restriction prohibits modification of the LGPL-covered library portions or
 reverse engineering needed to debug such library modifications. See the LGPL
 texts and the library replacement instructions in docs/DEPENDENCIES.md.
+
+This product uses MediaInfo library (https://mediaarea.net/MediaInfo), Copyright (c) 2002-2024 MediaArea.net SARL.
+pymediainfo: Copyright (c) 2010-2014 Patrick Altman and (c) 2016 Louis Sautier; MIT license retained in licenses/pymediainfo-MIT.txt.

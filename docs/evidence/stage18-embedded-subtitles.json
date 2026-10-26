@@ -1,0 +1,71 @@
+{
+  "version": "0.9.0-rc.11",
+  "date": "2026-10-25",
+  "behavior": "Matching embedded language satisfies requirements without extraction; mismatched or unknown language remains actionable",
+  "tests": {
+    "newContractsPassed": 26,
+    "businessRegressionPassed": 32,
+    "webRegressionPassed": 33,
+    "refinedLanguageRulesPassed": 10,
+    "uniqueUnitContractCasesPassed": 91,
+    "manualOverrideExplanationRegressionPassed": true
+  },
+  "actualWorkspace": {
+    "passed": true,
+    "checks": [
+      "actual_native_folder_drop_scan_and_language_status",
+      "satisfied_no_external_action_no_extraction_no_markup_execution",
+      "real_manual_override_and_restore",
+      "actual_language_control_changes_policy_and_search_queue",
+      "videos_unchanged_no_subtitles_created_no_js_or_python_errors"
+    ],
+    "physicalFramesVerified": false,
+    "pythonErrors": [],
+    "consoleErrors": []
+  },
+  "actualPackagedReader": {
+    "passed": true,
+    "checks": [
+      "actual_windowed_exe_inherited_pipes_and_bundled_dll_without_developer_PATH",
+      "actual_mkv_mp4_languages_unknown_and_separate_dual_tracks",
+      "no_extraction_no_video_changes_no_new_media_files"
+    ],
+    "physicalFramesVerified": false,
+    "replies": 4,
+    "stderrEmpty": true
+  },
+  "packagedStartup": {
+    "desktopBoot": "ready",
+    "fontLoaded": true,
+    "overflow": false,
+    "width": 1280,
+    "height": 860,
+    "glassButtons": 36,
+    "structuralButtons": 4,
+    "frameValidationPerformed": false,
+    "quickActionsAbsent": true,
+    "occlusionGuardPassedToChild": true
+  },
+  "reportedDisplayOutput": {
+    "host": "qt-quick",
+    "backend": "D3D11",
+    "swapchain": "HDRExtendedSrgbLinear",
+    "nativeHdrActive": true,
+    "systemHdrEnabled": true,
+    "bitsPerChannel": 10,
+    "sdrWhiteNits": 240,
+    "osSettingsChanged": false
+  },
+  "javascriptExceptions": [],
+  "consoleErrors": [],
+  "limitations": {
+    "languageEvidence": "Track metadata/title, not actual translation quality or OCR",
+    "burnedInRecognized": false,
+    "physicalHdrMeasured": false,
+    "fullAnimationRetested": false,
+    "newExeMediaOrganizationRepeated": false,
+    "cleanWindowsTested": false,
+    "uploaded": false
+  },
+  "previousLocalReleaseRemoved": "0.9.0-rc.10"
+}

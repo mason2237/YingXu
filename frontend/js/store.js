@@ -3,8 +3,9 @@ export class WorkspaceStore extends EventTarget {
     super(); this.adapter = adapter; this.filters = {search: '', status: 'all', fileType: '', sortKey: 'name', sortDir: 'asc'};
     this.summary = {scanId:null,revision:0,counts: {all: 0}}; this.view = {total: 0, ids: []}; this.selectedId = null; this.details = null; this.loading = false; this.error = ''; this.ticket = 0;this.selectionTicket = 0;
     adapter.addEventListener('loading', event => this.dispatchEvent(new CustomEvent('loading', {detail: event.detail})));
+    adapter.addEventListener('disconnect', event => {this.error = event.detail;this.loading = false;this.ticket++;this.selectionTicket++;this.changed();});
   }
-  get busy() {return this.loading || Boolean(this.adapter.state?.busy);}
+  get busy() {return Boolean(this.adapter.closed) || this.loading || Boolean(this.adapter.state?.busy);}
   params(extra = {}) {return {scanId: this.summary.scanId, revision: this.summary.revision, ...extra};}
   changed(reset = false) {this.dispatchEvent(new CustomEvent('change',{detail:{reset}}));}
   async load(scenario) {

@@ -1,0 +1,18 @@
+{
+  "scheduledFor": "2026-10-26T06:15:00+08:00",
+  "checkedAt": "2026-10-26T06:16:14+08:00",
+  "implementationCommit": "566d73ea964599c42021c3175c4692c8f61a757a",
+  "check": "PresentMon 2.6.0 one-second ETW preflight",
+  "exitCode": 6,
+  "administrator": false,
+  "traceAvailable": false,
+  "reason": "ETW trace session access denied; requires an appropriately privileged process.",
+  "independentPresentationVerified": false,
+  "migrationGate": "not_verified",
+  "stageBStarted": false,
+  "previouslyPassedTestsRepeated": false,
+  "systemPermissionsChanged": false,
+  "hdrSettingsChanged": false,
+  "mediaModified": false,
+  "outcome": "Saved the unchanged gate result and stopped the one-time conditional continuation."
+}

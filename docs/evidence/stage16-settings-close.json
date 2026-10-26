@@ -1,0 +1,166 @@
+{
+  "version": "0.9.0-rc.9",
+  "date": "2026-10-25",
+  "scope": "Current Windows source and packaged UI checks; no clean-machine certification",
+  "settingsFadeMs": 140,
+  "backgroundResumeDelayMs": 120,
+  "source": {
+    "hdr": {
+      "passed": true,
+      "closes": [
+        {
+          "samples": 7,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        },
+        {
+          "samples": 9,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        },
+        {
+          "samples": 8,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        },
+        {
+          "samples": 7,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        },
+        {
+          "samples": 9,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        },
+        {
+          "samples": 8,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        },
+        {
+          "samples": 8,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        },
+        {
+          "samples": 10,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        }
+      ],
+      "quickActionsRemoved": true,
+      "reopenDuringExitPassed": true,
+      "reducedMotionPassed": true,
+      "idleFramePumpStopped": true,
+      "pythonErrors": [],
+      "sceneGraphErrors": []
+    },
+    "sdr": {
+      "passed": true,
+      "closes": [
+        {
+          "samples": 7,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        },
+        {
+          "samples": 11,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        },
+        {
+          "samples": 9,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        },
+        {
+          "samples": 9,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        },
+        {
+          "samples": 9,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        },
+        {
+          "samples": 10,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        },
+        {
+          "samples": 7,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        },
+        {
+          "samples": 7,
+          "intermediateFade": true,
+          "backgroundLuma": 20.17
+        }
+      ],
+      "quickActionsRemoved": true,
+      "reopenDuringExitPassed": true,
+      "reducedMotionPassed": true,
+      "idleFramePumpStopped": true,
+      "pythonErrors": [],
+      "sceneGraphErrors": []
+    }
+  },
+  "unitTestsPassed": 18,
+  "sourceFileWorkflow": {
+    "passed": true,
+    "checks": [
+      "actual_qt_zip_and_direct_downloads_registered_no_media_change_no_remote_channel",
+      "batch_import_double_click_dedup_unambiguous_pending_ambiguous_candidates_live_refresh",
+      "actual_candidate_selection_and_two_review_confirmations_final_paths_preview_media_unchanged",
+      "single_confirmed_execution_correct_files_original_downloads_retained_video_bytes_unchanged_history_recorded",
+      "narrow_dark_result_window_no_js_errors"
+    ],
+    "pythonErrors": [],
+    "packagedMediaWorkflowRepeated": false
+  },
+  "packaged": {
+    "width": 1280,
+    "height": 860,
+    "overflow": false,
+    "fontLoaded": true,
+    "glassButtons": 36,
+    "structuralButtons": 4,
+    "buttons": 40,
+    "quickActionsAbsent": true,
+    "settingsClosesVerified": 6,
+    "fadeFrames": [
+      11,
+      11,
+      11,
+      11,
+      11,
+      11
+    ],
+    "occlusionGuardPassedToChild": true
+  },
+  "packagedDisplayOutput": {
+    "host": "qt-quick",
+    "backend": "D3D11",
+    "swapchain": "HDRExtendedSrgbLinear",
+    "nativeHdrActive": true,
+    "systemHdrEnabled": true,
+    "bitsPerChannel": 10,
+    "sdrWhiteNits": 240,
+    "osSettingsChanged": false
+  },
+  "packagedExceptionMessages": [],
+  "packagedConsoleMessages": [],
+  "limitations": {
+    "continuousNativeGrabProbePassed": false,
+    "probeIssue": "High-frequency native grabWindow readback caused D3D read-access/context-loss errors; invasive probe removed; subsequent normal source and EXE checks passed",
+    "captureScope": "Browser animation frames plus native background before/after; screenshots precede native HDR shader",
+    "allDriverFlickerEliminatedProven": false,
+    "physicalPeakMeasured": false,
+    "cleanWindowsTested": false,
+    "liveWebsiteDownloadRepeated": false,
+    "uploaded": false
+  }
+}

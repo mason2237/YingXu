@@ -7,9 +7,9 @@ from PySide6.QtWebEngineCore import QWebEngineScript
 
 
 DEFAULTS = {"theme": "system", "glassEnabled": True, "strength": "enhanced",
-            "particlesEnabled": True, "reducedMotion": False, "mistEnabled": True}
+            "particlesEnabled": True, "reducedMotion": False, "mistEnabled": True, "lighting": "enhanced", "nativeHdr": True}
 SETTINGS_KEY = "appearance/v1"
-BACKGROUNDS = {"light": "#f5f7fa", "dark": "#13161c"}
+BACKGROUNDS = {"light": "#f3f6fb", "dark": "#0c1422"}
 
 
 def validated_patch(value):
@@ -20,6 +20,8 @@ def validated_patch(value):
             valid = item in ("light", "dark", "system")
         elif key == "strength":
             valid = item in ("standard", "enhanced")
+        elif key == "lighting":
+            valid = item in ("off", "soft", "enhanced")
         else:
             valid = type(item) is bool
         if not valid:
@@ -39,6 +41,7 @@ def bootstrap_source(state):
         root.dataset.theme = state.resolvedTheme;
         root.dataset.themePreference = state.theme;
         root.dataset.reduced = String(state.reducedMotion);
+        root.dataset.lighting = state.lighting;
         root.dataset.appearanceBootstrapped = 'true';
         return true;
       };
@@ -70,7 +73,8 @@ class AppearanceBridge(QObject):
 
     def state(self):
         return {**self.preferences, "systemTheme": self.system_theme,
-                "resolvedTheme": self.system_theme if self.preferences["theme"] == "system" else self.preferences["theme"]}
+                "resolvedTheme": self.system_theme if self.preferences["theme"] == "system" else self.preferences["theme"],
+                "displayOutput": getattr(self, 'output_status', {'host':'widgets','nativeHdrActive':False})}
 
     @Slot(result=str)
     def getState(self):
@@ -115,7 +119,7 @@ class AppearanceBridge(QObject):
 def native_palette(theme):
     dark = theme == "dark"
     palette = QPalette()
-    colors = {QPalette.ColorRole.Window: BACKGROUNDS[theme], QPalette.ColorRole.Base: "#1b2029" if dark else "#ffffff",
+    colors = {QPalette.ColorRole.Window: BACKGROUNDS[theme], QPalette.ColorRole.Base: "#131e2e" if dark else "#ffffff",
               QPalette.ColorRole.WindowText: "#e5eaf2" if dark else "#202837",
               QPalette.ColorRole.Text: "#e5eaf2" if dark else "#202837",
               QPalette.ColorRole.Button: "#252c38" if dark else "#ffffff",
@@ -141,7 +145,7 @@ def set_titlebar_theme(handle, theme):
     mode = fn(handle, 20, ctypes.byref(dark), ctypes.sizeof(dark))
     if mode:
         mode = fn(handle, 19, ctypes.byref(dark), ctypes.sizeof(dark))
-    color = "#191d25" if theme == "dark" else "#ffffff"
+    color = BACKGROUNDS[theme]
     red, green, blue = (int(color[i:i + 2], 16) for i in (1, 3, 5))
     caption = wintypes.DWORD(red | green << 8 | blue << 16)
     title = fn(handle, 35, ctypes.byref(caption), ctypes.sizeof(caption))

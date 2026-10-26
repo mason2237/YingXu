@@ -1,5 +1,6 @@
 import {WorkspaceDialogs} from './dialogs.js';
 import {el,iconNode,button,language,badge} from './icons.js';
+import {applyPrototypeMode} from './prototype-mode.js';
 
 const $ = id => document.getElementById(id);
 const PAGE_SIZE = 20, CANDIDATE_SIZE = 6;
@@ -22,9 +23,16 @@ export class LocalWorkspaceDialogs extends WorkspaceDialogs {
     this.syncExecution();
   }
   syncExecution() {
+    const summary = this.adapter.state?.summary;
+    if (this.plan && summary && (this.plan.scanId !== summary.scanId || this.plan.revision !== summary.revision)) {
+      this.plan.canExecute = false;
+      $('preview-ack').checked = false;
+      $('preview-summary').textContent = '匹配内容已变化，请关闭并重新生成预览。';
+    }
     $('execute-button').disabled = !this.plan?.canExecute || !$('preview-ack').checked || this.store.busy || this.executing || this.previewLoading;
     $('preview-ack').disabled = this.executing || this.previewLoading;
     this.syncRecordControls();
+    applyPrototypeMode(this.adapter.state);
   }
   syncRecordControls() {
     const blocked = this.store.busy || this.historyLoading;
@@ -49,8 +57,11 @@ export class LocalWorkspaceDialogs extends WorkspaceDialogs {
     for (const candidate of response.rows) {
       const card = el('article',`candidate-card${candidate.recommended ? ' recommended' : ''}`);card.dataset.candidateId = candidate.subtitleId;
       const header = el('header');header.append(language(candidate.language),el('span','',candidate.recommended ? '优先核对' : `候选 ${candidate.rank+1}`));
-      card.append(header,el('h3','',candidate.name),el('div','candidate-score',`${Math.round(candidate.score*100)}%`),el('p','',candidate.reason),el('p','',`集数标识 · ${candidate.episode}`));
-      const path = el('p','subtle-text',candidate.displayPath);path.title = candidate.displayPath;card.append(path);
+      card.append(header,el('h3','',candidate.name),el('div','candidate-score',`${Math.round(candidate.score*100)}%`),el('p','subtle-text','文件名相似度，不代表匹配概率'),el('p','',candidate.reason),el('p','',`集数标识 · ${candidate.episode}`));
+      const path = el('p','subtle-text',candidate.displayPath);path.title = candidate.displayPath;
+      if (candidate.imported) {
+        const location = el('details','path-details');location.append(el('summary','','本机暂存 · 展开完整路径'),path);card.append(location);
+      } else card.append(path);
       if (candidate.conflict) {const warning = el('div','notice warning');warning.append(iconNode('alert'),document.createTextNode('集数不一致，请核对后选择。'));card.append(warning);}
       const assign = button(candidate.disabled ? candidate.reason : row.subtitles.some(sub => sub.language === candidate.language) ? '替换此语言字幕' : '使用这份字幕',candidate.recommended ? 'primary' : 'secondary',async () => {
         if (this.store.busy) return;assign.disabled = true;
@@ -78,7 +89,7 @@ export class LocalWorkspaceDialogs extends WorkspaceDialogs {
     const plan = this.plan;if (!plan) return;
     $('preview-prev').disabled = $('preview-next').disabled = true;
     const response = await this.adapter.request('preview.query',{snapshotId:plan.snapshotId,offset:this.page*PAGE_SIZE,limit:PAGE_SIZE});
-    $('preview-summary').textContent = `${plan.changeCount} 份字幕可整理 · ${plan.unmatchedCount} 个视频未匹配 · 核对后才会修改文件`;
+    $('preview-summary').textContent = `${plan.changeCount} 份字幕可整理 · ${plan.unmatchedCount} 个视频未匹配 · ${this.adapter.state?.prototype ? '对比原型仅展示名称变更，不执行文件操作' : '核对后才会修改文件'}`;
     const warning = $('preview-warning');warning.hidden = !plan.pendingCount && !plan.conflictCount;
     warning.textContent = `还有 ${plan.pendingCount} 项匹配待确认、${plan.conflictCount} 项冲突。请返回审阅后重新生成预览。`;
     const labels = {rename:['待整理','待整理'],skipped:['已跳过','已跳过'],unchanged:['已符合','无需变更'],pending:['需确认','待确认'],blocked:['存在冲突','已阻止'],unmatched:['未匹配','未匹配']};

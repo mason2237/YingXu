@@ -2,6 +2,7 @@
 // ruiqichenbiec/design-systems@7a424c93b9be13cf835b91ea67495fec2ec0584e
 // overture/src/dynamics.js. Changes: ES module, 180ms, cancellation,
 // synchronous GPU palette update, reduced-motion fallback; no global Overture.
+import {isDesktopHost} from '../../js/channel.js';
 let active = null;
 export function cancelThemeTransition() {
   active?.skipTransition(); active = null;
@@ -11,8 +12,9 @@ export function cancelThemeTransition() {
 export async function transitionTheme(apply, {origin, reduced = false} = {}) {
   cancelThemeTransition();
   const root = document.documentElement;
-  if (!document.startViewTransition || !origin || reduced || document.hidden) {
-    root.dataset.themeTransitionReason = !document.startViewTransition ? 'unsupported' : !origin ? 'no-origin' : reduced ? 'reduced' : 'hidden';
+  const nativeDesktop = isDesktopHost();
+  if (!document.startViewTransition || !origin || reduced || document.hidden || nativeDesktop) {
+    root.dataset.themeTransitionReason = nativeDesktop ? 'desktop-stability' : !document.startViewTransition ? 'unsupported' : !origin ? 'no-origin' : reduced ? 'reduced' : 'hidden';
     root.classList.remove('ov-vt'); await apply(); return 'instant';
   }
   const rect = root.getBoundingClientRect();

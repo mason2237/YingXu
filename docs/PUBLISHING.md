@@ -26,7 +26,7 @@
 ## 生成发布材料
 
 ```powershell
-.venv-web/Scripts/python.exe scripts/build_web.py --release --zip
+.venv-web/Scripts/python.exe scripts/build_electron.py --zip
 # 先保存代码/文档并创建本阶段提交，再从该提交导出源码：
 .venv-web/Scripts/python.exe scripts/prepare_github_release.py
 ```
@@ -47,6 +47,8 @@
 2. 上传/推送源码，确认根目录 LICENSE、NOTICE、README、THIRD_PARTY_NOTICES 和 licenses/ 都存在。
 3. 新建对应版本的预发布 Release，使用本轮说明，上传两个 ZIP 和 SHA256SUMS。保持源码版本与 EXE 对应，不将 rc 标成已做全环境认证的稳定版。
 4. 在二进制下载说明旁保留许可证和对应第三方源码/构建链接。未完成实际版本源码提供要求时，不公开该二进制。
+
+0.10.0 起使用 Electron + 冻结 Python/Qt 辅助进程的整包。官方 Electron ZIP 固定 SHA256，根目录保留完整 Chromium 声明，用户数据写 LOCALAPPDATA；不要只上传单个 EXE。维护者可用 `scripts/publish_github_release.py --status` 检查系统既有 Git 凭据，再以准备目录和精确公开源码提交发布；该脚本只在内存使用凭据，不写入仓库，先上传草稿资产并核对服务端摘要，再公开预发布版。授权来自当次用户明确发布请求，不因脚本存在自动发布。
 
 ## 验证记录
 

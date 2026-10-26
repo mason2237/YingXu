@@ -93,7 +93,7 @@ def snapshot_from_review(review: ReviewPlan) -> PlanSnapshot:
     for index, row in enumerate(review.rows):
         state = review.state(index)
         if not row.matches:
-            items.append(PlannedItem(row.video, None, None, "skipped" if row.skipped else "unmatched"))
+            items.append(PlannedItem(row.video, None, None, "skipped" if row.skipped else "unchanged" if row.uses_embedded else "unmatched"))
             continue
         for match in row.matches:
             source, target = match.source, match.target

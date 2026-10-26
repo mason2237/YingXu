@@ -1,2 +1,5 @@
-# Stage 1 runtime uses only the Python 3.12 standard library, including Tkinter.
-# Windows: install CPython with Tcl/Tk support. No runtime pip packages required.
+# Current PySide6 desktop runtime/build environment; prebuilt wheels only.
+PySide6==6.12.0
+pymediainfo==7.0.1
+PyInstaller==6.17.0
+pyinstaller-hooks-contrib==2026.8

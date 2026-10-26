@@ -1,0 +1,29 @@
+{
+  "date":"2026-10-25",
+  "version":"0.9.0-rc.8",
+  "userObservedBadFrame":true,
+  "identicalBadFrameReliablyReproducedLocally":false,
+  "sourceFinalNativeWheelEvents":{
+    "sdr":{"commands":90,"settings":8,"passed":true},
+    "hdr":{"commands":90,"settings":8,"passed":true}
+  },
+  "scrollEventsTrusted":true,
+  "scrollCommittedOnMainThread":true,
+  "coverageScope":{"sdr":"full composed frame","hdr":"verified half-float bytes covering upper-frame rows only"},
+  "parameterContractTestsPassed":4,
+  "lensSourceTestsPassed":3,
+  "packagedChromiumWheelEventsPassed":12,
+  "maximumPackagedScrollPixels":202,
+  "occlusionGuardPassedToWebEngineChild":true,
+  "packagedHdrOutput":{
+    "backend":"D3D11","swapchain":"HDRExtendedSrgbLinear",
+    "nativeHdrActive":true,"bitsPerChannel":10,"sdrWhiteNits":240,"osSettingsChanged":false
+  },
+  "packagedLocalAssetEntrypoints":15,
+  "packagedJsErrors":[],
+  "packagedConsoleErrors":[],
+  "newDependencies":false,
+  "cleanWindowsTested":false,
+  "physicalPeakMeasured":false,
+  "uploaded":false
+}

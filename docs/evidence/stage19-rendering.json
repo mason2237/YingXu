@@ -1,0 +1,151 @@
+{
+  "version": "0.9.0-rc.12",
+  "date": "2026-10-25",
+  "uniqueUnitContractCasesPassed": 57,
+  "baselineIdle": {
+    "nativeFrames": 0,
+    "hidden": false,
+    "ids": {
+      "close-details": 61,
+      "detail-toggle": 61,
+      "sort-name": 61,
+      "sort-score": 61
+    },
+    "mutations": 244
+  },
+  "sourceHdr": {
+    "passed": true,
+    "checks": [
+      "idle_mutation_loop_stopped_and_frames_advance",
+      "real_wheel_settings_close_fade_focus_and_idle_pump",
+      "reopen_during_fade_and_reduced_motion",
+      "theme_resize_minimize_restore_reload",
+      "real_scan_keyboard_wheel_visible_rows_no_media_changes"
+    ],
+    "idle": {
+      "nativeFrames": 0,
+      "hidden": false,
+      "ids": {},
+      "mutations": 0
+    },
+    "rafSamples": 39,
+    "maxRafGapMs": 16.8,
+    "list": {
+      "checks": [
+        "selection_reuses_nodes_and_cached_data",
+        "five_thousand_rows_bounded_buffered_scroll",
+        "filter_and_scan_identity_invalidate_cache",
+        "out_of_order_replies_do_not_repaint_new_results",
+        "concurrent_same_page_queries_coalesced",
+        "empty_restore_and_untrusted_filename_plain_text"
+      ],
+      "passed": true,
+      "queries": 44
+    },
+    "hdrTextureAllocated": true,
+    "settingsFadeSamples": [
+      9,
+      11,
+      10,
+      10
+    ],
+    "realList": {
+      "nodes": 17,
+      "scrollTop": 495,
+      "total": "120",
+      "visible": 5,
+      "wheelEvents": 8
+    },
+    "consoleErrors": [],
+    "errors": []
+  },
+  "sourceSdr": {
+    "passed": true,
+    "checks": [
+      "idle_mutation_loop_stopped_and_frames_advance",
+      "real_wheel_settings_close_fade_focus_and_idle_pump",
+      "reopen_during_fade_and_reduced_motion",
+      "theme_resize_minimize_restore_reload",
+      "real_scan_keyboard_wheel_visible_rows_no_media_changes"
+    ],
+    "idle": {
+      "nativeFrames": 0,
+      "hidden": false,
+      "ids": {},
+      "mutations": 0
+    },
+    "rafSamples": 39,
+    "maxRafGapMs": 16.8,
+    "list": {
+      "checks": [
+        "selection_reuses_nodes_and_cached_data",
+        "five_thousand_rows_bounded_buffered_scroll",
+        "filter_and_scan_identity_invalidate_cache",
+        "out_of_order_replies_do_not_repaint_new_results",
+        "concurrent_same_page_queries_coalesced",
+        "empty_restore_and_untrusted_filename_plain_text"
+      ],
+      "passed": true,
+      "queries": 44
+    },
+    "hdrTextureAllocated": false,
+    "settingsFadeSamples": [
+      10,
+      9,
+      10,
+      9
+    ],
+    "realList": {
+      "nodes": 17,
+      "scrollTop": 495,
+      "total": "120",
+      "visible": 5,
+      "wheelEvents": 8
+    },
+    "consoleErrors": [],
+    "errors": []
+  },
+  "packaged": {
+    "desktopBoot": "ready",
+    "fontLoaded": true,
+    "overflow": false,
+    "width": 1280,
+    "height": 860,
+    "settingsClosesVerified": 6,
+    "fadeFrames": [
+      11,
+      11,
+      12,
+      11,
+      12,
+      11
+    ],
+    "listRendering": {
+      "passed": true,
+      "checks": [
+        "selection_reuses_nodes_and_cached_data",
+        "five_thousand_rows_bounded_buffered_scroll",
+        "filter_and_scan_identity_invalidate_cache",
+        "out_of_order_replies_do_not_repaint_new_results",
+        "concurrent_same_page_queries_coalesced",
+        "empty_restore_and_untrusted_filename_plain_text"
+      ],
+      "queries": 44
+    },
+    "idleClassMutations": 0,
+    "frameValidationPerformed": true,
+    "occlusionGuardPassedToChild": true
+  },
+  "packagedStartupSecondsSingleSample": 1.595,
+  "packagedConsoleErrors": [],
+  "packagedExceptions": [],
+  "limits": {
+    "physicalHdrMeasured": false,
+    "cleanWindowsTested": false,
+    "allDriversVerified": false,
+    "newExeMediaExecutionRetested": false,
+    "uploaded": false,
+    "allIntermittentFlickerEliminated": false
+  },
+  "screenshotScope": "Source: composited window capture. EXE: WebEngine content before native HDR shader. Neither measures physical luminance."
+}

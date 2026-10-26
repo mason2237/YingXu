@@ -7,8 +7,10 @@ ROW = CONTEXT | {"rowId"}
 SCHEMAS = {
     "app.hello": (set(), set()), "app.state": (set(), set()),
     "folder.choose": (set(), set()),
+    "subtitle.open": (CONTEXT, {"rowId"}),
     "scan.start": ({"folderId", "recursive", "move"}, set()),
     "scan.configure": ({"recursive", "move"}, set()),
+    "embedded.configure": ({"enabled", "language"}, set()),
     "scan.cancel": ({"jobId"}, set()), "job.stop": ({"jobId"}, set()),
     "review.query": (CONTEXT, {"search", "status", "fileType", "sortKey", "sortDir", "offset", "limit", "includeIds"}),
     "review.details": (ROW, set()),
@@ -16,6 +18,7 @@ SCHEMAS = {
     "review.assign": (ROW | {"subtitleId"}, {"replaceId"}),
     "review.remove": (ROW | {"subtitleId"}, set()),
     "review.confirm": (ROW, set()), "review.skip": (ROW | {"skipped"}, set()),
+    "review.embedded": (ROW | {"use"}, set()),
     "preview.create": (CONTEXT, set()),
     "preview.query": ({"snapshotId"}, {"offset", "limit"}),
     "preview.discard": (set(), {"snapshotId"}),
@@ -30,6 +33,7 @@ ACTIONS = frozenset(SCHEMAS)
 ENUMS = {
     "status": {"all", "待整理", "需确认", "未匹配", "存在冲突", "已跳过", "已符合"},
     "fileType": {""} | VIDEO_EXTS, "sortKey": {"name", "score", "state"}, "sortDir": {"asc", "desc"},
+    "language": {"chinese", "bilingual", "simplified", "traditional", "english", "japanese", "korean", "any"},
 }
 
 
@@ -39,7 +43,7 @@ def validate(action, params):
         raise ProtocolError("INVALID_REQUEST", "操作参数缺失或包含未支持的字段。")
     for key, value in params.items():
         valid = True
-        if key in {"recursive", "move", "skipped", "includeIds", "acknowledged"}:
+        if key in {"recursive", "move", "skipped", "includeIds", "acknowledged", "enabled", "use"}:
             valid = type(value) is bool
         elif key in {"revision", "reviewRevision", "offset", "limit"}:
             maximum = (30 if action == "history.list" else 200) if key == "limit" else 2**31-1

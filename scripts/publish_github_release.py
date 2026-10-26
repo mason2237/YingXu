@@ -84,7 +84,7 @@ def main():
     release = api.request('GET', f'/repos/{REPO}/releases/tags/{tag}', optional=True)
     if release is None:
         release = api.request('POST', f'/repos/{REPO}/releases', {
-            'tag_name': tag, 'target_commitish': args.commit, 'name': f'映序 {version} · Electron 高刷工作台与在线字幕',
+            'tag_name': tag, 'target_commitish': args.commit, 'name': f'映序 {version}',
             'body': body, 'draft': True, 'prerelease': True})
     if release['target_commitish'] not in {args.commit, repository['default_branch']}:
         raise RuntimeError('Existing release points to a different target')
@@ -101,7 +101,7 @@ def main():
             if existing.get('digest') != 'sha256:'+sha(p) or existing['size'] != p.stat().st_size:
                 raise RuntimeError('GitHub upload digest mismatch: '+p.name)
     release = api.request('PATCH', f'/repos/{REPO}/releases/{release["id"]}',
-                          {'body': body, 'draft': False, 'prerelease': True})
+                          {'name': f'映序 {version}', 'body': body, 'draft': False, 'prerelease': True})
     result = {'repository': REPO, 'tag': tag, 'publicSourceCommit': args.commit,
               'url': release['html_url'], 'draft': release['draft'], 'prerelease': release['prerelease'],
               'publishedAt': release['published_at'], 'assets': [{k:a[k] for k in ('name','size','digest','state','browser_download_url')} for a in release['assets']]}

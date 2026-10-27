@@ -169,8 +169,16 @@
     "Scroll page p95 remains approximately 14ms",
     "Website firewall requires manual verification"
   ],
-  "published": false,
-  "publication": "Pending prepared asset hashes and public source commit",
+  "published": true,
+  "publication": {
+    "url": "https://github.com/mason2237/YingXu/releases/tag/v0.11.0-rc.2",
+    "publishedAt": "2026-10-27T03:11:55Z",
+    "tagCommit": "692a3f41d1e1dedfee140a0b01c81c5d70e20015",
+    "sourceArchiveSnapshotCommit": "99dc9937b5878abbdf097748e98ecbf76f982d83",
+    "anonymousDownloadsVerified": true,
+    "serverDigestsMatched": true,
+    "evidence": "docs/evidence/publication-0.11.0-rc.2.json"
+  },
   "firstValidatedBuild": "a5eca94b115c2f1cba9766c2487ab44ec50c7eac",
   "sourceAtBuild": "7176d10930b4acc8c56416af571da6f99f74c7f8",
   "postWindowTestChanges": "Current dependency/notice/documentation refresh and one legacy compatibility docstring only. UI and business function implementations unchanged; final frozen backend suites rechecked."

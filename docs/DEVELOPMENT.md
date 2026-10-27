@@ -42,11 +42,10 @@ node scripts/check_subtitle_desktop.cjs
 业务基准独立于正确性测试：
 
 ```powershell
-.venv-core/Scripts/python.exe -S benchmarks/business.py --implementation legacy --output work/test-results/business-benchmarks/before.json
-.venv-core/Scripts/python.exe -S benchmarks/business.py --implementation layered --output work/test-results/business-benchmarks/after.json
+.venv-core/Scripts/python.exe -S benchmarks/business.py --implementation layered --output work/test-results/business-benchmarks/current.json
 ```
 
-基准生成可丢弃样本，记录计时和磁盘检查次数，不设时间通过门槛，也不推算整体帧率。
+基准生成可丢弃样本，只运行当前实现，记录计时和磁盘检查次数，不设时间通过门槛，也不推算整体帧率。历史前后对照保留在 evidence/refactor-r5.json；旧实现已清理，当前脚本不再接受 legacy 参数。
 按实际改动选择检查，保留已有结果，不重复未受影响的完整历史验收。若 Codex 的文件沙箱拒绝 Windows 最终路径解析，应区分沙箱失败与产品失败，不修改系统权限来绕过。
 
 ## 数据与进程入口

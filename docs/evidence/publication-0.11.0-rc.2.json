@@ -1,0 +1,39 @@
+{
+  "version": "0.11.0-rc.2",
+  "repository": "mason2237/YingXu",
+  "url": "https://github.com/mason2237/YingXu/releases/tag/v0.11.0-rc.2",
+  "prerelease": true,
+  "publishedAt": "2026-10-27T03:11:55Z",
+  "publicSourceCommit": "692a3f41d1e1dedfee140a0b01c81c5d70e20015",
+  "localSourceSnapshotCommit": "99dc9937b5878abbdf097748e98ecbf76f982d83",
+  "anonymousReleaseVisible": true,
+  "anonymousTaggedSourceVisible": true,
+  "tagCommitVerified": true,
+  "assets": [
+    {
+      "name": "SHA256SUMS.txt",
+      "bytes": 199,
+      "sha256": "4f9c2bb75c20468ce136fb9587bd9e09aa53e66e0984f0a8c4b2bed7c5daa376",
+      "anonymousDownloadStatus": 206,
+      "url": "https://github.com/mason2237/YingXu/releases/download/v0.11.0-rc.2/SHA256SUMS.txt"
+    },
+    {
+      "name": "YingXu-0.11.0-rc.2-source.zip",
+      "bytes": 13293322,
+      "sha256": "605e92558b0ba6836e3e042c423f0610252647f6cd8752b62899c7251b398217",
+      "anonymousDownloadStatus": 206,
+      "url": "https://github.com/mason2237/YingXu/releases/download/v0.11.0-rc.2/YingXu-0.11.0-rc.2-source.zip"
+    },
+    {
+      "name": "YingXu-0.11.0-rc.2-windows-x64.zip",
+      "bytes": 182624463,
+      "sha256": "8967627bb47b67c92b3815d1cf2e20b38d3a7a8761220adb128bf61a39bb5ec3",
+      "anonymousDownloadStatus": 206,
+      "url": "https://github.com/mason2237/YingXu/releases/download/v0.11.0-rc.2/YingXu-0.11.0-rc.2-windows-x64.zip"
+    }
+  ],
+  "digestMethod": "GitHub-reported SHA256 matched local sealed files; anonymous bounded downloads checked reachability, not full redownload hashes",
+  "oldTagsAndAssetsModified": false,
+  "localPrivateHistoryUploaded": false,
+  "cleanWindowsTested": false
+}

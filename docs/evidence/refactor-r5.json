@@ -1,0 +1,245 @@
+{
+  "schema": 1,
+  "stage": "R5",
+  "date": "2026-10-27",
+  "baseCommit": "3ee974c542dfca26135e75cb9169ec5215489321",
+  "version": "0.11.0-rc.1",
+  "commitSubject": "release: deliver Qt-free desktop candidate with measured matching optimization",
+  "runtime": "Electron + Python",
+  "packaged": true,
+  "uploaded": false,
+  "oldReleasesChanged": false,
+  "payload": {
+    "passed": true,
+    "moduleCount": 239,
+    "qtModules": [],
+    "noCaches": true,
+    "helperCodeFilename": "yingxu\\desktop\\host.py",
+    "fileCount": 222,
+    "bytes": 421603655
+  },
+  "businessBenchmark": {
+    "before": {
+      "schema": 1,
+      "implementation": "layered",
+      "python": "3.12.0",
+      "os": "Windows",
+      "size": 120,
+      "repeats": 3,
+      "matching": {
+        "milliseconds": [
+          111.118,
+          113.257,
+          113.912
+        ],
+        "medianMs": 113.257,
+        "pathChecks": [
+          120,
+          120,
+          120
+        ]
+      },
+      "reviewBuild": {
+        "milliseconds": [
+          6.26,
+          5.418,
+          5.609
+        ],
+        "medianMs": 5.609,
+        "pathChecks": [
+          120,
+          120,
+          120
+        ]
+      },
+      "singleRowUpdate": {
+        "milliseconds": [
+          0.188,
+          0.132,
+          0.118
+        ],
+        "medianMs": 0.132,
+        "pathChecks": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    "after": {
+      "schema": 1,
+      "implementation": "layered",
+      "python": "3.12.0",
+      "os": "Windows",
+      "size": 120,
+      "repeats": 3,
+      "matching": {
+        "milliseconds": [
+          12.675,
+          12.661,
+          12.12
+        ],
+        "medianMs": 12.661,
+        "pathChecks": [
+          120,
+          120,
+          120
+        ]
+      },
+      "reviewBuild": {
+        "milliseconds": [
+          6.186,
+          5.679,
+          6.052
+        ],
+        "medianMs": 6.052,
+        "pathChecks": [
+          120,
+          120,
+          120
+        ]
+      },
+      "singleRowUpdate": {
+        "milliseconds": [
+          0.252,
+          0.174,
+          0.134
+        ],
+        "medianMs": 0.174,
+        "pathChecks": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    "matchingReductionPercent": 88.82,
+    "identicalScorePairs": 8100,
+    "profiling": "work/test-results/business-benchmarks/r5-profile-before.txt",
+    "notAnFpsMeasurement": true
+  },
+  "validation": {
+    "pythonBatchCounts": [
+      25,
+      28
+    ],
+    "batchesAreNotAdditive": true,
+    "nodeBoundaryChecks": 5,
+    "frozenWorkspace": {
+      "passed": true,
+      "mode": "frozen",
+      "startupMs": 1106,
+      "activeScroll": {
+        "milliseconds": 2466,
+        "chromiumCpuSeconds": 1.2649309999999998,
+        "maxRows": 16
+      },
+      "processes": [
+        {
+          "Id": 6184,
+          "ProcessName": "YingXu",
+          "WorkingSet64": 280862720,
+          "CPU": 2.640625
+        },
+        {
+          "Id": 30920,
+          "ProcessName": "YingXu",
+          "WorkingSet64": 129617920,
+          "CPU": 0.84375
+        },
+        {
+          "Id": 31136,
+          "ProcessName": "YingXu",
+          "WorkingSet64": 48168960,
+          "CPU": 0.015625
+        },
+        {
+          "Id": 35852,
+          "ProcessName": "YingXu",
+          "WorkingSet64": 172285952,
+          "CPU": 1.03125
+        },
+        {
+          "Id": 25760,
+          "ProcessName": "YingXuBackend",
+          "WorkingSet64": 33488896,
+          "CPU": 0.28125
+        }
+      ],
+      "resizeWidths": [
+        1000,
+        1360
+      ],
+      "minimizeRestore": true,
+      "protocol": 2,
+      "runtime": "Electron + Python",
+      "qtImported": false,
+      "videos": 300,
+      "maxVisibleRows": 16,
+      "scanPreview": true,
+      "unconfirmedExecutionBlocked": true,
+      "themes": true,
+      "onlineLocalUI": true,
+      "languagePreference": true,
+      "remoteHasLocalAPI": false,
+      "websiteVisited": false,
+      "reload": true,
+      "mediaUnchanged": true,
+      "exitCode": 0,
+      "screenshot": "work\\test-results\\noqt-desktop-1793060201575\\workspace.png",
+      "onlineScreenshot": "work\\test-results\\noqt-desktop-1793060201575\\online.png"
+    },
+    "frozenRecovery": {
+      "passed": true,
+      "mode": "frozen",
+      "settingsCycles": 20,
+      "protocol": 2,
+      "qtImported": false,
+      "recoveryBanner": true,
+      "recoveryExplicitConfirmation": true,
+      "previewDoesNotModifyMedia": true,
+      "executeAndUndo": true,
+      "historyAfterReload": true,
+      "mediaRestored": true,
+      "jsExceptions": 0,
+      "websiteVisited": false,
+      "exitCode": 0,
+      "screenshots": [
+        "recovery-preview.png",
+        "organize-preview.png",
+        "organize-result.png",
+        "undo-result.png"
+      ]
+    },
+    "frozenSubtitles": {
+      "passed": true,
+      "mode": "frozen",
+      "realElectronBlobDownload": true,
+      "manualPageSelection": true,
+      "explicitDownloadConfirmation": true,
+      "validatedAndImported": true,
+      "mediaUnchangedBeforeConfirmation": true,
+      "remoteHasNoLocalBridge": true,
+      "jsExceptions": 0,
+      "publicWebsiteTested": false,
+      "exitCode": 0,
+      "output": "work\\test-results\\r4-online-1793060527908"
+    },
+    "embeddedProbe": "work/test-results/r5-frozen-media/report.json",
+    "publicHygiene": "work/test-results/r5-public-audit.json",
+    "historyRewritten": false
+  },
+  "performanceNotes": [
+    "One startup sample; not a cold-start guarantee",
+    "Process working sets may count shared memory multiple times",
+    "Short active-scroll CPU sample, not sustained presentation fps",
+    "Glass and HDR code retained; no new HDR or high-refresh certification"
+  ],
+  "limits": [
+    "Unsigned candidate; clean Windows not tested",
+    "Public subtitle websites and CAPTCHA not revalidated",
+    "Blob cannot resume across sessions",
+    "Imported/recovery/undo caches retained conservatively",
+    "Process-kill evidence from R3 is not real power-loss testing"
+  ]
+}

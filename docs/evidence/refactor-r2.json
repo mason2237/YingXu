@@ -1,0 +1,181 @@
+{
+  "schema": 1,
+  "stage": "R2",
+  "date": "2026-10-26",
+  "baseCommit": "e49759c",
+  "commitSubject": "refactor: run workspace on Electron and Qt-free Python",
+  "sourceEntry": [
+    "run.py",
+    "run_electron.py"
+  ],
+  "pythonHost": "yingxu.desktop.host",
+  "pythonRuntimeRequirements": "requirements-runtime.txt",
+  "qtPresentInValidationEnvironment": false,
+  "releaseChanged": false,
+  "packaged": false,
+  "published": false,
+  "tests": {
+    "qtFreeSuite": {
+      "passed": 56,
+      "unit": 14,
+      "contract": 29,
+      "integration": 8,
+      "recovery": 5,
+      "python": "3.12.0",
+      "noSiteFlag": true
+    },
+    "legacyBusinessAndBoundaryGroup": {
+      "passed": 54,
+      "includesBoundaryCasesAlsoInQtFreeSuite": 3
+    },
+    "legacyQtBackendAndDisplayGroup": {
+      "passed": 17
+    },
+    "browserAdapterNodeContracts": [
+      "source-policy",
+      "IPC-whitelist",
+      "resume-after-verification",
+      "cancel-during-window-startup"
+    ]
+  },
+  "businessBenchmark": {
+    "size": 120,
+    "repeats": 3,
+    "before": {
+      "schema": 1,
+      "implementation": "legacy",
+      "python": "3.12.0",
+      "os": "Windows",
+      "size": 120,
+      "repeats": 3,
+      "matching": {
+        "milliseconds": [
+          116.549,
+          116.477,
+          119.205
+        ],
+        "medianMs": 116.549,
+        "pathChecks": [
+          120,
+          120,
+          120
+        ]
+      },
+      "reviewBuild": {
+        "milliseconds": [
+          7.366,
+          6.985,
+          6.685
+        ],
+        "medianMs": 6.985,
+        "pathChecks": [
+          120,
+          120,
+          120
+        ]
+      },
+      "singleRowUpdate": {
+        "milliseconds": [
+          12.178,
+          11.978,
+          11.696
+        ],
+        "medianMs": 11.978,
+        "pathChecks": [
+          120,
+          120,
+          120
+        ]
+      }
+    },
+    "after": {
+      "schema": 1,
+      "implementation": "layered",
+      "python": "3.12.0",
+      "os": "Windows",
+      "size": 120,
+      "repeats": 3,
+      "matching": {
+        "milliseconds": [
+          113.386,
+          114.341,
+          113.074
+        ],
+        "medianMs": 113.386,
+        "pathChecks": [
+          120,
+          120,
+          120
+        ]
+      },
+      "reviewBuild": {
+        "milliseconds": [
+          7.534,
+          6.708,
+          6.763
+        ],
+        "medianMs": 6.763,
+        "pathChecks": [
+          120,
+          120,
+          120
+        ]
+      },
+      "singleRowUpdate": {
+        "milliseconds": [
+          0.204,
+          0.149,
+          0.134
+        ],
+        "medianMs": 0.149,
+        "pathChecks": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    "rawBefore": "work/test-results/business-benchmarks/r2-baseline.json",
+    "rawAfter": "work/test-results/business-benchmarks/r2-layered.json",
+    "scope": "single-row skip/confirm; complete replanning remains for assignment changes",
+    "limitation": "Short sample. Not an overall framerate, flicker or matching-throughput claim.",
+    "discardedProbe": "r2-before.json counted Path.exists only and missed lstat; use r2-baseline.json for comparison."
+  },
+  "desktop": {
+    "passed": true,
+    "protocol": 2,
+    "runtime": "Electron + Python",
+    "qtImported": false,
+    "videos": 300,
+    "maxVisibleRows": 17,
+    "scanPreview": true,
+    "executionDisabled": true,
+    "themes": true,
+    "onlineLocalUI": true,
+    "languagePreference": true,
+    "remoteHasLocalAPI": false,
+    "websiteVisited": false,
+    "reload": true,
+    "mediaUnchanged": true,
+    "exitCode": 0,
+    "screenshot": "work\\test-results\\noqt-desktop-1793020459834\\workspace.png",
+    "onlineScreenshot": "work\\test-results\\noqt-desktop-1793020459834\\online.png"
+  },
+  "desktopRawDirectory": "work/test-results/noqt-desktop-1793020459834",
+  "testLimitations": [
+    "Sandbox rejected Windows final-path resolution; affected tests passed in the ordinary current Windows environment without changing OS permissions.",
+    "Early desktop probes timed out on uninitialized view inspection or handshake readiness; raw attempts retained under ignored work/test-results/noqt-desktop-*.",
+    "No live subtitle website/download, complete presentation/HDR benchmark, EXE rebuild or clean-system test this stage."
+  ],
+  "remaining": [
+    "R3 operation journal, file reconciliation and undo",
+    "R4 real downloads, validation, imports and conditional resume",
+    "R5 performance/release packaging"
+  ],
+  "newEntryDisabledCapabilities": [
+    "file execution",
+    "downloads",
+    "archive extraction/import",
+    "record export"
+  ]
+}

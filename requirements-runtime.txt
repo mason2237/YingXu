@@ -1,0 +1,2 @@
+# Qt-free Python runtime. Electron is installed separately using the pinned installer.
+pymediainfo==7.0.1

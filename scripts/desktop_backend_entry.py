@@ -13,7 +13,11 @@ def attach_inherited_streams():
     kernel.GetStdHandle.argtypes = [ctypes.c_uint32];kernel.GetStdHandle.restype = ctypes.c_void_p
     for name, number, flags, mode in [('stdin', -10, os.O_RDONLY, 'rb'),
                                       ('stdout', -11, os.O_WRONLY, 'wb'), ('stderr', -12, os.O_WRONLY, 'wb')]:
-        if getattr(sys, name, None) is not None:continue
+        current = getattr(sys, name, None)
+        if current is not None:
+            if hasattr(current, 'reconfigure'):
+                current.reconfigure(encoding='utf-8', errors='replace', newline='\n', write_through=True)
+            continue
         handle = kernel.GetStdHandle(number & 0xffffffff)
         if not handle or handle == ctypes.c_void_p(-1).value:
             stream = open(os.devnull, mode, buffering=0)
@@ -25,15 +29,11 @@ def attach_inherited_streams():
 def main():
     attach_inherited_streams()
     if '--read-embedded-subtitles' in sys.argv:
-        from yingxu.embedded_subtitles import probe_main
+        from yingxu.adapters.mediainfo import probe_main
         return probe_main()
     if '--desktop-backend' in sys.argv:
         sys.argv.remove('--desktop-backend')
-        from yingxu.desktop_host.backend import main as start
-        return start()
-    if '--subtitle-browser' in sys.argv:
-        sys.argv.remove('--subtitle-browser')
-        from yingxu.desktop_host.subtitle_process import main as start
+        from yingxu.desktop.host import main as start
         return start()
     return 2
 

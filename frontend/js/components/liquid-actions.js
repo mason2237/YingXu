@@ -33,7 +33,11 @@ export class LiquidActions {
       const renderer = this.runtime.system?.renderer;
       if (renderer) {
         const render = renderer.render.bind(renderer);
-        renderer.render = now => {this.clip(); render(now);};
+        renderer.render = now => {
+          const jelly = this.runtime.system.jelly;
+          if (renderer.rectDirty || jelly.frame || jelly.gesture || !this.clipPath) this.clip();
+          render(now);
+        };
       }
     }
     if (changed && this.runtime) {

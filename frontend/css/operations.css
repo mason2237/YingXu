@@ -1,0 +1,6 @@
+.history-operation-tools {display:flex;flex-wrap:wrap;flex-shrink:0;gap:8px;margin:0 28px 14px;}
+.history-operation-tools[hidden] {display:none;}
+#recovery-notice {align-items:center;justify-content:space-between;gap:12px;}
+#recovery-notice[hidden] {display:none;}
+#recovery-notice-text {flex:1;}
+#recovery-open {white-space:nowrap;}

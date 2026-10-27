@@ -1,3 +1,4 @@
+import {windowInactive,onWindowVisibility} from '../visibility.js';
 // Project-owned procedural vapor. Original Lens is used for buttons, not this
 // shader. One low-resolution canvas under all virtual rows, never over text.
 const VERTEX = `#version 300 es
@@ -54,9 +55,10 @@ export class ListMist {
     }, {signal, passive: true});
     viewport.addEventListener('pointerleave', () => {this.hoverTarget = 0; if (!this.reduced) this.wake(650);}, {signal});
     viewport.addEventListener('scroll', () => this.wake(450), {signal, passive: true});
-    document.addEventListener('visibilitychange', () => {if (document.hidden) this.stop(); else {this.restore(); this.wake(500);}}, {signal});
+    onWindowVisibility( () => {if (windowInactive()) this.stop(); else {this.restore(); this.wake(500);}}, {signal});
     this.resizeObserver = new ResizeObserver(() => this.resize()); this.resizeObserver.observe(viewport);
-    this.observer = new MutationObserver(() => this.wake(1100));
+    this.selectionDirty = true;
+    this.observer = new MutationObserver(() => {this.selectionDirty = true;this.wake(1100);});
     this.observer.observe(viewport, {subtree: true, childList: true, attributes: true, attributeFilter: ['hidden','aria-selected','aria-busy']});
     this.initialize(); this.resize();
   }
@@ -101,21 +103,21 @@ export class ListMist {
     this.restore(); this.draw(); if (!this.reduced) this.wake(1200);
   }
   restore() {
-    if (!this.destroyed && this.enabled && !document.hidden && this.gl?.isContextLost() && !this.restoreTimer) {
-      this.restoreTimer = setTimeout(() => {this.restoreTimer = 0;if (!this.destroyed && this.enabled && !document.hidden) this.extension?.restoreContext();},150);
+    if (!this.destroyed && this.enabled && !windowInactive() && this.gl?.isContextLost() && !this.restoreTimer) {
+      this.restoreTimer = setTimeout(() => {this.restoreTimer = 0;if (!this.destroyed && this.enabled && !windowInactive()) this.extension?.restoreContext();},150);
     }
   }
   wake(duration = 1000) {
     if (this.destroyed) return;
     this.syncMode();
-    if (!this.enabled || this.suspended || this.mode !== 'webgl2' || document.hidden || this.viewport.hidden || this.viewport.getAttribute('aria-busy') === 'true') {this.stop(); return;}
+    if (!this.enabled || this.suspended || this.mode !== 'webgl2' || windowInactive() || this.viewport.hidden || this.viewport.getAttribute('aria-busy') === 'true') {this.stop(); return;}
     if (this.reduced) {this.hover = this.hoverTarget; this.draw(); return;}
     this.deadline = performance.now()+duration;
     if (!this.raf) this.raf = requestAnimationFrame(now => this.tick(now));
   }
   tick(now) {
     this.raf = 0;
-    if (this.destroyed || this.suspended || document.hidden || !this.enabled || this.reduced || this.viewport.hidden || this.mode !== 'webgl2') {this.stop(); return;}
+    if (this.destroyed || this.suspended || windowInactive() || !this.enabled || this.reduced || this.viewport.hidden || this.mode !== 'webgl2') {this.stop(); return;}
     // Carry the 60Hz budget across refresh ticks, including 144Hz displays.
     if (!this.last || now+.5 >= this.nextFrame) {
       const elapsed = this.last ? Math.min(now-this.last,60)/1000 : 0;
@@ -128,14 +130,22 @@ export class ListMist {
   }
   draw() {
     const gl = this.gl;
-    if (this.destroyed || !this.enabled || document.hidden || this.mode !== 'webgl2' || !gl || gl.isContextLost() || !this.program || this.viewport.hidden) return;
-    const row = this.viewport.querySelector('[aria-selected=true]'), rect = row?.getBoundingClientRect(), viewport = this.viewport.getBoundingClientRect();
-    const center = rect ? (rect.top-viewport.top+rect.height/2)/this.height : -1;
+    if (this.destroyed || !this.enabled || windowInactive() || this.mode !== 'webgl2' || !gl || gl.isContextLost() || !this.program || this.viewport.hidden) return;
+    // Virtual rows already expose their absolute index. Cache the selected row
+    // after a list mutation; scrolling needs arithmetic, not a layout read on
+    // every vapor frame (which can synchronize the main/compositor threads).
+    if (this.selectionDirty) {
+      this.selectionDirty = false;
+      const row = this.viewport.querySelector('[aria-selected=true]');
+      const height = row?.offsetHeight || 84;
+      this.selection = row ? {top:(Number(row.getAttribute('aria-rowindex'))-1)*height,height} : null;
+    }
+    const center = this.selection ? (this.selection.top-this.viewport.scrollTop+this.selection.height/2)/this.height : -1;
     const selected = center >= 0 && center <= 1 ? center : -1;
     gl.viewport(0,0,this.canvas.width,this.canvas.height); gl.useProgram(this.program); gl.bindVertexArray(this.vao);
     const u = this.uniforms;
     gl.uniform2f(u.uSize,this.width,this.height); gl.uniform2f(u.uPointer,...this.pointer);
-    gl.uniform2f(u.uSelection,selected,(rect?.height || 84)/this.height);
+    gl.uniform2f(u.uSelection,selected,(this.selection?.height || 84)/this.height);
     gl.uniform1f(u.uTime,this.clock); gl.uniform1f(u.uHover,this.reduced ? 0 : this.hover); gl.uniform1f(u.uScroll,this.viewport.scrollTop);
     gl.uniform1f(u.uDark,document.documentElement.dataset.theme === 'dark' ? 1 : 0);
     gl.drawArrays(gl.TRIANGLES,0,3); this.frames++;

@@ -1,4 +1,5 @@
 import {JellyController} from '../../vendor/design-systems/lens/internal/jelly.js';
+import {windowInactive,onWindowVisibility} from '../visibility.js';
 
 const OWNED = '.workspace-lens-stage,.filter-lens-stage,.liquid-actions-stage';
 const STRUCTURAL = '.list-heading button,.inspector-heading button';
@@ -15,10 +16,22 @@ export class GlassControls {
       if (options().reduced || !options().enabled || this.jelly.bodies.get(body.element) !== body || body.element.closest(OWNED)) return;
       grab(body,event);
     };
-    this.observer = new MutationObserver(() => this.schedule());
+    // Virtual rows contain no controls. Their insertion/removal must not rescan
+    // and reconfigure every button in the window during ordinary scrolling.
+    this.observer = new MutationObserver(records => {
+      if (records.some(record => record.type === 'childList'
+        ? [...record.addedNodes,...record.removedNodes].some(node => node.nodeType === 1 && (node.matches('button') || node.querySelector('button')))
+        : record.target.matches(`button,dialog,${OWNED}`) || record.target.querySelector('button'))) this.schedule();
+    });
     this.observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','disabled','hidden','open']});
     // Suppress a real drag even when reduced motion disables the spring.
     const signal = this.abort.signal;
+    onWindowVisibility(() => {
+      if (windowInactive()) {
+        cancelAnimationFrame(this.frame);this.frame = 0;
+        this.jelly.cancel(true);cancelAnimationFrame(this.jelly.frame);this.jelly.frame = 0;this.jelly.last = 0;
+      } else this.schedule();
+    }, {signal});
     document.addEventListener('pointerdown',event => {
       const button = event.target.closest?.('button');
       if (event.button === 0 && event.isPrimary && button && !button.disabled) this.pointer = {button,id:event.pointerId,x:event.clientX,y:event.clientY,moved:false};
@@ -36,7 +49,7 @@ export class GlassControls {
     },{passive:true,signal:this.abort.signal});
     this.refresh();
   }
-  schedule() {if (!this.frame && !this.dead) this.frame = requestAnimationFrame(() => {this.frame = 0;this.refresh();});}
+  schedule() {if (!this.frame && !this.dead && !windowInactive()) this.frame = requestAnimationFrame(() => {this.frame = 0;this.refresh();});}
   refresh() {
     if (this.dead) return;
     this.buttons = [...document.querySelectorAll('button')];

@@ -1,4 +1,4 @@
-// Identical CDP input workloads on the frozen Qt baseline and Electron prototype.
+// Current Electron workload: real input, Chromium trace, optional independent PresentMon capture.
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -9,42 +9,34 @@ import {CdpClient} from './cdp_client.mjs';
 
 const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const option=(key,fallback)=>process.argv.find(value=>value.startsWith(`--${key}=`))?.slice(key.length+3)||fallback;
-const host=option('host','electron'),effects=option('effects','full');
+const host='electron',effects=option('effects','full');
 const duration=Number(option('seconds','30')),repeats=Number(option('repeats','3'));
 const presentationRoot=option('presentation-root',null);
 const capturePresentMon=process.argv.includes('--presentmon');
+const detail=process.argv.includes('--detail');
 if(capturePresentMon&&(!presentationRoot||host!=='electron'))throw Error('PresentMon requires an Electron presentation-root');
-if(!['electron','qt'].includes(host)||!['full','moderate'].includes(effects)||!Number.isFinite(duration)||duration<3||duration>120||!Number.isInteger(repeats)||repeats<1||repeats>5)throw Error('Invalid probe options');
-const output=presentationRoot?path.resolve(presentationRoot,`${host}-${effects}`):path.join(ROOT,`work/test-results/${host==='electron'?'architecture-a-visible':'architecture-a-fixed60'}/${host}-${effects}`);
-const media=path.join(ROOT,'work/test-results/electron-a-full/media');
-const profile=path.join(output,'profile'),python=path.join(ROOT,'.venv-web/Scripts/python.exe');
+if(!['full','moderate'].includes(effects)||!Number.isFinite(duration)||duration<3||duration>120||!Number.isInteger(repeats)||repeats<1||repeats>5)throw Error('Invalid probe options');
+const output=presentationRoot?path.resolve(presentationRoot,`${host}-${effects}`):path.join(ROOT,`work/test-results/render-current-${Date.now()}/${host}-${effects}`);
+const media=path.join(output,'media');
+const profile=path.join(output,'profile'),python=path.join(ROOT,'.venv-core/Scripts/python.exe');
 fs.mkdirSync(profile,{recursive:true});
-if(!fs.existsSync(media))throw Error('Run check_electron.mjs once to create the shared synthetic fixture');
+fs.mkdirSync(media,{recursive:true});for(let i=1;i<=300;i++){const stem=`Atlas.S01E${String(i).padStart(3,'0')}`;fs.writeFileSync(path.join(media,stem+'.1080p.mkv'),'generated video');fs.writeFileSync(path.join(media,stem+'.chs.srt'),'generated subtitle');}
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const wake=spawn(python,[path.join(ROOT,'scripts/probe_environment.py'),'--keep-awake'],{windowsHide:true,stdio:['pipe','pipe','pipe']});
 const environment=await new Promise(resolve=>wake.stdout.once('data',data=>resolve(JSON.parse(data.toString()))));
 await sleep(2000);
 const port=await new Promise(resolve=>{const server=net.createServer();server.listen(0,'127.0.0.1',()=>{const {port}=server.address();server.close(()=>resolve(port));});});
-let command,args;
-if(host==='qt') {
-  const baseline=path.join(ROOT,'work/test-results/architecture-a/qt-baseline-228773c');
-  if(!fs.existsSync(path.join(baseline,'run.py'))) {
-    const archive=path.join(ROOT,'work/test-results/architecture-a/baseline.zip');
-    execFileSync('git',['archive','228773c','--format=zip',`--output=${archive}`],{cwd:ROOT});
-    execFileSync(python,['-c','import sys,zipfile;zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])',archive,baseline]);
-  }
-  command=python;args=[path.join(ROOT,'scripts/launch_qt_probe.py'),'--root',baseline,'--profile',profile,'--folder',media,'--port',String(port),'--effects',effects];
-} else {
-  fs.mkdirSync(path.join(profile,'python'),{recursive:true});
-  execFileSync(python,['-c',"import json,sys;from PySide6.QtCore import QSettings;s=QSettings(sys.argv[1],QSettings.IniFormat);s.setValue('subtitles/embedded/v1',json.dumps({'enabled':False,'language':'chinese'}));s.sync()",path.join(profile,'python/embedded.ini')]);
-  fs.writeFileSync(path.join(profile,'appearance.json'),JSON.stringify({theme:'dark',mistEnabled:effects==='full',particlesEnabled:effects==='full'}));
-  command=path.join(ROOT,'work/tools/electron-45.0.0/electron.exe');args=[path.join(ROOT,'desktop/electron'),'--preview',`--profile=${profile}`,'--diagnostics',`--test-folder=${media}`,`--effects=${effects}`,`--remote-debugging-port=${port}`,'--remote-debugging-address=127.0.0.1'];
-}
+fs.mkdirSync(path.join(profile,'python'),{recursive:true});
+fs.writeFileSync(path.join(profile,'python/embedded.json'),JSON.stringify({enabled:false,language:'chinese'}));
+fs.writeFileSync(path.join(profile,'appearance.json'),JSON.stringify({theme:'dark',mistEnabled:effects==='full',particlesEnabled:effects==='full'}));
+const executable=option('executable',null);
+const command=executable?path.resolve(executable):path.join(ROOT,'work/tools/electron-45.0.0/electron.exe');
+const args=[...(executable?[]:[path.join(ROOT,'desktop/electron')]),`--profile=${profile}`,'--diagnostics',`--test-folder=${media}`,`--effects=${effects}`,`--remote-debugging-port=${port}`,'--remote-debugging-address=127.0.0.1'];
 const env={...process.env,YINGXU_PYTHON:python};delete env.ELECTRON_RUN_AS_NODE;
 const started=performance.now(),child=spawn(command,args,{cwd:ROOT,env,windowsHide:host!=='electron',stdio:['pipe','pipe','pipe']});
 const logs=[];child.stdout.on('data',data=>logs.push(data.toString()));child.stderr.on('data',data=>logs.push(data.toString()));
-const result={host,effects,environment,baseline:'228773c95e8ab9c1c786354ad0d8b026f11826f0',durationSeconds:duration,repeats,
-  comparableVisualPolicy:'same Lens and desktop overlay behavior; HDR host differs',passes:[],presentMon:{available:false,reason:'ETW trace session access denied (requires Windows administrator or Performance Log Users)'},physicalPeakMeasured:false};
+const result={host,effects,environment,source:'current Qt-free desktop',durationSeconds:duration,repeats,
+  visualPolicy:'main Lens and HDR retained; full/moderate recorded separately',passes:[],presentMon:{available:false,reason:'ETW trace session access denied (requires Windows administrator or Performance Log Users)'},physicalPeakMeasured:false};
 let browser,page,cdp,rootCdp,tracing=false;
 function summarize(values) {
   if(!values.length)return {count:0};
@@ -64,7 +56,7 @@ try {
   page={evaluate,waitForFunction:async fn=>{const deadline=performance.now()+30000;while(performance.now()<deadline){if(await evaluate(fn))return;await sleep(80);}throw Error('Workspace readiness timeout');},
     screenshot:async({path:filename})=>{const shot=await cdp.send('Page.captureScreenshot',{format:'png'});fs.writeFileSync(filename,Buffer.from(shot.data,'base64'));},
     close:()=>cdp.send('Page.close')};
-  await page.waitForFunction(()=>document.documentElement?.dataset.desktopBoot==='ready');
+  await page.waitForFunction(()=>document.documentElement?.dataset.ready==='true');
   result.startupMs=Math.round(performance.now()-started);
   if(host==='electron')await page.evaluate(()=>document.getElementById('dataset-button').click());
   await page.waitForFunction(()=>document.querySelector('#count-all').textContent==='300'&&document.querySelector('#file-list').getAttribute('aria-busy')==='false');
@@ -74,7 +66,7 @@ try {
     const native=logs.join('').split('\n').map(line=>{try{return JSON.parse(line);}catch{return null;}}).find(frame=>frame?.type==='window');
     if(!native?.visible)throw Error('Native Electron window is hidden; refusing an invalid performance comparison');
     result.nativeWindowVisible=true;
-    execFileSync(python,[path.join(ROOT,'scripts/capture_window_preview.py'),native.handle,path.join(output,'native-before.png')]);
+    await page.screenshot({path:path.join(output,'native-before.png')});
   }
   try {result.gpu=(await rootCdp.send('SystemInfo.getInfo')).gpu.devices;}catch(error){result.gpuError=String(error);}
   if(presentationRoot) {
@@ -107,7 +99,8 @@ try {
       probe.observer=new PerformanceObserver(list=>probe.longTasks.push(...list.getEntries().map(entry=>({start:entry.startTime,duration:entry.duration,phase:probe.phase}))));
       probe.observer.observe({type:'longtask'});
     });
-    if(iteration===0){await rootCdp.send('Tracing.start',{categories:'viz,cc,benchmark,disabled-by-default-devtools.timeline.frame',transferMode:'ReturnAsStream'});tracing=true;}
+    if(iteration===0){await rootCdp.send('Tracing.start',{categories:'viz,cc,benchmark,disabled-by-default-devtools.timeline.frame'+(detail?',devtools.timeline':''),transferMode:'ReturnAsStream'});tracing=true;}
+    if(detail) {await cdp.send('Profiler.enable');await cdp.send('Profiler.setSamplingInterval',{interval:1000});await cdp.send('Profiler.start');}
     let before;
     try{before=(await rootCdp.send('SystemInfo.getProcessInfo')).processInfo;}catch{}
     const phaseDuration=duration*1000/3;
@@ -144,6 +137,7 @@ try {
     const sampled=await page.evaluate(()=>{const p=window.__architectureProbe;p.phase=null;cancelAnimationFrame(p.raf);p.observer.disconnect();document.getElementById('file-list').removeEventListener('scroll',p.scroll);return {gaps:p.gaps,longTasks:p.longTasks,scrollEvents:p.scrollEvents};});
     for(const phase of ['hover','drag','scroll'])pass.phases[phase]={...pass.phases[phase],raf:summarize(sampled.gaps[phase])};
     pass.longTasks=sampled.longTasks;pass.scrollEvents=sampled.scrollEvents;
+    if(detail) {const {profile}=await cdp.send('Profiler.stop');fs.writeFileSync(path.join(output,`pass-${iteration+1}.cpuprofile`),JSON.stringify(profile));}
     try{const after=(await rootCdp.send('SystemInfo.getProcessInfo')).processInfo;pass.chromiumCpuSeconds=after.reduce((sum,item)=>sum+Math.max(0,item.cpuTime-(before?.find(old=>old.id===item.id)?.cpuTime||item.cpuTime)),0);
       const ids=[...new Set(after.map(item=>item.id).filter(id=>Number.isInteger(id)&&id>0))].join(',');
       if(ids)pass.processMemory=JSON.parse(execFileSync('powershell.exe',['-NoProfile','-NonInteractive','-Command',`$items=@(Get-Process -Id ${ids} -ErrorAction SilentlyContinue);[pscustomobject]@{workingSetBytes=($items|Measure-Object WorkingSet64 -Sum).Sum;privateBytes=($items|Measure-Object PrivateMemorySize64 -Sum).Sum}|ConvertTo-Json -Compress`],{encoding:'utf8'}));
@@ -165,7 +159,7 @@ try {
   delete result.activeStep;
   await page.screenshot({path:path.join(output,'workspace.png')});
   const windowFrame=logs.join('').split('\n').map(line=>{try{return JSON.parse(line);}catch{return null;}}).find(frame=>frame?.type==='window');
-  if(windowFrame)try{execFileSync(python,[path.join(ROOT,'scripts/capture_window_preview.py'),windowFrame.handle,path.join(output,'native-window.png')]);}catch(error){result.nativeScreenshotError=String(error);}
+  if(windowFrame)await page.screenshot({path:path.join(output,'native-window.png')});
 } catch(error){result.failure=error.stack||String(error);process.exitCode=1;}
 finally {
   wake.stdin.end();

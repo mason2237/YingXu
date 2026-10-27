@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "stage": "R4",
+  "date": "2026-10-27",
+  "baseCommit": "dde3529660d57e89a41d9c9e78f40950a87966c9",
+  "runtime": "Electron + Qt-free Python",
+  "packaged": false,
+  "published": false,
+  "newThirdPartyDependencies": false,
+  "tests": {
+    "affectedPythonBatch": 53,
+    "exportIncrementalBatch": 3,
+    "batchesOverlap": true,
+    "transport": "local real HTTP 206,200,416,object change,bad range,drop,crash tail,expired,HTML,cancel",
+    "generatedMediaPipeline": "blob -> bounded archive -> restart -> identity check -> review -> confirmed execute -> export -> undo",
+    "realWindow": "work/test-results/r4-online-1793042326162/report.json",
+    "realWindowJsExceptions": 0,
+    "publicWebsitesTested": false,
+    "powerLossTested": false,
+    "cleanWindowsTested": false
+  },
+  "limits": [
+    "Manual CAPTCHA and site download steps",
+    "Blob cannot resume across sessions",
+    "Imported/recovery/undo caches retained conservatively",
+    "512 MiB inbox budget; 128 artifacts"
+  ]
+}

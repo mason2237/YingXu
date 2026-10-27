@@ -19,12 +19,16 @@ export class LocalWorkspaceDialogs extends WorkspaceDialogs {
     bind('history-previous',() => this.recordPage(this.historyPage-1));
     bind('history-next',() => this.recordPage(this.historyPage+1));
     bind('export-record',() => this.exportRecord());
+    bind('resume-record',()=>this.operationPreview('operation.resumePreview'));
+    bind('undo-record',()=>this.operationPreview('operation.undoPreview'));
+    bind('archive-record',async()=>{if(!this.record)return;await this.adapter.request('operation.archive',{runId:this.record.recordId,acknowledged:true});await this.adapter.request('app.state');await this.recordPage(0);this.toast('已保留文件与缓存，可稍后在记录中继续核对。');});
+    bind('operation-cache',()=>this.adapter.request('operation.cache'));
     $('history-record').addEventListener('change',() => this.recordPage(0,$('history-record').value).catch(error => this.toast(error.message,{tone:'error'})));
     this.syncExecution();
   }
   syncExecution() {
     const summary = this.adapter.state?.summary;
-    if (this.plan && summary && (this.plan.scanId !== summary.scanId || this.plan.revision !== summary.revision)) {
+    if (this.plan && (!this.plan.operation||this.plan.operation==='apply') && summary && (this.plan.scanId !== summary.scanId || this.plan.revision !== summary.revision)) {
       this.plan.canExecute = false;
       $('preview-ack').checked = false;
       $('preview-summary').textContent = '匹配内容已变化，请关闭并重新生成预览。';
@@ -40,6 +44,11 @@ export class LocalWorkspaceDialogs extends WorkspaceDialogs {
     $('export-record').disabled = blocked || !this.record;
     $('history-previous').disabled = blocked || !this.record || !this.historyPage;
     $('history-next').disabled = blocked || !this.record || (this.historyPage+1)*PAGE_SIZE >= this.record.itemCount;
+    const modern=this.adapter.state?.runtime==='python-stdlib';$('history-operation-tools').hidden=!modern;
+    $('resume-record').disabled=blocked||!this.record?.canResume;$('undo-record').disabled=blocked||!this.record?.canUndo;
+    $('archive-record').hidden=!this.record?.needsRecovery;$('archive-record').disabled=blocked;
+    $('operation-cache').disabled=blocked;
+    $('export-record').hidden=modern&&this.adapter.state?.stage==='R3';
   }
   async candidates() {
     if (this.store.busy || !this.store.details) return;
@@ -88,15 +97,22 @@ export class LocalWorkspaceDialogs extends WorkspaceDialogs {
   async renderPlan() {
     const plan = this.plan;if (!plan) return;
     $('preview-prev').disabled = $('preview-next').disabled = true;
-    const response = await this.adapter.request('preview.query',{snapshotId:plan.snapshotId,offset:this.page*PAGE_SIZE,limit:PAGE_SIZE});
-    $('preview-summary').textContent = `${plan.changeCount} 份字幕可整理 · ${plan.unmatchedCount} 个视频未匹配 · ${this.adapter.state?.prototype ? '对比原型仅展示名称变更，不执行文件操作' : '核对后才会修改文件'}`;
+    const operation=plan.operation||'apply';
+    const response = await this.adapter.request(operation==='apply'?'preview.query':'operation.query',{
+      ...(operation==='apply'?{}:{runId:plan.runId}),snapshotId:plan.snapshotId,offset:this.page*PAGE_SIZE,limit:PAGE_SIZE});
+    $('preview-title').textContent=operation==='undo'?'撤销预览':operation==='resume'?'恢复预览':'变更预览';
+    $('execute-button').replaceChildren(iconNode('check'),document.createTextNode(operation==='undo'?'确认撤销':operation==='resume'?'确认继续':'确认整理'));
+    const count=plan.remainingCount??plan.changeCount;
+    const progress=operation==='undo'?`${count} 份字幕待撤销`:operation==='resume'?`${count} 项待继续 · ${plan.completedCount||0} 项已完成`:`${count} 份字幕可整理 · ${plan.unmatchedCount} 个视频未匹配`;
+    $('preview-summary').textContent = `${progress} · ${plan.executionReason || (this.adapter.state?.prototype ? '对比原型仅展示名称变更，不执行文件操作' : '核对后才会修改文件')}`;
     const warning = $('preview-warning');warning.hidden = !plan.pendingCount && !plan.conflictCount;
-    warning.textContent = `还有 ${plan.pendingCount} 项匹配待确认、${plan.conflictCount} 项冲突。请返回审阅后重新生成预览。`;
+    warning.textContent = `还有 ${plan.pendingCount} 项匹配待确认、${plan.conflictCount} 项冲突。${operation==='apply'?'请返回审阅后重新生成预览。':'请按下方提示处理文件，再从操作记录重新核对。'}`;
     const labels = {rename:['待整理','待整理'],skipped:['已跳过','已跳过'],unchanged:['已符合','无需变更'],pending:['需确认','待确认'],blocked:['存在冲突','已阻止'],unmatched:['未匹配','未匹配']};
     const fragment = document.createDocumentFragment();
     for (const item of response.items) {
       const row = el('div','preview-item'),source = el('div'),target = el('div','preview-target');
       source.append(el('small','',item.videoName),el('strong','',item.sourceName),el('small','',item.sourcePath));
+      if(item.message)source.append(el('small','',item.message));
       target.append(el('strong','',item.targetName),el('small','',item.targetPath));
       const label = labels[item.action] || ['未匹配','未匹配'],status = badge(label[0]);status.lastChild.textContent = label[1];
       row.append(source,iconNode('arrow'),target,status);fragment.append(row);
@@ -110,7 +126,10 @@ export class LocalWorkspaceDialogs extends WorkspaceDialogs {
     if ($('execute-button').disabled || this.executing) return;
     const plan = this.plan;this.executing = true;this.syncExecution();
     try {
-      const started = await this.adapter.start('organize.confirmAndStart',{scanId:plan.scanId,reviewRevision:plan.revision,snapshotId:plan.snapshotId,confirmationToken:plan.confirmationToken,acknowledged:$('preview-ack').checked});
+      const operation=plan.operation||'apply';
+      const started = await this.adapter.start(operation==='apply'?'organize.confirmAndStart':'operation.confirm',{
+        ...(operation==='apply'?{scanId:plan.scanId,reviewRevision:plan.revision}:{runId:plan.runId}),
+        snapshotId:plan.snapshotId,confirmationToken:plan.confirmationToken,acknowledged:$('preview-ack').checked});
       plan.canExecute = false;await this.modals.preview.close();
       const result = await this.adapter.waitJob(started.jobId);await this.store.refresh(true);await this.showResult(result.batchId);
     } catch (error) {
@@ -123,14 +142,22 @@ export class LocalWorkspaceDialogs extends WorkspaceDialogs {
     for (const record of records) {const option = el('option','',`${record.title} · ${this.time(record.time)}`);option.value = record.recordId;$('history-record').append(option);}
   }
   time(value) {const date = new Date(value);return Number.isNaN(date.valueOf()) ? value : date.toLocaleString('zh-CN',{hour12:false});}
-  async history() {
+  async history(preferRecovery=false) {
     if (this.store.busy || this.historyLoading) return;
     this.historyLoading = true;this.syncRecordControls();
     try {this.updateRecords(await this.adapter.request('history.list',{limit:30}));}
     finally {this.historyLoading = false;this.syncRecordControls();}
-    if (this.records.length) await this.recordPage(0,this.records[0].recordId);
+    if (this.records.length) await this.recordPage(0,(preferRecovery&&this.records.find(value=>value.needsRecovery)||this.records[0]).recordId);
     else {this.record = null;$('history-content').replaceChildren(el('p','command-empty','还没有整理记录。完成整理后，结果会显示在这里。'));$('history-warning').hidden = true;$('history-page').textContent = '0 条记录';this.syncRecordControls();}
     this.modals.history.open();
+  }
+  async operationPreview(action) {
+    if(this.store.busy||this.previewLoading||!this.record)return;
+    this.previewLoading=true;this.plan=null;this.syncExecution();
+    try {
+      this.plan=await this.adapter.request(action,{runId:this.record.recordId});this.page=0;$('preview-ack').checked=false;
+      await this.modals.history.close();await this.renderPlan();this.modals.preview.open();
+    } finally {this.previewLoading=false;this.syncExecution();}
   }
   async showResult(batchId) {
     const record = await this.adapter.request('result.get',{batchId,offset:0,limit:PAGE_SIZE});

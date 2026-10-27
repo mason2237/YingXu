@@ -9,7 +9,7 @@ function subscribe(channel,callback) {
 contextBridge.exposeInMainWorld('__yingxuAppearance',initial);
 contextBridge.exposeInMainWorld('yingxuHost',{
   kind:'electron',prototype:initial.prototype,effectProfile:initial.effectProfile,
-  workspace:{request:raw=>ipcRenderer.invoke('yingxu:request',raw),
+  workspace:{protocolVersion:initial.businessProtocol||1,request:raw=>ipcRenderer.invoke('yingxu:request',raw),
     onReply:callback=>subscribe('yingxu:reply',callback),onEvent:callback=>subscribe('yingxu:event',callback),
     onDisconnect:callback=>subscribe('yingxu:disconnected',callback),
     onNativeUi:callback=>subscribe('yingxu:native-ui',callback),
@@ -17,6 +17,7 @@ contextBridge.exposeInMainWorld('yingxuHost',{
   appearance:{getState:()=>ipcRenderer.invoke('yingxu:appearance:get'),update:patch=>ipcRenderer.invoke('yingxu:appearance:update',patch),
     subscribe:callback=>subscribe('yingxu:appearance',callback)},
   hdr:{report:report=>ipcRenderer.invoke('yingxu:hdr:report',report)},
+  lifecycle:{onVisibility:callback=>subscribe('yingxu:visibility',callback)},
 });
 const bootstrap=()=>{
   const root=document.documentElement;if(!root)return false;

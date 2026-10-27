@@ -10,6 +10,9 @@ __pycache__/
 /work/test-results/
 /work/tools/
 /work/electron-profile/
+/work/electron-profile-noqt/
+.venv-core/
+.venv-build/
 node_modules/
 .env
 .env.*
@@ -30,3 +33,6 @@ Desktop.ini
 /appearance.ini
 *.tmp
 *.bak
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm

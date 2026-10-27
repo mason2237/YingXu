@@ -1,4 +1,4 @@
-// Minimal CDP client: Qt doesn't implement Playwright's browser-context APIs.
+// Small CDP client for the app's optional, loopback-only diagnostic port.
 import {EventEmitter} from 'node:events';
 export class CdpClient extends EventEmitter {
   constructor(socket){super();this.socket=socket;this.serial=0;this.pending=new Map();

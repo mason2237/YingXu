@@ -1,3 +1,4 @@
+import {windowInactive,onWindowVisibility} from '../visibility.js';
 import {createGlassSystem} from '../../vendor/design-systems/lens/runtime.js';
 
 export const LENS_ORIGIN = Object.freeze({
@@ -78,10 +79,10 @@ export class LensRuntime {
     this.abort = new AbortController();
     this.media.addEventListener('change', () => this.applyMotion(), {signal: this.abort.signal});
     this.start();
-    document.addEventListener('visibilitychange', () => {
+    onWindowVisibility( () => {
       const system = this.system;
       if (!system) return;
-      if (document.hidden) {
+      if (windowInactive()) {
         system.sound.stop();
         cancelAnimationFrame(system.jelly.frame); system.jelly.frame = 0;
         if (system.renderer) {cancelAnimationFrame(system.renderer.frame); system.renderer.frame = 0;}
@@ -118,9 +119,8 @@ export class LensRuntime {
     for (const body of jelly.bodies.values()) if (body.element.matches('button')) body.maxTravel = 12;
     const renderer = this.system.renderer;
     if (renderer) {
-      // Qt's native compositor can keep references to a canvas mailbox. Keep
-      // these few contexts on ordinary viewport suspension; release on destroy.
-      // This changes lifecycle only, never upstream optical/rendering math.
+      // Keep the few live contexts during viewport suspension; dispose their
+      // resources only on destruction. Dialog transitions retain their texture.
       const resume = renderer.resumeGPU.bind(renderer);
       renderer.suspendGPU = () => {
         renderer.suspended = true; cancelAnimationFrame(renderer.frame); renderer.frame = 0;
@@ -129,12 +129,12 @@ export class LensRuntime {
       };
       renderer.resumeGPU = () => {
         if (renderer.gl?.isContextLost()) {
-          // Chromium/Qt requires restoration after the loss event has returned.
+          // Restore only after the context-loss event has returned.
           // Keep the extension acquired before loss; getExtension is null now.
           if (renderer.lossObserved && !this.restoreTimer && !this.destroyed) {
             this.restoreTimer = setTimeout(() => {
               this.restoreTimer = 0;
-              if (!this.destroyed && this.enabled && !document.hidden && renderer.gl?.isContextLost()) renderer.contextExtension?.restoreContext();
+              if (!this.destroyed && this.enabled && !windowInactive() && renderer.gl?.isContextLost()) renderer.contextExtension?.restoreContext();
             }, 150);
           }
           return;
@@ -145,9 +145,8 @@ export class LensRuntime {
         this.stage.classList.add('webgl-ready'); this.stage.classList.remove('fallback');
         renderer.lastTime = 0; renderer.invalidate(150);
       };
-      // Same resource cleanup as upstream, with native canvas destruction left
-      // to WebEngine. Forcing loseContext while Qt retains a mailbox produces
-      // stale shared-image warnings. All programs/textures/buffers are deleted.
+      // Delete programs/textures/buffers, leaving canvas destruction to the
+      // browser instead of forcing a second, observable context-loss event.
       renderer.destroy = () => {
         renderer.destroyed = true; cancelAnimationFrame(renderer.frame); renderer.frame = 0;
         renderer.abort.abort(); renderer.resizeObserver.disconnect();
@@ -161,6 +160,12 @@ export class LensRuntime {
         gl.deleteBuffer(renderer.buffer); gl.deleteVertexArray(renderer.vao);
       };
       const render = renderer.render.bind(renderer);
+      const readGeometry = renderer.readGeometry.bind(renderer);
+      renderer.readGeometry = () => {
+        // Pointer lighting changes uniforms, not bounds. Mutations/resizes
+        // still invalidate geometry; active spring motion keeps live bounds.
+        if (renderer.rectDirty || jelly.frame || jelly.gesture) readGeometry();
+      };
       renderer.render = now => {
         if (this.occluded) {renderer.frame = 0;renderer.lastTime = 0;return;}
         this.frames++; render(now);
@@ -212,7 +217,7 @@ export class LensRuntime {
     if (this.theme === theme) return;
     this.theme = theme; this.setBackdrop(this.backdrop);
     const renderer = this.system?.renderer;
-    if (this.enabled && renderer?.gl && !renderer.suspended && !renderer.lost && !document.hidden) {
+    if (this.enabled && renderer?.gl && !renderer.suspended && !renderer.lost && !windowInactive()) {
       // View Transition DOM updates suspend rAF. Paint the new artwork before
       // its snapshot without waiting on a frame that cannot run yet.
       cancelAnimationFrame(renderer.frame); renderer.frame = 0;

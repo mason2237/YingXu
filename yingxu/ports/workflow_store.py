@@ -1,0 +1,13 @@
+"""Atomic workflow updates, not a filesystem-operation recovery journal."""
+from typing import Callable, Protocol
+from ..domain.models import CommandReceipt, SubtitleTask, WorkflowCommand
+
+
+class WorkflowStore(Protocol):
+    def create(self, task: SubtitleTask) -> SubtitleTask: ...
+    def get(self, task_id: str) -> SubtitleTask: ...
+    def apply(self, command: WorkflowCommand,
+              evolve: Callable[[SubtitleTask], SubtitleTask]) -> CommandReceipt:
+        """Atomically deduplicate, compare revision, evolve and persist receipt."""
+        ...
+    def close(self) -> None: ...

@@ -1,3 +1,4 @@
+import {windowInactive,onWindowVisibility} from './visibility.js';
 // Local HDR highlights only. No full-page readback or copy of the HTML scene.
 import {appearance} from './appearance.js';
 
@@ -45,8 +46,8 @@ class HdrLayer {
       if (event.clientY >= this.rect.top-40 && event.clientY <= this.rect.bottom+40) this.wake(160);
     },{passive:true,signal:this.abort.signal});
     document.addEventListener('yingxu:overlay', () => this.wake(),{signal:this.abort.signal});
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {cancelAnimationFrame(this.raf);this.raf=0;} else this.wake();
+    onWindowVisibility( () => {
+      if (windowInactive()) {cancelAnimationFrame(this.raf);this.raf=0;} else this.wake();
     },{signal:this.abort.signal});
     appearance.addEventListener('change', () => this.configure(),{signal:this.abort.signal});
     window.addEventListener('pagehide', () => this.destroy(),{once:true,signal:this.abort.signal});
@@ -97,13 +98,13 @@ class HdrLayer {
     this.canvas.width = Math.round((rect.width+20)*this.scale);this.canvas.height = Math.round((rect.height+20)*this.scale);
   }
   wake(duration = 0) {
-    if (!this.pipeline || !this.enabled || document.hidden || this.abort.signal.aborted) return;
+    if (!this.pipeline || !this.enabled || windowInactive() || this.abort.signal.aborted) return;
     this.until = Math.max(this.until,performance.now()+duration);
     if (!this.raf) this.raf=requestAnimationFrame(now => this.draw(now));
   }
   draw(now) {
     this.raf = 0;
-    if (document.hidden || !this.enabled || this.abort.signal.aborted) return;
+    if (windowInactive() || !this.enabled || this.abort.signal.aborted) return;
     const overlay = Boolean(document.querySelector('dialog[open]'));
     this.device.queue.writeBuffer(this.uniform,0,new Float32Array([this.canvas.width,this.canvas.height,...this.pointer,
       overlay ? 0 : this.intensity,this.calibration ? 1 : 0,0,0]));

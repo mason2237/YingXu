@@ -1,0 +1,475 @@
+{
+  "stage": "R7",
+  "date": "2026-10-27",
+  "runtime": "Electron 45.0.0 + standard-library Python",
+  "qtSourceRemoved": true,
+  "testGroups": [
+    "unit",
+    "contract",
+    "integration",
+    "recovery"
+  ],
+  "pythonTests": {
+    "passed": 196,
+    "seconds": 19.295
+  },
+  "frontendContracts": {
+    "onlineBoundaryChecks": 7,
+    "nativeVisibility": true
+  },
+  "sourceWindow": {
+    "passed": true,
+    "mode": "source",
+    "startupMs": 1186,
+    "activeScroll": {
+      "milliseconds": 2427,
+      "chromiumCpuSeconds": 1.2540520000000002,
+      "maxRows": 16
+    },
+    "processes": [
+      {
+        "Id": 2284,
+        "ProcessName": "electron",
+        "WorkingSet64": 49811456,
+        "CPU": 0.0625
+      },
+      {
+        "Id": 29716,
+        "ProcessName": "electron",
+        "WorkingSet64": 130039808,
+        "CPU": 0.640625
+      },
+      {
+        "Id": 30012,
+        "ProcessName": "electron",
+        "WorkingSet64": 268869632,
+        "CPU": 2.953125
+      },
+      {
+        "Id": 37908,
+        "ProcessName": "electron",
+        "WorkingSet64": 200650752,
+        "CPU": 1.1875
+      },
+      {
+        "Id": 8624,
+        "ProcessName": "python",
+        "WorkingSet64": 4530176,
+        "CPU": 0.015625
+      }
+    ],
+    "resizeWidths": [
+      1000,
+      1360
+    ],
+    "minimizeRestore": true,
+    "protocol": 2,
+    "runtime": "Electron + Python",
+    "qtImported": false,
+    "videos": 300,
+    "maxVisibleRows": 16,
+    "scanPreview": true,
+    "unconfirmedExecutionBlocked": true,
+    "themes": true,
+    "onlineLocalUI": true,
+    "languagePreference": true,
+    "remoteHasLocalAPI": false,
+    "websiteVisited": false,
+    "reload": true,
+    "mediaUnchanged": true,
+    "rendering": {
+      "passed": true,
+      "checks": [
+        "selection_reuses_nodes_and_cached_data",
+        "five_thousand_rows_bounded_buffered_scroll",
+        "filter_and_scan_identity_invalidate_cache",
+        "out_of_order_replies_do_not_repaint_new_results",
+        "concurrent_same_page_queries_coalesced",
+        "empty_restore_and_untrusted_filename_plain_text"
+      ],
+      "queries": 44
+    },
+    "exitCode": 0,
+    "screenshot": "work\\test-results\\noqt-desktop-1793068935296\\workspace.png",
+    "onlineScreenshot": "work\\test-results\\noqt-desktop-1793068935296\\online.png"
+  },
+  "liveProvider": {
+    "SubHD": {
+      "query": "Interstellar",
+      "candidateCount": 20,
+      "downloaded": true,
+      "validated": true,
+      "prepared": true,
+      "importedForReview": true,
+      "generatedVideoUnchanged": true,
+      "captchaSolved": false,
+      "rawResult": "work/test-results/live-provider-1793067714924/report.json"
+    },
+    "Zimuku": {
+      "hosts": [
+        "zimuku.org",
+        "srtku.com"
+      ],
+      "observed": "Website firewall requires user verification in real Chromium",
+      "bypassed": false
+    },
+    "downloadedThirdPartySubtitlesPublished": false
+  },
+  "rendering": {
+    "samples": {
+      "fullBefore": {
+        "input": "300 generated pairs; hover/drag/scroll; 3 x 30s",
+        "completed": true,
+        "viewport": {
+          "width": 1280,
+          "height": 860,
+          "scale": 1,
+          "visibility": "visible"
+        },
+        "passes": [
+          {
+            "iteration": 1,
+            "pageUpdates": {
+              "hover": {
+                "count": 1471,
+                "fps": 146.93,
+                "p95Ms": 7.1,
+                "over25Percent": 0,
+                "maxMs": 7.6
+              },
+              "drag": {
+                "count": 1469,
+                "fps": 146.84,
+                "p95Ms": 7.1,
+                "over25Percent": 0.07,
+                "maxMs": 38.3
+              },
+              "scroll": {
+                "count": 1230,
+                "fps": 123.03,
+                "p95Ms": 14,
+                "over25Percent": 0,
+                "maxMs": 14.6
+              }
+            },
+            "longTasks": 0,
+            "cpuSeconds": 15.171199,
+            "memory": {
+              "workingSetBytes": 852471808,
+              "privateBytes": 702500864
+            }
+          },
+          {
+            "iteration": 2,
+            "pageUpdates": {
+              "hover": {
+                "count": 1481,
+                "fps": 147.93,
+                "p95Ms": 7.1,
+                "over25Percent": 0,
+                "maxMs": 7.6
+              },
+              "drag": {
+                "count": 1474,
+                "fps": 147.43,
+                "p95Ms": 7.1,
+                "over25Percent": 0,
+                "maxMs": 7.6
+              },
+              "scroll": {
+                "count": 1243,
+                "fps": 124.12,
+                "p95Ms": 14,
+                "over25Percent": 0,
+                "maxMs": 14.6
+              }
+            },
+            "longTasks": 0,
+            "cpuSeconds": 13.784066999999997,
+            "memory": {
+              "workingSetBytes": 782016512,
+              "privateBytes": 625418240
+            }
+          },
+          {
+            "iteration": 3,
+            "pageUpdates": {
+              "hover": {
+                "count": 1472,
+                "fps": 147.2,
+                "p95Ms": 7.1,
+                "over25Percent": 0,
+                "maxMs": 7.7
+              },
+              "drag": {
+                "count": 1475,
+                "fps": 147.28,
+                "p95Ms": 7.1,
+                "over25Percent": 0,
+                "maxMs": 7.6
+              },
+              "scroll": {
+                "count": 1254,
+                "fps": 125.3,
+                "p95Ms": 14,
+                "over25Percent": 0,
+                "maxMs": 14.4
+              }
+            },
+            "longTasks": 0,
+            "cpuSeconds": 13.695471000000001,
+            "memory": {
+              "workingSetBytes": 786685952,
+              "privateBytes": 628015104
+            }
+          }
+        ],
+        "rawResult": "work/test-results/render-current-1793067987171/electron-full/result.json",
+        "rawTrace": "work/test-results/render-current-1793067987171/electron-full/trace.json.gz"
+      },
+      "moderate": {
+        "input": "300 generated pairs; hover/drag/scroll; 3 x 30s",
+        "completed": true,
+        "viewport": {
+          "width": 1280,
+          "height": 860,
+          "scale": 1,
+          "visibility": "visible"
+        },
+        "passes": [
+          {
+            "iteration": 1,
+            "pageUpdates": {
+              "hover": {
+                "count": 1470,
+                "fps": 146.94,
+                "p95Ms": 7.1,
+                "over25Percent": 0,
+                "maxMs": 7.6
+              },
+              "drag": {
+                "count": 1466,
+                "fps": 146.52,
+                "p95Ms": 7.1,
+                "over25Percent": 0.14,
+                "maxMs": 34.9
+              },
+              "scroll": {
+                "count": 1082,
+                "fps": 108.12,
+                "p95Ms": 14,
+                "over25Percent": 0,
+                "maxMs": 14.6
+              }
+            },
+            "longTasks": 0,
+            "cpuSeconds": 15.138492999999999,
+            "memory": {
+              "workingSetBytes": 826060800,
+              "privateBytes": 649420800
+            }
+          },
+          {
+            "iteration": 2,
+            "pageUpdates": {
+              "hover": {
+                "count": 1470,
+                "fps": 146.99,
+                "p95Ms": 7.1,
+                "over25Percent": 0,
+                "maxMs": 13
+              },
+              "drag": {
+                "count": 1476,
+                "fps": 147.46,
+                "p95Ms": 7.1,
+                "over25Percent": 0,
+                "maxMs": 7.6
+              },
+              "scroll": {
+                "count": 1083,
+                "fps": 108.23,
+                "p95Ms": 14,
+                "over25Percent": 0,
+                "maxMs": 14.7
+              }
+            },
+            "longTasks": 0,
+            "cpuSeconds": 13.654329,
+            "memory": {
+              "workingSetBytes": 779976704,
+              "privateBytes": 670060544
+            }
+          },
+          {
+            "iteration": 3,
+            "pageUpdates": {
+              "hover": {
+                "count": 1482,
+                "fps": 147.92,
+                "p95Ms": 7.1,
+                "over25Percent": 0,
+                "maxMs": 7.6
+              },
+              "drag": {
+                "count": 1468,
+                "fps": 146.7,
+                "p95Ms": 7.1,
+                "over25Percent": 0,
+                "maxMs": 7.7
+              },
+              "scroll": {
+                "count": 1091,
+                "fps": 109.07,
+                "p95Ms": 14.1,
+                "over25Percent": 0,
+                "maxMs": 14.7
+              }
+            },
+            "longTasks": 0,
+            "cpuSeconds": 13.388655000000004,
+            "memory": {
+              "workingSetBytes": 780603392,
+              "privateBytes": 669941760
+            }
+          }
+        ],
+        "rawResult": "work/test-results/render-current-1793068532484/electron-moderate/result.json",
+        "rawTrace": "work/test-results/render-current-1793068532484/electron-moderate/trace.json.gz"
+      },
+      "fullAfter": {
+        "input": "300 generated pairs; hover/drag/scroll; 3 x 30s",
+        "completed": true,
+        "viewport": {
+          "width": 1280,
+          "height": 860,
+          "scale": 1,
+          "visibility": "visible"
+        },
+        "passes": [
+          {
+            "iteration": 1,
+            "pageUpdates": {
+              "hover": {
+                "count": 1467,
+                "fps": 146.5,
+                "p95Ms": 7.1,
+                "over25Percent": 0,
+                "maxMs": 7.6
+              },
+              "drag": {
+                "count": 1464,
+                "fps": 145.94,
+                "p95Ms": 7.1,
+                "over25Percent": 0.14,
+                "maxMs": 33.2
+              },
+              "scroll": {
+                "count": 1250,
+                "fps": 124.79,
+                "p95Ms": 14,
+                "over25Percent": 0,
+                "maxMs": 14.7
+              }
+            },
+            "longTasks": 0,
+            "cpuSeconds": 15.000141,
+            "memory": {
+              "workingSetBytes": 844017664,
+              "privateBytes": 715497472
+            }
+          },
+          {
+            "iteration": 2,
+            "pageUpdates": {
+              "hover": {
+                "count": 1482,
+                "fps": 147.97,
+                "p95Ms": 7.1,
+                "over25Percent": 0,
+                "maxMs": 7.6
+              },
+              "drag": {
+                "count": 1475,
+                "fps": 147.5,
+                "p95Ms": 7.1,
+                "over25Percent": 0,
+                "maxMs": 7.6
+              },
+              "scroll": {
+                "count": 1238,
+                "fps": 123.62,
+                "p95Ms": 14,
+                "over25Percent": 0,
+                "maxMs": 14.6
+              }
+            },
+            "longTasks": 0,
+            "cpuSeconds": 13.650298,
+            "memory": {
+              "workingSetBytes": 776798208,
+              "privateBytes": 629669888
+            }
+          },
+          {
+            "iteration": 3,
+            "pageUpdates": {
+              "hover": {
+                "count": 1471,
+                "fps": 147.02,
+                "p95Ms": 7.1,
+                "over25Percent": 0,
+                "maxMs": 7.6
+              },
+              "drag": {
+                "count": 1471,
+                "fps": 147.01,
+                "p95Ms": 7.1,
+                "over25Percent": 0,
+                "maxMs": 7.6
+              },
+              "scroll": {
+                "count": 1255,
+                "fps": 125.4,
+                "p95Ms": 14,
+                "over25Percent": 0,
+                "maxMs": 14.6
+              }
+            },
+            "longTasks": 0,
+            "cpuSeconds": 13.554300000000003,
+            "memory": {
+              "workingSetBytes": 785375232,
+              "privateBytes": 639016960
+            }
+          }
+        ],
+        "rawResult": "work/test-results/render-current-1793068798025/electron-full/result.json",
+        "rawTrace": "work/test-results/render-current-1793068798025/electron-full/trace.json.gz"
+      }
+    },
+    "conclusion": "Geometry and observer work reduced; sustained frame-gate improvement not established. Scroll p95 remains approximately 14ms.",
+    "strict120FpsGatePassed": false,
+    "independentPresentation": {
+      "currentVerified": false,
+      "reason": "PresentMon ETW access denied under current non-elevated token; awaiting user presence for temporary diagnostic authorization",
+      "groupsOrSystemPermissionsChanged": false
+    },
+    "historicalHdrEvidence": "docs/evidence/stage20a-electron.json",
+    "physicalPeakMeasured": false
+  },
+  "publicAudit": {
+    "filesChecked": 501,
+    "currentFindings": 0,
+    "generatedTracked": 0,
+    "personalEmailCandidates": 0,
+    "localHistoryPushed": false
+  },
+  "limits": [
+    "No clean Windows test by user request",
+    "No real power-cut verification",
+    "Unsigned candidate",
+    "Public websites may require user verification",
+    "Current strict presentation gate remains unverified"
+  ]
+}

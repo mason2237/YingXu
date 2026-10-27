@@ -37,7 +37,16 @@ export class LocalAdapter extends EventTarget {
   }
   waitJob(jobId) {
     const promise = new Promise((resolve,reject) => {const group = this.waiters.get(jobId) || [];group.push({resolve,reject});this.waiters.set(jobId,group);});
-    this.receive(this.state);this.pollState();return promise;
+    this.receive(this.state);this.pollState();return promise.then(result=>result?.jobResult?this.jobResult(jobId):result);
+  }
+  async jobResult(jobId) {
+    let offset=0,entries=[],first;
+    do {const page=await this.client.call('job.result',{jobId,offset,limit:20});first ||= page;
+      if(page.shape==='value')return page.value;
+      entries.push(...page.entries);if(page.nextOffset==null)break;
+      if(page.nextOffset<=offset)throw Error('结果分页未能继续');offset=page.nextOffset;
+    } while(true);
+    return first.shape==='list'?entries:{...first.meta,rows:entries};
   }
   pollState() {
     if (!this.waiters.size || this.poll || this.closed) return;
@@ -54,7 +63,24 @@ export class LocalAdapter extends EventTarget {
   async request(action, params = {}) {
     const response = await this.start(action,params);
     if (action === 'app.state') {this.receive(response);return response.summary;}
-    return response?.jobId ? this.waitJob(response.jobId) : response;
+    if(response?.jobId)return this.waitJob(response.jobId);
+    if(this.client.version!==2)return response;
+    const field=Array.isArray(response?.rows)?'rows':Array.isArray(response?.items)?'items':null;
+    if(field&&response.nextOffset!=null) {
+      const end=(params.offset||0)+(params.limit||20);let offset=response.nextOffset;
+      while(offset<end) {
+        const page=await this.client.call(action,{...params,offset,limit:end-offset});
+        response[field].push(...page[field]);if(page.nextOffset==null)break;
+        if(page.nextOffset<=offset)throw Error('列表分页未能继续');offset=page.nextOffset;
+      }
+    }
+    if(action==='review.query'&&response.idsPaged) {
+      const ids=[];let offset=0;
+      while(offset<response.total){const page=await this.client.call('review.ids',{...params,offset,limit:200});
+        ids.push(...page.ids);if(!page.ids.length)throw Error('列表索引未能继续');offset+=page.ids.length;}
+      response.ids=ids;
+    }
+    return response;
   }
   async load(command = 'restore') {
     await this.init();

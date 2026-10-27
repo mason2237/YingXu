@@ -17,19 +17,27 @@ export function prepareLocalWorkspace() {
   const options = button('扫描选项','subtle-button',null,'settings');options.id = 'scan-options-button';$('scan-button').before(options);
   const online = button('在线字幕','secondary',null,'search');online.id = 'online-subtitles-button';online.title = '为未匹配的视频批量查找字幕，打开后确认搜索';online.disabled = true;
   document.querySelector('.page-heading').append(online);
+  const inbox=button('下载暂存','subtle-button');inbox.id='subtitle-inbox';document.querySelector('.page-heading').append(inbox);
   const reveal = button('','icon-button',null,'folder');reveal.id = 'open-folder-button';reveal.setAttribute('aria-label','打开所选文件夹');reveal.disabled = true;$('dataset-button').before(reveal);
   document.querySelector('.footer-mode').textContent = '仅在本地处理 · 不上传文件';
   const warnings = el('details','scan-notice');warnings.id = 'scan-warnings';warnings.hidden = true;
   const messages = el('ul');messages.id = 'scan-warning-items';warnings.append(el('summary'),messages);document.querySelector('.collection').prepend(warnings);
+  const draft=el('div','notice');draft.id='draft-notice';draft.hidden=true;document.querySelector('.collection').prepend(draft);
+  const recovery = el('div','notice warning');recovery.id='recovery-notice';recovery.hidden=true;
+  const recoveryText=el('span');recoveryText.id='recovery-notice-text';
+  const recoveryOpen=button('查看任务','secondary');recoveryOpen.id='recovery-open';recovery.append(recoveryText,recoveryOpen);document.querySelector('.collection').prepend(recovery);
   const actions = el('div','footer-actions');$('preview-button').before(actions);
   const stop = button('取消扫描','stop-task',null,'x');stop.id = 'stop-task';stop.hidden = true;actions.append(stop,$('preview-button'));
   $('preview-dialog').querySelector('.confirmation-strip > span').textContent = '只执行本次核对的固定计划；文件发生变化时会阻止操作，已有文件不会被覆盖。';
   $('execute-button').replaceChildren(iconNode('check'),document.createTextNode('确认整理'));
   $('execute-button').title = '请先核对目标并勾选确认';
   $('history-dialog').querySelector('.eyebrow').textContent = '保存在本机';
-  $('history-dialog').querySelector('.dialog-footer .subtle-text').textContent = '已完成的变更会保留，可导出完整记录。';
+  $('history-dialog').querySelector('.dialog-footer .subtle-text').textContent = '整理记录保存在本机。恢复与撤销都需重新核对。';
   const chooser = el('select','history-chooser');chooser.id = 'history-record';chooser.setAttribute('aria-label','选择本地整理记录');$('history-title').after(chooser);
   const warning = el('div','notice error');warning.id = 'history-warning';warning.hidden = true;$('history-content').before(warning);
+  const tools=el('div','history-operation-tools');tools.id='history-operation-tools';tools.hidden=true;
+  for(const [id,label] of [['resume-record','核对并继续'],['undo-record','预览撤销'],['archive-record','稍后处理'],['operation-cache','打开恢复缓存']]){const control=button(label,'secondary');control.id=id;tools.append(control);}
+  $('history-content').before(tools);
   const exportButton = button('导出记录','secondary');exportButton.id = 'export-record';
   $('history-dialog').querySelector('.dialog-footer').prepend(pageControls('history'),exportButton);
   $('candidate-dialog').querySelector('.dialog-footer').prepend(pageControls('candidate'));
@@ -56,7 +64,9 @@ export class LocalWorkspace {
   constructor({adapter,store,dialogs,feedback,load,toast,update}) {
     Object.assign(this,{adapter,store,dialogs,feedback,load,toast,update});this.lastJob = null;
     adapter.readOptions = () => ({recursive:$('recursive-setting').checked,move:$('move-setting').checked});
+    $('subtitle-inbox').addEventListener('click',()=>adapter.request('subtitle.inbox').catch(error=>toast(error.message,{tone:'error'})));
     $('online-subtitles-button').addEventListener('click',() => this.openSubtitles());
+    $('recovery-open').addEventListener('click',()=>dialogs.history(true).catch(error=>toast(error.message,{tone:'error'})));
     $('scan-options-button').addEventListener('click',() => dialogs.open('scan-options'));
     $('scan-options-start').addEventListener('click',async () => {await dialogs.modals['scan-options'].close();load('scan').catch(error => toast(error.message,{tone:'error'}));});
     $('open-folder-button').addEventListener('click',() => adapter.request('file.reveal',{fileId:store.summary.folderId}).catch(error => toast(error.message,{tone:'error'})));
@@ -90,8 +100,9 @@ export class LocalWorkspace {
         // Native imports have no waiting JS request; refresh the actual review once.
         if (job.status === 'completed') {
           load('restore').then(async () => {
-            await store.select(job.result.rowId);
-            toast(`已导入 ${job.result.imported} 份字幕 · ${job.result.assigned} 个匹配待确认 · ${job.result.unassigned} 份请从候选选择`,{tone:job.result.imported ? 'success' : 'error'});
+            const result=job.result?.jobResult?await adapter.jobResult(job.jobId):job.result;
+            if(result.rowId)await store.select(result.rowId);
+            toast(`已导入 ${result.imported} 份下载 · ${result.assigned} 个匹配待确认；多个候选请人工选择`,{tone:'success'});
           }).catch(error => toast(error.message,{tone:'error'}));
         } else toast(job.message,{tone:'error'});
       }
@@ -109,18 +120,22 @@ export class LocalWorkspace {
     this.openingSubtitles = true;this.sync();
     try {
       const result = await this.adapter.request('subtitle.open',this.store.params(rowId ? {rowId} : {}));
-      this.toast(`已打开在线字幕 · ${result.taskCount} 个视频，确认搜索后才会联网`);
+      this.toast(`已打开在线字幕 · 本批 ${result.taskCount} 个视频${result.remaining ? `，另有 ${result.remaining} 个待后续处理` : ''}，确认搜索后才会联网`);
     } catch (error) {this.toast(error.message,{tone:'error'});}
     finally {this.openingSubtitles = false;this.sync();}
   }
   sync() {
     const {adapter,store} = this,job = adapter.state?.job;
+    if(adapter.state?.interruptedTasks&&!this.shownRecovery){this.shownRecovery=true;this.toast(`上次有 ${adapter.state.interruptedTasks} 个字幕查找中断，未自动重试。请重新查找。`);}
+    const draft=adapter.state?.draft;$('draft-notice').hidden=!draft?.message;$('draft-notice').textContent=draft?.message||'';
+    const pending=adapter.state?.recoveryPending||0;$('recovery-notice').hidden=!pending;
+    $('recovery-notice-text').textContent=`有 ${pending} 个文件任务待核对；不会自动继续。`;$('recovery-open').disabled=store.busy;
     $('scan-options-button').disabled = store.busy;$('scan-options-start').disabled = store.busy || !store.summary.folderId;
     $('open-folder-button').disabled = store.busy || !store.summary.folderId;
     $('online-subtitles-button').disabled = store.busy || this.openingSubtitles || !store.summary.scanId || !(store.summary.counts['未匹配'] > 0);
-    const stopping = adapter.state?.busy && job?.status === 'running' && ['scan','apply'].includes(job.kind);
+    const stopping = adapter.state?.busy && job?.status === 'running' && ['scan','apply','undo','reconcile','recovery','undo_preview'].includes(job.kind);
     $('stop-task').hidden = !stopping;$('stop-task').disabled = Boolean(job?.stopRequested);
-    $('stop-task').lastChild.textContent = job?.stopRequested ? '正在停止…' : job?.kind === 'apply' ? '停止整理' : '取消扫描';
+    $('stop-task').lastChild.textContent = job?.stopRequested ? '正在停止…' : job?.kind === 'apply' ? '停止整理' : job?.kind==='undo'?'停止撤销':job?.kind==='scan'?'取消扫描':'取消核对';
     $('history-button').disabled = store.busy;
     $('embedded-enabled').disabled = store.busy;$('embedded-language').disabled = store.busy || !$('embedded-enabled').checked;
     if (stopping || (job && ['failed','cancelled'].includes(job.status))) $('footer-status').textContent = job.message;

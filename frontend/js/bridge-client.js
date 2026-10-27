@@ -5,6 +5,7 @@ export class BridgeClient extends EventTarget {
 
   async connect() {
     const host = await desktopHost();this.bridge = host.workspace;
+    this.version=this.bridge?.protocolVersion||1;
     if (!this.bridge) throw new Error('当前入口未提供本地文件功能。');
     this.unsubscribe = [this.bridge.onReply(raw => this.onReply(raw)),this.bridge.onEvent(raw => this.onEvent(raw))];
     if (this.bridge.onDisconnect) this.unsubscribe.push(this.bridge.onDisconnect(message => {
@@ -23,7 +24,7 @@ export class BridgeClient extends EventTarget {
         reject(new Error('状态待同步，请重新连接；操作不会自动重试。'));
       }, timeout) : null;
       this.pending.set(requestId, {resolve, reject, timer});
-      Promise.resolve(this.bridge.request(JSON.stringify({v: 1, requestId, sessionId: this.sessionId, action, params}))).catch(error => {
+      Promise.resolve(this.bridge.request(JSON.stringify({v: this.version, requestId, sessionId: this.sessionId, action, params}))).catch(error => {
         if (!this.pending.delete(requestId)) return;
         clearTimeout(timer);reject(error);
       });
@@ -32,6 +33,7 @@ export class BridgeClient extends EventTarget {
 
   onReply(raw) {
     const reply = JSON.parse(raw);
+    if(reply.v!==this.version)return;
     const pending = this.pending.get(reply.requestId);
     if (!pending) return;
     clearTimeout(pending.timer); this.pending.delete(reply.requestId);
@@ -41,6 +43,8 @@ export class BridgeClient extends EventTarget {
 
   onEvent(raw) {
     const event = JSON.parse(raw);
+    if(event.v!==this.version)return;
+    if(this.version===2)event.type=event.event;
     if (event.sessionId !== this.sessionId || event.sequence <= this.sequence) return;
     this.sequence = event.sequence;
     this.dispatchEvent(new CustomEvent('state', {detail: event}));

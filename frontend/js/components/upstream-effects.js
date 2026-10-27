@@ -1,3 +1,4 @@
+import {windowInactive,onWindowVisibility} from '../visibility.js';
 import {bindChoiceGroup} from '../../vendor/design-systems/lens/components.js';
 import {LensRuntime, ENHANCED_MATERIAL, LENS_ORIGIN, drawApplicationArtwork, drawToolbarArtwork} from './lens-runtime.js';
 import {ParticleFeedback} from './particle-feedback.js';
@@ -58,7 +59,7 @@ export class Effects {
       this.allRuntimes.forEach(runtime => runtime.setTheme(state.resolvedTheme));
       this.configure();
     }, {signal: this.abort.signal});
-    document.addEventListener('visibilitychange', () => {if (document.hidden) this.particles.stop();}, {signal: this.abort.signal});
+    onWindowVisibility( () => {if (windowInactive()) this.particles.stop();}, {signal: this.abort.signal});
     window.addEventListener('pagehide', () => this.destroy(), {once: true, signal: this.abort.signal});
     this.configure();
     desktopHost().then(host => {

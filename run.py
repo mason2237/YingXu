@@ -1,27 +1,12 @@
-"""Start the current PySide6 desktop workspace; --widgets selects the SDR compatibility host."""
+"""Start the Electron desktop and its Qt-free Python service."""
 import sys
 
-
 def main():
-    if sys.argv[1:] == ['--read-embedded-subtitles']:
-        from yingxu.embedded_subtitles import probe_main
-        try:
-            return probe_main()
-        except (OSError, ValueError):
-            return 2
-    try:
-        if '--widgets' in sys.argv:
-            sys.argv.remove('--widgets')
-            from yingxu.web_ui.window import main as start
-            return start()
-        from yingxu.web_ui.native_window import main as start
-    except ModuleNotFoundError as error:
-        if error.name and error.name.startswith("PySide6"):
-            print("请使用 .venv-web 环境，并先安装 requirements.txt。", file=sys.stderr)
-            return 2
-        raise
+    if sys.argv[1:]==['--read-embedded-subtitles']:
+        from yingxu.adapters.mediainfo import probe_main
+        return probe_main()
+    from run_electron import main as start
     return start()
 
-
-if __name__ == "__main__":
-    sys.exit(main())
+if __name__=='__main__':
+    raise SystemExit(main())

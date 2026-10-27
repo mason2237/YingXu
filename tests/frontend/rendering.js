@@ -1,4 +1,4 @@
-// Run only by check_rendering.py in the real WebEngine page, never shipped.
+// Loaded by check_noqt_desktop.cjs into the actual Electron page; never shipped.
 globalThis.__renderTests = null;
 (async () => {
   const {VirtualFileList, ROW_HEIGHT} = await import(new URL('/js/components/file-list.js',location.href).href);

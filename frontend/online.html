@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'none'; img-src 'self'; base-uri 'none'; form-action 'none'">
+<title>映序 · 查找字幕</title><link rel="stylesheet" href="css/online.css"></head>
+<body>
+<header><div><span class="brand">映序</span><span class="eyebrow">查找字幕</span></div>
+<h1>先核对片名，再查找字幕。</h1>
+<div class="search"><input id="query" maxlength="200" aria-label="电影或剧集名称" placeholder="电影或剧集名称">
+<select id="provider" aria-label="字幕来源"><option value="zimuku">字幕库 · 首选</option><option value="srtku">字幕库 · 备用</option><option value="subhd">SubHD · 备用来源</option><option value="subhd-one">SubHD · 备用线路</option></select>
+<select id="language" aria-label="字幕语言偏好"><option value="bilingual">中英双语优先</option><option value="zh-Hans">简体中文优先</option><option value="zh-Hant">繁体中文优先</option><option value="en">英语优先</option></select>
+<button id="search" class="primary">确认并查找</button><button id="cancel">取消搜索</button></div>
+<p id="notice" role="status">选中视频后确认片名；仅在点击查找后联网。下载只进入暂存区，整理媒体文件前仍需预览确认。</p></header>
+<aside><nav class="pages"><button id="previous" aria-label="上一页">←</button><span id="page">0 个视频</span><button id="next" aria-label="下一页">→</button></nav>
+<label for="tasks">待查找的视频</label><select id="tasks" size="5" aria-label="选择视频"></select>
+<div class="section"><h2>推荐结果</h2><button id="refresh">刷新状态</button></div>
+<p id="phase">等待选择</p><button id="try-backup" hidden>试试备用来源</button><div id="candidates"></div><nav class="pages"><button id="candidate-prev">上一页</button><button id="candidate-next">下一页</button></nav>
+<button id="resume-queue" class="primary" hidden>继续上次下载队列</button><button id="use-page">选择右侧当前字幕页面</button><button id="download-selected" class="primary">确认下载本页已选</button>
+<div class="section"><h2>下载暂存</h2><button id="open-cache">打开缓存</button></div>
+<div id="downloads"></div><nav class="pages"><button id="downloads-prev">上一页</button><button id="downloads-next">下一页</button></nav>
+<button id="import-ready">导入本页已就绪字幕</button>
+<p class="note">推荐仅依据网站信息。验证码请在右侧完成；先选候选 → 确认下载 → 网站验证 → 自动检查解压 → 导入待审阅。</p></aside>
+<section class="browser-placeholder"><div>网站浏览</div><p>确认搜索后，字幕网站会显示在这里。</p></section>
+<dialog id="confirmation"><h2 id="confirmation-title"></h2><p id="confirmation-body"></p><form method="dialog"><button value="cancel">取消</button><button class="primary" value="confirm">确认</button></form></dialog>
+<script type="module" src="js/online.js"></script></body></html>

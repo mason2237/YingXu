@@ -12,7 +12,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from yingxu.version import VERSION
-from scripts.build import digest, hash_bundle, python_sources, release_documents, stage_frontend, version_resource
+from scripts.release_payload import digest, hash_bundle, python_sources, release_documents, stage_frontend, version_resource
 from scripts.setup_electron import ELECTRON_SHA256, VERSION as ELECTRON_VERSION
 
 BUILD = ROOT/'work/build/electron'
@@ -20,7 +20,8 @@ DIST = ROOT/'outputs/releases'/VERSION
 BUNDLE = DIST/'YingXu'
 INPUTS = BUILD/'release-inputs.json'
 DESKTOP_FILES = ('desktop/electron/main.cjs', 'desktop/electron/preload.cjs', 'desktop/electron/package.json',
-                 'scripts/desktop_backend_entry.py', 'scripts/build_electron.py', 'run_electron.py')
+                 'desktop/electron/online.cjs', 'desktop/electron/online-preload.cjs',
+                 'scripts/desktop_backend_entry.py', 'scripts/build_electron.py', 'scripts/build_utils.py', 'scripts/release_payload.py', 'run_electron.py')
 
 
 def source_hashes():
@@ -32,14 +33,8 @@ def source_hashes():
 def validate_bundle(assets):
     internal = BUNDLE/'python/_internal'
     required = ['YingXu.exe', 'LICENSE', 'LICENSES.chromium.html', 'resources/app/main.cjs',
-                'resources/app/preload.cjs', 'resources/app/package.json', 'python/YingXuBackend.exe',
-                'python/_internal/PySide6/QtWebEngineProcess.exe',
-                'python/_internal/PySide6/Qt6WebEngineCore.dll',
-                'python/_internal/PySide6/resources/qtwebengine_resources.pak',
-                'python/_internal/PySide6/resources/qtwebengine_resources_100p.pak',
-                'python/_internal/PySide6/resources/qtwebengine_resources_200p.pak',
-                'python/_internal/PySide6/translations/qtwebengine_locales/en-US.pak',
-                'python/_internal/PySide6/plugins/platforms/qwindows.dll',
+                'resources/app/preload.cjs', 'resources/app/package.json', 'resources/app/online.cjs',
+                'resources/app/online-preload.cjs', 'python/YingXuBackend.exe',
                 'python/_internal/pymediainfo/MediaInfo.dll', 'python/_internal/pymediainfo/License.html']
     for name in required:
         if not (BUNDLE/name).is_file():raise RuntimeError('Missing release resource: '+name)
@@ -47,19 +42,17 @@ def validate_bundle(assets):
               for p in (internal/'frontend').rglob('*') if p.is_file()}
     if actual != {key.lstrip('/'): value for key, value in assets.items()}:
         raise RuntimeError('Frontend payload differs from the reviewed allowlist')
-    forbidden = ('Qt6Charts', 'Qt6DataVisualization', 'Qt6Graphs', 'Qt6Quick3D', 'Qt6VirtualKeyboard',
-                 'Qt6QuickTimeline', 'Qt6Pdf', 'Qt6Mqtt', 'Qt6Coap')
-    if any(p.name.startswith(forbidden) for p in (internal/'PySide6').glob('Qt6*.dll')):
-        raise RuntimeError('Unused optional Qt module in the release')
-    if any((internal/'PySide6/qml').rglob('qmldir')):
-        raise RuntimeError('The independent Widgets browser must not bundle a QML plugin tree')
+    forbidden = [p for p in BUNDLE.rglob('*') if any(
+        part.lower().startswith(('pyside', 'pyqt', 'shiboken', 'qt6', 'qtwebengine')) for part in p.parts)]
+    if forbidden:
+        raise RuntimeError('Qt must not be distributed: '+str(forbidden[:5]))
     origin = json.loads((ROOT/'licenses/MediaInfo-ORIGIN.json').read_text(encoding='utf8'))
     if digest(internal/'pymediainfo/MediaInfo.dll') != origin['dllSha256']:
         raise RuntimeError('MediaInfo binary differs from the reviewed wheel')
     inputs = json.loads(INPUTS.read_text(encoding='utf8'))
     if inputs['desktopSources'] != {name: digest(ROOT/name) for name in DESKTOP_FILES}:
         raise RuntimeError('Desktop sources changed since compilation; rebuild')
-    for name in ('main.cjs', 'preload.cjs', 'package.json'):
+    for name in ('main.cjs', 'preload.cjs', 'package.json', 'online.cjs', 'online-preload.cjs'):
         if digest(BUNDLE/'resources/app'/name) != inputs['desktopSources']['desktop/electron/'+name]:
             raise RuntimeError('Packaged desktop source changed: '+name)
 
@@ -98,11 +91,10 @@ def finalize(assets, archive):
         raise RuntimeError('Missing complete Electron Chromium notices')
     manifest = json.loads((BUNDLE/'BUILD_MANIFEST.json').read_text(encoding='utf8'))
     manifest.update({'entry': 'YingXu.exe', 'helper': 'python/YingXuBackend.exe',
-                     'profile': '%LOCALAPPDATA%/YingXu/Electron', 'electron': ELECTRON_VERSION,
+                     'profile': '%LOCALAPPDATA%/YingXu/Desktop', 'electron': ELECTRON_VERSION,
                      'electronArchiveSha256': ELECTRON_SHA256, 'unsigned': True,
-                     'onlineContainer': 'Separate Qt Widgets/WebEngine helper; no business bridge in remote pages'})
+                     'onlineContainer': 'Isolated Electron WebContentsView; no local preload or business authority'})
     (BUNDLE/'BUILD_MANIFEST.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+'\n', encoding='utf8')
-    for p in (BUNDLE/'python/_internal/PySide6/resources').glob('*.debug.pak'):p.unlink()
     hash_bundle(BUNDLE)
     if archive:
         package = Path(shutil.make_archive(str(DIST/f'YingXu-{VERSION}-windows-x64'), 'zip', DIST, 'YingXu'))
@@ -138,7 +130,7 @@ def main():
             if member.filename != 'resources/default_app.asar':source.extract(member, BUNDLE)
     (BUNDLE/'electron.exe').rename(BUNDLE/'YingXu.exe')
     app = BUNDLE/'resources/app';app.mkdir(parents=True)
-    for name in ('main.cjs', 'preload.cjs', 'package.json'):shutil.copy2(ROOT/'desktop/electron'/name, app/name)
+    for name in ('main.cjs', 'preload.cjs', 'package.json', 'online.cjs', 'online-preload.cjs'):shutil.copy2(ROOT/'desktop/electron'/name, app/name)
     inputs = {'host': 'electron', 'gitBase': subprocess.check_output(['git','rev-parse','HEAD'], cwd=ROOT, text=True).strip(),
               'uncommittedSourcesAtBuild': bool(subprocess.check_output(['git','status','--porcelain'], cwd=ROOT, text=True).strip()),
               'frontend': assets, 'pythonSources': source_hashes(),
@@ -152,13 +144,11 @@ def main():
                '--specpath', str(BUILD), '--additional-hooks-dir', str(ROOT/'scripts/hooks'),
                '--add-data', f'{staging/"frontend"};frontend',
                '--add-data', f'{ROOT/"assets/subtitle_organizer.ico"};.']
-    for module in ('PySide6.QtPdf', 'PySide6.QtPdfWidgets', 'PySide6.QtQml', 'PySide6.QtQuick',
-                   'PySide6.QtQuickWidgets', 'PySide6.QtWebEngineQuick'):
+    for module in ('PySide6', 'shiboken6', 'PyQt5', 'PyQt6', 'tkinter', 'yingxu.web_ui', 'yingxu.desktop_host'):
         command += ['--exclude-module', module]
     command.append(str(ROOT/'scripts/desktop_backend_entry.py'))
     environment = os.environ.copy();system = Path(environment.get('SystemRoot', 'C:/Windows'))
-    qt = Path(next(iter(importlib.util.find_spec('PySide6').submodule_search_locations)))
-    environment['PATH'] = os.pathsep.join(map(str, (Path(sys.executable).parent, qt, system/'System32', system)))
+    environment['PATH'] = os.pathsep.join(map(str, (Path(sys.executable).parent, system/'System32', system)))
     for name in ('PYTHONPATH', 'PYTHONHOME', 'QT_PLUGIN_PATH', 'QML2_IMPORT_PATH', 'QML_IMPORT_PATH'):environment.pop(name, None)
     print('Compiling private Python helper; log: work/build/electron/pyinstaller.log', flush=True)
     with (BUILD/'pyinstaller.log').open('wb') as log:subprocess.run(command, cwd=ROOT, env=environment, stdout=log, stderr=subprocess.STDOUT, check=True)

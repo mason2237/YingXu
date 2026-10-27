@@ -1,5 +1,2 @@
-# Current PySide6 desktop runtime/build environment; prebuilt wheels only.
-PySide6==6.12.0
-pymediainfo==7.0.1
-PyInstaller==6.17.0
-pyinstaller-hooks-contrib==2026.8
+# Default source runtime is Qt-free. Build pins are in requirements-build.txt.
+-r requirements-runtime.txt

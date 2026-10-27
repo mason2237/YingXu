@@ -1,0 +1,195 @@
+映序架构
+========
+状态：当前源码和本机验证候选为 0.11.0-rc.2，包含草稿/队列恢复与 Qt 源码清理。
+本文件描述结构与约束；当前任务见 todo.txt，开发历史见 CHANGELOG.md。
+
+1. 当前实现与目标
+
+默认源码入口 run.py / run_electron.py：Electron → v2 stdio → 标准库 Python 应用服务。
+在线字幕由 Electron 的本地界面 + 独立无 preload 的 WebContentsView 承载，不启动 Qt。
+新工作台可扫描、审阅、预览、确认整理、读取记录、恢复与撤销，以及辅助网站查找。
+下载、内容验证、安全解压、条件续传、待审阅导入与记录导出已接通。
+当前已移除 Qt 宿主、回退入口、QML、Qt 构建代码与钩子；旧实现仅保留在 Git 历史和既有发布包。
+默认 requirements.txt 指向 requirements-runtime.txt（仅 pymediainfo），不包含 Qt。
+候选包仅由 scripts/build_electron.py 构建，通用打包工具在 scripts/build_utils.py，不依赖 GUI 模块。
+删除 Qt 是运行依赖和业务解耦工作；更换图形栈本身不构成性能提升证明。
+
+2. 分层与依赖方向
+
+frontend/                工作区、搜索框、选择、弹窗、列表与可见状态
+desktop/electron/        窗口/系统对话框/远程网页隔离；当前路径暂保留
+yingxu/desktop/          消息编解码、进程宿主、适配器组合与生命周期
+yingxu/application/      扫描、审阅、预览、执行、历史、字幕任务的用例编排
+yingxu/domain/           不可变模型、匹配规则、审阅、计划与策略
+yingxu/ports/            存储、文件系统、媒体检查、供应服务等接口
+yingxu/adapters/         SQLite、本地文件、MediaInfo、网站与下载器的具体实现
+scripts/                 入口组合、构建和开发工具
+tests/{unit,contract,integration,recovery}/  按验证目的组织的新测试
+旧业务回归已归入上述分组；Qt 容器专属检查已随旧容器移除。
+
+domain 只依赖标准库；ports 可依赖 domain；application 只依赖 ports/domain。
+adapters 实现 ports，不反向导入 application 或 GUI。组合入口负责组装对象。
+desktop 负责调用用例，不包含匹配/命名/文件提交算法。展示层不拥有业务状态机。
+新层有导入边界检查；application 不导入具体适配器、桌面宿主或旧 web_ui。
+core.py/review.py/operations.py/embedded_subtitles.py 现在是兼容导出；算法只有一份。
+匹配/命名/审阅/语言政策在 domain；目录、元数据、旧执行器和站点规则在 adapters。
+单行跳过/确认只复制目标行并刷新该行显示；改配涉及共享目标名时仍完整重规划。
+正式执行使用 application/executing.py，通过 ports/operation_journal.py 与 transaction_files.py
+隔离存储及 Windows 文件提交。legacy_operations 仅用于回退兼容和原有只读预览检查。
+文件版本使用 domain/operations.py 的 FileVersion，包含文件身份、卷、大小、时间和 SHA256；
+数据库中的冻结意图使用有摘要的 JSON，页内 DTO 只提供当前用例需要的字段。
+
+3. 状态所有权
+
+一个任务只能有一个应用层工作流决定其业务状态；持久化仓库提供原子版本比较与回执。
+Electron、provider、网页和下载器是适配器，只提交命令或报告事实，不自行推进任务。
+前端可保存选中行、筛选、弹窗等展示状态；任务进度、候选确认、导入资格以应用层为准。
+不同用例分别拥有自己的状态机，不把整个应用做成一个全局状态大对象。
+
+字幕任务的应用层状态流：
+  queued → searching → candidates_ready → selected → downloading
+         → verifying → preparing → review_ready
+  searching → awaiting_user → searching（产生新的 effect ID）
+  awaiting_user/candidates_ready/selected → capturing → selected（显式选择网站当前页面）
+  searching → no_results；活动阶段 → failed / interrupted
+  非终态 → cancelled；failed/no_results/interrupted → retry → queued
+  已有下载的 interrupted/failed/cancelled → 明确确认重试 → downloading（新 effect ID）
+
+review_ready 只表示可进入审阅，不代表允许修改视频目录。
+下载确认、内容校验、最终整理确认是三个不同的关卡。
+downloaded/verified/prepared 由应用层接纳受限下载/校验适配器的结果，不能由前端直接提交。
+Discovery 统一管理搜索任务与工作区审阅绑定；Electron 只报告页面事实。
+页面刷新、审阅变化、取消会使旧浏览回调失效；启动将遗留活动任务标为 interrupted，
+显示提示但不自动访问网站；在线任务元数据本身不能判断网络请求是否曾到达远端。
+workspace.sqlite3 保存已提交的审阅选择、候选与暂停队列；WAL/FULL、版本和摘要约束独立于文件执行日志。
+启动通过目录/文件身份及字幕内容摘要核对后恢复，保留人工改配/跳过等草稿；旧执行授权不恢复。
+队列和网络动作保持暂停，必须新的明确确认才继续。文件变化时保留检查点并提示重新扫描。
+UI 尚未提交的输入框文字不作为业务草稿；匹配用例完成回复前必须持久化对应选择。
+
+整理的唯一业务状态所有者为 Execution；Workspace 负责审阅上下文与后台用例调度：
+  扫描/审阅 → 固定 preview → 明确确认 → running → completed / partial / cancelled
+  running 在重启时 → interrupted → 只读核对 → completed 或等待恢复预览
+  interrupted / partial / cancelled / archived → 新恢复预览与确认 → running
+  preview 在审阅或页面变化后 → invalidated；未使用的确认凭证同时失效。
+归档 archived 仅表示稍后处理，不删除文件或备份；可从记录重新核对。
+启动核对可以补记已完成的结果，不能复制、重命名或删除媒体。
+撤销是独立 kind=undo 的反向任务，关联 parent_id；父任务至多提交一次撤销。
+撤销部分中断后继续其自己的任务，不对父任务重复发起另一个撤销。
+
+4. 小型、版本化 IPC
+
+默认源码已连接 v2 宿主；旧下载包/回退路径仍用 v1。
+R1 的任务命令 codec 保留为独立学习/契约原型；桌面 v2 外层使用 requestId/sessionId/action/params，
+由 desktop/workspace_protocol.py 按用例路由，不能把任务 codec 与桌面外层混用。
+传输目标为 UTF-8 JSON Lines/stdin/stdout；stdout 只输出协议，日志写 stderr。
+一条消息最多 8 KiB；不传文件字节、整个工作区、任意系统命令或原始下载凭据。
+目录选择、候选和文件由宿主登记 ID；分页查询/有序事件已接入，不静默截断结果。
+
+桌面请求格式：
+  {"v":2,"type":"request","requestId":"cmd-1","sessionId":"session-1",
+   "action":"review.query","params":{"scanId":"scan-1","revision":7,"offset":0,"limit":20}}
+回复格式：
+  {"v":2,"type":"reply","requestId":"cmd-1","sessionId":"session-1",
+   "ok":true,"data":{...},"error":null}
+状态事件使用 type=event、event、sessionId 和递增 sequence；不附大结果。
+大结果通过 job.result 或用例分页读取；nextOffset 明确继续位置。单项超限报错，不截断目标名称。
+外层 native、browser、reset、shutdown 和显示状态帧同样携带 v=2。
+错误格式固定为 {code,message}。未知版本/字段/命令直接拒绝。
+任务原型命令包括 search / resume / select / capture_page / confirm_download / resume_download / cancel / retry；
+桌面仅开放已接入的用例白名单。
+results / downloaded / verified 等完成事件不能经 renderer codec 进入。
+桌面 requestId 使用会话内有界回执缓存；字幕任务 command_id 的回执另由 SQLite 持久保存。
+同一标识改内容会被拒绝；相同内容重试返回原回执。不能把这些去重机制当成文件操作事务。
+桌面 scanId/revision 绑定审阅；任务命令的 expectedRevision/workspaceId/reviewRevision 分别检查任务与上下文。
+effect ID 隔离取消/重试前的迟到回调，是关联标识，不是授权凭据。
+重复回执可能对应较早的任务版本；后续宿主应查询最新状态，不把它当全局最新快照。
+宿主已有 session/能力握手、事件顺序、128 项有界输入队列、合并进度、单工作线程和协作退出。
+桌面请求去重缓存有界；字幕任务的去重回执仍由 SQLite 持久化。二者不是文件事务日志。
+仅查询不得触发状态变更事件，避免“查询→刷新→查询”的循环。
+Electron 独占外观设置，Python 不保留第二套主题状态；在线本地页通过独立外观事件同步。
+Electron 必须限制 IPC 来源，启用沙箱/上下文隔离；网站不共享本地 preload 或业务权限。
+
+5. 持久化、文件提交与撤销
+
+任务元数据：SQLite WAL + synchronous=FULL，任务快照与去重回执在同一事务提交。
+纯状态转换在事务中短时运行；禁止在事务回调里做文件、网络或 GUI 操作。
+子进程强制退出测试证明元数据提交/回滚，不证明媒体文件断电恢复。
+数据库与文件系统不能共享一个原子事务，需要可观察的意图/结果日志和启动核对。
+
+操作日志独立存储在 python/operations/journal.sqlite3，同为 WAL + synchronous=FULL，
+runs 保存固定计划与授权上下文，items 保存逐项意图/步骤/归属，events 追加转换记录。
+同一数据目录由 OS 文件锁独占；进程死亡释放，不通过 PID 猜测并抢占锁。
+只存确认令牌的 SHA256；令牌绑定会话、用途和任务版本，在短事务中一次性消费。
+重复请求不能重复执行；页面重载可以断开旧请求，但已确认的文件任务仍受同一日志管理。
+
+逐项步骤：pending → buffering → buffered → committing → applied（同盘）；
+跨盘在 buffered 后增加 staging → staged → committing → committed → deleting → applied。
+先保存固定源/目标/文件身份和步骤意图，再进行文件副作用，最后持久化结果。
+WindowsFile 用打开的句柄核对与操作对象；源/视频/相关目录在该项处理期间保持保护。
+同盘先写持久备份，再按句柄原子不覆盖改名，保留文件身份、时间及已有硬链接关系。
+跨盘先备份，再向目标目录独占 .part 写完整内容、fsync 与 SHA256 校验，原子不覆盖提交，
+持久化目标身份后才按源句柄删除原文件。已提交目标保持保护直至源删除完成；恢复清理也先
+重新锁定并核对目标。普通占用、只读属性、目录身份变化或名称冲突都会阻止处理。
+
+启动/恢复核对源、临时文件、目标与备份。目标归属必须由日志中的文件 ID 证明，
+不能仅凭相同内容收养既有目标。已完成目标只补日志；半完成目标需重新确认后才清理源。
+未完成项的源与目标均不在而受管备份完整时，恢复预览明确显示从备份恢复，再次确认才执行。
+未知归属/损坏缓存或文件被改动时停止；前一项失败后不继续后续文件，部分成功保持可见。
+取消在文件之间生效，当前已确认项安全结束；不强杀正在执行的工作线程。
+
+撤销先验证目标的操作后身份及内容、原位置空闲，再生成固定反向预览并独立确认。
+目标已被编辑（即使大小与 mtime 相同）、删除或原位置被占用时拒绝自动撤销。
+旧版 JSONL 记录缺少所需身份，仍可读取，但不提供推测性的撤销。
+受管备份位于 python/operations/buffers/，临时文件在目标目录；引用及残留归属写入日志。
+恢复/撤销备份和部分临时文件继续保守保留，不删除未知归属文件。字幕载荷只在无草稿/活跃/恢复/撤销引用且内容未变化时回收，保留撤销所需目录身份。
+“打开恢复缓存”由后台给出固定位置，前端不能传任意系统路径。
+仅验证了当前 Windows 本地卷上的进程强退恢复，不证明真实断电或所有硬件/文件系统故障。
+
+6. 外部字幕供应服务
+
+SubtitleProvider 保留为独立原型接口；当前站点接入使用 BrowserProvider 的 plan/results/url，
+声明搜索/下载能力及人工步骤。下载资源通过 SubtitleArtifacts 管理，不信任网页提供的本地路径。
+每个网站单独适配；验证码/不支持自动化时明确 awaiting_user 或 unsupported。
+不宣称 zimuku/SubHD 所有线路都能自动下载，更不绕过网站必要验证。
+
+R4 校验链：来源/重定向 → 有界下载 → 类型与内容 → 有界解压 → 字幕解析 → 待审阅。
+拒绝路径穿越、链接、可执行内容、超量/超大/高压缩比包；扩展名不能单独作为信任依据。
+字幕通过验证仍需匹配/审阅；内嵌字幕语言符合即通过，不默认导出。
+
+续传仅在远端确实支持且对象身份可验证时启用：保存受管 .part、已落盘偏移、长度、
+ETag/Last-Modified 等；核对 206、Content-Range 起点/总长及对象验证值后才追加。
+收到 200、对象变化、认证失效或 blob 来源不可重放时，保留状态并安全重下/人工处理。
+不把旧文件与新对象拼接；Cookie 只在下载请求内存中使用，不写日志或前端状态。私有下载收据保留可重试 URL，
+可能含短期签名参数，不导出、不提交仓库；失效时需要回原网站获取。
+
+7. 性能与验证
+
+先测业务耗时，再测 IPC/渲染；匹配打分、单行审阅更新、路径检查次数各自建立 benchmark。
+benchmark 独立于正确性 tests，记录数据规模/环境，不用屏幕帧率代替业务吞吐量。
+单行审阅采用行级复制；文件名特征使用 4096 项有界纯值缓存。集数不符的配对在文本差异比较前返回零分，
+对照旧实现的 8100 组评分相同。业务耗时的改善不能解释或证明全部呈现帧率/闪烁问题已解决。
+逐步采用增量更新、有限并发、取消和背压；不把扫描/解压塞进渲染线程。
+
+默认源码及 0.11 候选仅 Electron + Python；Qt 源码回退已移除，未进入新冻结模块或二进制。
+冻结脚本 scripts/desktop_backend_entry.py 只启动 desktop.host 或只读 MediaInfo 助手；
+资源白名单 desktop/assets.py 不依赖 Qt。requirements-build.txt 建立独立无 Qt 构建环境，
+build_electron.py 拒绝任何 Qt/PySide/Shiboken 载荷，保留 Electron/字体/Lens 与当前依赖许可。
+Windows 冻结流不依赖系统区域设置，已有和新建标准流都显式设置 UTF-8，保持 8 KiB 消息边界。
+候选 profile 为 %LOCALAPPDATA%/YingXu/Desktop；不自动迁移旧版本数据。
+R5 延用主界面材质/HDR 实现；未重复全部呈现或 HDR 认证。旧发布目录、GitHub 标签及资产不变。
+网站批次最多 200 项；每次确认下载最多 20 份已选候选，网站人工步骤保持明确。
+application/downloading.py 是下载/导入编排入口；browser/HTTP/私有文件适配器报告事实。
+单个后台任务执行器承载下载与解压，Python 所有者线程接纳结果，窗口不拥有业务状态。
+python/subtitles/<id>/receipt.json 以 fsync + 同目录原子替换持久保存关联、偏移、摘要、准备文件。
+重启将活动传输标记中断，不自动联网；导入需要当前扫描中视频身份一致，下载不等于匹配通过。
+缓存预算 512 MiB、128 份；每份下载 64 MiB，展开 32 MiB、单字幕 8 MiB、200 条目、压缩比 200。
+ZIP 先界定中央目录；RAR/7z 用 Windows tar 只读列举/输出流，不让归档器直接落盘。
+字幕验证和安全解压实现移入 adapters/subtitle_downloads.py 与 subtitle_imports.py，旧路径兼容别名。
+下载页面不支持自动解析时，只能由用户明确选择当前受信任来源页面，不推测网站接口。
+记录导出只接收记录 ID，经系统保存对话框独占创建 JSON，不允许渲染器提供任意保存路径。
+新手学习入口：docs/learning.md；每阶段的验收条件只维护在 todo.txt。
+
+缓存维护只删除摘要匹配且没有当前草稿/恢复/撤销引用的载荷，保留准备目录的身份；30 天后自动执行相同规则。
+
+原生最小化事件独立于 document.hidden，经受限只读生命周期事件停用玻璃、雾气、粒子与 HDR 的帧更新；恢复后重新唤醒。
+SubHD 适配器支持站点折叠菜单，并在确认候选后最多点击两步已识别的普通下载按钮；不点击验证码或绕过验证。

@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "stage": "R3",
+  "date": "2026-10-26",
+  "baseCommit": "a73a151",
+  "commitSubject": "feat: add durable file execution, recovery and undo",
+  "runtime": "Electron + Qt-free Python",
+  "packaged": false,
+  "published": false,
+  "releaseChanged": false,
+  "newThirdPartyDependencies": false,
+  "tests": {
+    "distinctCasesCovered": 48,
+    "batchCountsAreNotAdditive": true,
+    "batches": [
+      {"passed": 45, "log": "work/test-results/r3-python-final.log", "scope": "import boundaries, IPC, consent, real files, host, embedded subtitles, recovery"},
+      {"passed": 27, "log": "work/test-results/r3-files-final.log", "scope": "final affected consent, file and recovery groups; includes repeated cases"},
+      {"passed": 1, "log": "work/test-results/r3-history-final.log", "scope": "new pending recovery remains reachable beyond 30 newer records"}
+    ],
+    "pythonNoSiteFlag": true,
+    "crashExitCode": 97,
+    "processDeathScenarios": 27,
+    "realCrossVolume": ["C:", "D:"],
+    "powerLossTested": false,
+    "coverage": [
+      "no media changes before explicit consent",
+      "one-use session, purpose and revision bound confirmation",
+      "profile lease released on process death and initialization failure",
+      "same-volume identity, timestamps, hardlinks and undo",
+      "atomic no-clobber commit race and partial undo",
+      "cross-volume checked copy with target protected through source deletion",
+      "read-only startup reconciliation without repeated file operations",
+      "partial buffer and staging file retention",
+      "unknown same-content targets are never adopted",
+      "edited source, edited target, changed directory and corrupt backup block recovery",
+      "same-size edit with restored mtime blocks undo",
+      "buffer-only restoration needs a fresh explicit preview",
+      "interrupted undo resumes its own run",
+      "embedded language satisfied passes without extraction",
+      "v2 stdio restart, persistent history and undo"
+    ]
+  },
+  "desktop": {
+    "command": "node scripts/check_recovery_desktop.cjs",
+    "output": "work/test-results/r3-desktop-1793025903861",
+    "passed": true,
+    "visibleWindow": true,
+    "qtImported": false,
+    "recoveryBanner": true,
+    "recoveryExplicitConfirmation": true,
+    "previewDoesNotModifyMedia": true,
+    "executeAndUndo": true,
+    "historyAfterReload": true,
+    "mediaRestored": true,
+    "jsExceptions": 0,
+    "websiteVisited": false,
+    "exitCode": 0,
+    "screenshots": ["recovery-preview.png", "organize-preview.png", "organize-result.png", "undo-result.png"]
+  },
+  "limits": [
+    "R3 journal records only; legacy JSONL is readable but cannot safely undo",
+    "recovery buffers and partial staging files are retained; garbage collection is deferred to R4",
+    "not a power-loss or all-filesystem certification",
+    "downloads, extraction, import and record export remain unavailable in the new source entry",
+    "prior R2 performance, HDR, browser and legacy evidence retained; no unnecessary full rerun",
+    "no clean Windows test, new EXE, version tag or GitHub upload"
+  ]
+}

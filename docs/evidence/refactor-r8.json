@@ -1,0 +1,177 @@
+{
+  "stage": "R8",
+  "date": "2026-10-27",
+  "version": "0.11.0-rc.2",
+  "sourceCommittedAtBuild": true,
+  "runtime": "Electron + Python",
+  "pythonFrozenModules": 242,
+  "qtModules": [],
+  "window": {
+    "passed": true,
+    "mode": "frozen",
+    "startupMs": 1197,
+    "activeScroll": {
+      "milliseconds": 2426,
+      "chromiumCpuSeconds": 1.6955540000000002,
+      "maxRows": 16
+    },
+    "processes": [
+      {
+        "Id": 1068,
+        "ProcessName": "YingXu",
+        "WorkingSet64": 291819520,
+        "CPU": 3.40625
+      },
+      {
+        "Id": 18192,
+        "ProcessName": "YingXu",
+        "WorkingSet64": 116817920,
+        "CPU": 0.859375
+      },
+      {
+        "Id": 19584,
+        "ProcessName": "YingXu",
+        "WorkingSet64": 226889728,
+        "CPU": 1.515625
+      },
+      {
+        "Id": 34408,
+        "ProcessName": "YingXu",
+        "WorkingSet64": 48386048,
+        "CPU": 0.03125
+      },
+      {
+        "Id": 34708,
+        "ProcessName": "YingXuBackend",
+        "WorkingSet64": 34062336,
+        "CPU": 0.34375
+      }
+    ],
+    "resizeWidths": [
+      1000,
+      1360
+    ],
+    "minimizeRestore": true,
+    "protocol": 2,
+    "runtime": "Electron + Python",
+    "qtImported": false,
+    "videos": 300,
+    "maxVisibleRows": 16,
+    "scanPreview": true,
+    "unconfirmedExecutionBlocked": true,
+    "themes": true,
+    "onlineLocalUI": true,
+    "languagePreference": true,
+    "remoteHasLocalAPI": false,
+    "websiteVisited": false,
+    "reload": true,
+    "mediaUnchanged": true,
+    "rendering": {
+      "passed": true,
+      "checks": [
+        "selection_reuses_nodes_and_cached_data",
+        "five_thousand_rows_bounded_buffered_scroll",
+        "filter_and_scan_identity_invalidate_cache",
+        "out_of_order_replies_do_not_repaint_new_results",
+        "concurrent_same_page_queries_coalesced",
+        "empty_restore_and_untrusted_filename_plain_text"
+      ],
+      "queries": 44
+    },
+    "hdr": {
+      "verified": true,
+      "format": "R16G16B16A16_FLOAT",
+      "method": "Windows Graphics Capture window",
+      "linearScRgbSamples": [
+        2.99935,
+        14.85677,
+        75.91667
+      ],
+      "abovePaperWhiteRatio": 25.311,
+      "textureSize": [
+        1346,
+        813
+      ],
+      "warmupFrames": 15,
+      "physicalPeakMeasured": false,
+      "osSettingsChanged": false
+    },
+    "demonstrationPathLabel": true,
+    "exitCode": 0,
+    "screenshot": "work\\test-results\\noqt-desktop-1793069599257\\workspace.png",
+    "onlineScreenshot": "work\\test-results\\noqt-desktop-1793069599257\\online.png"
+  },
+  "executionRecoveryUndo": {
+    "passed": true,
+    "mode": "frozen",
+    "settingsCycles": 20,
+    "protocol": 2,
+    "qtImported": false,
+    "recoveryBanner": true,
+    "recoveryExplicitConfirmation": true,
+    "previewDoesNotModifyMedia": true,
+    "executeAndUndo": true,
+    "historyAfterReload": true,
+    "mediaRestored": true,
+    "jsExceptions": 0,
+    "websiteVisited": false,
+    "exitCode": 0,
+    "screenshots": [
+      "recovery-preview.png",
+      "organize-preview.png",
+      "organize-result.png",
+      "undo-result.png"
+    ]
+  },
+  "subtitleBrowser": {
+    "passed": true,
+    "mode": "frozen",
+    "realElectronBlobDownload": true,
+    "manualPageSelection": true,
+    "explicitDownloadConfirmation": true,
+    "validatedAndImported": true,
+    "mediaUnchangedBeforeConfirmation": true,
+    "remoteHasNoLocalBridge": true,
+    "jsExceptions": 0,
+    "publicWebsiteTested": false,
+    "exitCode": 0,
+    "output": "work\\test-results\\r4-online-1793069722163"
+  },
+  "frozenBackendReusedTests": {
+    "passed": 6,
+    "seconds": 2.588,
+    "suites": [
+      "tests.recovery.test_workspace_drafts",
+      "tests.integration.test_subtitle_inbox"
+    ],
+    "overlapsExistingPythonTests": true,
+    "covers": [
+      "forced-exit draft and queue restoration",
+      "changed-content rejection",
+      "download/extract/restart/import",
+      "explicit execution",
+      "history export",
+      "cache compaction followed by undo",
+      "archive traversal rejection",
+      "late callback rejection"
+    ]
+  },
+  "licenseScope": "Actual distributed components, full official texts, attribution and provenance; no new runtime dependency",
+  "privacy": "Generated screenshot data; display-only path label; private profiles/raw subtitles/cache and local Git history excluded",
+  "diagnostics": [
+    "One GPU state warning during visible-window shutdown; normal process exit and zero JS exceptions; raw log retained locally"
+  ],
+  "limits": [
+    "Unsigned",
+    "No clean Windows test at user request",
+    "No real power-cut test",
+    "Strict current independent presentation gate remains unverified",
+    "Scroll page p95 remains approximately 14ms",
+    "Website firewall requires manual verification"
+  ],
+  "published": false,
+  "publication": "Pending prepared asset hashes and public source commit",
+  "firstValidatedBuild": "a5eca94b115c2f1cba9766c2487ab44ec50c7eac",
+  "sourceAtBuild": "7176d10930b4acc8c56416af571da6f99f74c7f8",
+  "postWindowTestChanges": "Current dependency/notice/documentation refresh and one legacy compatibility docstring only. UI and business function implementations unchanged; final frozen backend suites rechecked."
+}

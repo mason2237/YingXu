@@ -1,3 +1,4 @@
+import {windowInactive,onWindowVisibility} from '../visibility.js';
 // Existing project particle feedback, retained separately from upstream optics.
 export class ParticleFeedback {
   constructor(canvas, reduced) {
@@ -10,7 +11,7 @@ export class ParticleFeedback {
   }
   burst(element) {
     this.stop();
-    if (!this.enabled || this.reduced() || document.hidden || !this.context) return;
+    if (!this.enabled || this.reduced() || windowInactive() || !this.context) return;
     const box = element.getBoundingClientRect(), x = box.left + box.width / 2, y = box.top + box.height / 2;
     const dpr = Math.min(devicePixelRatio || 1, 1.5);
     this.canvas.width = innerWidth * dpr; this.canvas.height = innerHeight * dpr;
@@ -20,7 +21,7 @@ export class ParticleFeedback {
     const frame = now => {
       const t = (now - start) / 650, ctx = this.context;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, innerWidth, innerHeight);
-      if (t >= 1 || document.hidden || this.reduced() || !this.enabled) {this.stop(); return;}
+      if (t >= 1 || windowInactive() || this.reduced() || !this.enabled) {this.stop(); return;}
       for (let i = 0; i < 16; i++) {
         const angle = i * Math.PI * 2 / 16, distance = 10 + 38 * t;
         ctx.globalAlpha = (1 - t) * .7; ctx.fillStyle = colors[i % 3 ? 0 : 1];

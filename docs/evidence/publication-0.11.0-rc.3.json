@@ -1,0 +1,40 @@
+{
+  "version": "0.11.0-rc.3",
+  "repository": "mason2237/YingXu",
+  "url": "https://github.com/mason2237/YingXu/releases/tag/v0.11.0-rc.3",
+  "publishedAt": "2026-10-27T05:45:16Z",
+  "prerelease": true,
+  "publicSourceCommit": "8ec090ff7b49a5b43c576339f1e53ab41456c33b",
+  "localSourceSnapshotCommit": "ae8e49bbeb5816b271c77c85ce8be33c01debc53",
+  "anonymousReleaseVisible": true,
+  "anonymousTaggedSourceVisible": true,
+  "tagCommitVerified": true,
+  "assets": [
+    {
+      "name": "SHA256SUMS.txt",
+      "bytes": 199,
+      "sha256": "caa6d5d8c5d23681c983cb6799ef10d7c7385650976ed67eca11f2bb1ad33326",
+      "anonymousDownloadStatus": 200,
+      "url": "https://github.com/mason2237/YingXu/releases/download/v0.11.0-rc.3/SHA256SUMS.txt"
+    },
+    {
+      "name": "YingXu-0.11.0-rc.3-source.zip",
+      "bytes": 13304505,
+      "sha256": "f0dd2fa03dc63491df7bf14abb9ac99817bbaec1cd1ba27e911ef2e4c424c913",
+      "anonymousDownloadStatus": 206,
+      "url": "https://github.com/mason2237/YingXu/releases/download/v0.11.0-rc.3/YingXu-0.11.0-rc.3-source.zip"
+    },
+    {
+      "name": "YingXu-0.11.0-rc.3-windows-x64.zip",
+      "bytes": 182626168,
+      "sha256": "845f992464c27d2b9c64c4a3603acc0ac6236c86b2ee3af95618c1d15e0da2a5",
+      "anonymousDownloadStatus": 206,
+      "url": "https://github.com/mason2237/YingXu/releases/download/v0.11.0-rc.3/YingXu-0.11.0-rc.3-windows-x64.zip"
+    }
+  ],
+  "digestMethod": "GitHub-reported SHA256 matched local files; bounded anonymous ZIP downloads verified reachability; checksum file downloaded in full",
+  "runtimeSourceFilesVerified": 148,
+  "privateHistoryUploaded": false,
+  "oldTagsOrAssetsModified": false,
+  "cleanWindowsTested": false
+}

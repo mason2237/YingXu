@@ -104,12 +104,27 @@
     "frozenPythonModules": 242,
     "qtModules": [],
     "runtime": "Electron + Python",
-    "sourcesCommittedAtBuild": true
+    "sourcesCommittedAtBuild": true,
+    "digestScope": "Original local validation ZIP before release-document assembly; published asset hash is recorded under publication."
   },
   "limits": [
     "Generated samples only; user media not modified",
     "No new full-site or performance/HDR certification",
-    "Unsigned; no clean Windows test by user request",
-    "Local candidate only; existing public release unchanged"
-  ]
+    "Unsigned; no clean Windows test by user request"
+  ],
+  "publication": {
+    "url": "https://github.com/mason2237/YingXu/releases/tag/v0.11.0-rc.3",
+    "publishedAt": "2026-10-27T05:45:16Z",
+    "publicSourceCommit": "8ec090ff7b49a5b43c576339f1e53ab41456c33b",
+    "localSourceSnapshotCommit": "ae8e49bbeb5816b271c77c85ce8be33c01debc53",
+    "windowsAsset": {
+      "name": "YingXu-0.11.0-rc.3-windows-x64.zip",
+      "bytes": 182626168,
+      "sha256": "845f992464c27d2b9c64c4a3603acc0ac6236c86b2ee3af95618c1d15e0da2a5",
+      "anonymousDownloadStatus": 206,
+      "url": "https://github.com/mason2237/YingXu/releases/download/v0.11.0-rc.3/YingXu-0.11.0-rc.3-windows-x64.zip"
+    },
+    "anonymousVerification": true,
+    "evidence": "docs/evidence/publication-0.11.0-rc.3.json"
+  }
 }

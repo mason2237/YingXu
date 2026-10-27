@@ -1,7 +1,7 @@
 # 当前开发检查点
 
-更新时间：2026-10-27。R9 修复完成，0.11.0-rc.3 已打包并通过本机验证；现按用户要求执行 R10 公开发布。
-正在更新源码和发布材料，旧版标签/资产保持不变；不重复已通过的功能测试。
+更新时间：2026-10-27。R9 修复与 R10 发布完成，0.11.0-rc.3 已于香港时间 2026-10-27 13:45 公开发布。
+Windows 包、源码 ZIP 和校验文件已上传；匿名下载/源码可见，GitHub 摘要与本地文件一致。旧版标签/资产保持不变，未重复已通过的功能测试。
 业务修复提交 1916bd6；最终构建来源 94092a7；本检查点提交见 git log -1。
 
 ## 本轮修复
@@ -21,13 +21,13 @@
 - 冻结 Python 242 个模块无 Qt/PySide/Shiboken 或旧宿主；沿用已检查的第三方资源与许可，没有新增运行依赖。
 - 汇总见 docs/evidence/detail-pagination-rc3.json；原始窗口结果在忽略的 work/test-results/multitrack-1793079228731/。
 
-## 本地交付
+## 交付与发布
 
 - EXE：outputs/releases/0.11.0-rc.3/YingXu/YingXu.exe，保留完整同目录文件。
-- ZIP：outputs/releases/0.11.0-rc.3/YingXu-0.11.0-rc.3-windows-x64.zip，182,626,518 字节。
-- 上述为本机测试包；汇集最终发布说明后重新记录 ZIP 摘要。原验证摘要保留在 detail-pagination-rc3.json。
+- ZIP：outputs/releases/0.11.0-rc.3/YingXu-0.11.0-rc.3-windows-x64.zip，182,626,168 字节。
+- 发布 ZIP SHA256：845f992464c27d2b9c64c4a3603acc0ac6236c86b2ee3af95618c1d15e0da2a5。本机测试原包摘要保留在 detail-pagination-rc3.json；发布前仅重新汇集说明与许可，EXE/运行代码未改变。
 - 先关闭旧版再启动。0.11 候选间沿用 %LOCALAPPDATA%/YingXu/Desktop/；不自动继续网络下载或文件操作。
-- 源码、进度和证据均保存为 Git 提交；rc.3 发布进度和最终摘要将在本文件及 publication-0.11.0-rc.3.json 记录。
+- 源码、进度和证据均保存为 Git 提交；发布证据见 docs/evidence/publication-0.11.0-rc.3.json。
 
 ## 保留约束与后续
 
@@ -36,3 +36,11 @@
 - 持续高刷目标仍未验收，早期滚动 p95 约 14ms；当前独立呈现采样需用户在场响应诊断授权，不改权限配置、VPN 或 HDR 开关。
 - 网站必要验证由用户完成；当前包未签名。按用户要求不做干净 Windows 测试，不把进程强退说成真实断电验证。
 - 架构只看 architecture.txt，任务看 todo.txt，教程看 docs/learning.md。
+
+## 发布记录
+
+- 发布页：https://github.com/mason2237/YingXu/releases/tag/v0.11.0-rc.3
+- 标签对应公共源码：8ec090ff7b49a5b43c576339f1e53ab41456c33b；源码 ZIP 快照：ae8e49bbeb5816b271c77c85ce8be33c01debc53，不含本地开发历史。
+- 源码 ZIP：13,304,505 字节；SHA256 f0dd2fa03dc63491df7bf14abb9ac99817bbaec1cd1ba27e911ef2e4c424c913。
+- 验证方式：匿名下载 ZIP 的有界片段、完整下载校验文件，并核对 GitHub 报告的 SHA256；未重复下载全部 ZIP 计算摘要。
+- 后续文档提交仅记录发布结果，不改变本标签或已上传资产。

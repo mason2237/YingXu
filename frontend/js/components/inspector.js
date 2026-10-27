@@ -27,10 +27,15 @@ function renderActions(host, row, handlers) {
   view.main.disabled = Boolean(row.embeddedSatisfied);
 }
 
-export function renderInspector(host, row, {mutate, candidates, copy, reveal, online, actionsHost}) {
+export function renderInspector(host, row, {mutate, candidates, copy, reveal, online, actionsHost, error = '', retry}) {
   host.replaceChildren();
   renderActions(actionsHost, row, {mutate, candidates, online});
-  if (!row) {const empty = el('div','inspector-empty');empty.append(iconNode('brand'),el('p','subtle-text','选择一个视频，查看字幕和目标名称。'));host.append(empty);return;}
+  if (!row) {
+    const empty = el('div','inspector-empty');
+    empty.append(iconNode(error ? 'alert' : 'brand'),el('p','subtle-text',error ? `这项详情暂未载入。${error}` : '选择一个视频，查看字幕和目标名称。'));
+    if (error && retry) empty.append(button('重试详情','secondary',retry,'refresh'));
+    host.append(empty);return;
+  }
   const header = el('section'); header.append(el('span', 'detail-label', `视频 · ${row.video.extension.slice(1).toUpperCase()}`), el('h3', 'detail-video', row.video.name));
   const state = el('div', 'detail-status'); state.append(badge(stateOf(row)), el('span', '', row.episode)); header.append(state); host.append(header);
   if (row.warnings.length) {const warning = el('div', 'notice warning'); warning.style.marginTop = '17px'; warning.append(iconNode('alert'), document.createTextNode(row.warnings[0].message)); host.append(warning);}

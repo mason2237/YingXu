@@ -65,6 +65,19 @@ class Client:
     def call(self, action, params=None):
         return self.response(self.send(action, params))
 
+    def details(self, params):
+        result = self.call('review.details', params)
+        for section, total in result['detailCounts'].items():
+            entries = []
+            while len(entries) < total:
+                page = self.call('review.detailPage', {**params, 'section': section, 'offset': len(entries), 'limit': 20})
+                if not page['entries']:
+                    raise AssertionError('Detail pagination made no progress')
+                entries.extend(page['entries'])
+            if section == 'tracks': result['embedded']['tracks'] = entries
+            else: result[section] = entries
+        return result
+
     def choose(self, folder):
         rid = self.send('folder.choose')
         frame = self.wait(lambda value: value.get('type') == 'native' and value['requestId'] == rid)

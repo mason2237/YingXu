@@ -14,6 +14,7 @@ SCHEMAS = {
     "scan.cancel": ({"jobId"}, set()), "job.stop": ({"jobId"}, set()),
     "review.query": (CONTEXT, {"search", "status", "fileType", "sortKey", "sortDir", "offset", "limit", "includeIds"}),
     "review.details": (ROW, set()),
+    "review.detailPage": (ROW | {"section"}, {"offset", "limit"}),
     "review.candidates": (ROW, {"offset", "limit"}),
     "review.assign": (ROW | {"subtitleId"}, {"replaceId"}),
     "review.remove": (ROW | {"subtitleId"}, set()),
@@ -56,6 +57,7 @@ SCHEMAS['online.import'] = ({'artifactIds', 'acknowledged'}, set())
 SCHEMAS['online.cache'] = (set(), set())
 ACTIONS = frozenset(SCHEMAS)
 ENUMS = {
+    "section": {"tracks", "subtitles", "warnings", "basis"},
     "status": {"all", "待整理", "需确认", "未匹配", "存在冲突", "已跳过", "已符合"},
     "fileType": {""} | VIDEO_EXTS, "sortKey": {"name", "score", "state"}, "sortDir": {"asc", "desc"},
     "provider": {"zimuku", "srtku", "subhd", "subhd-one"},

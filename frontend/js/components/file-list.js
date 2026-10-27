@@ -90,7 +90,8 @@ export class VirtualFileList {
         subtitle.append(el('span','subtitle-summary','视频内字幕 · 已满足语言要求'));
       } else if (row.subtitles.length) {
         row.subtitles.forEach(sub => subtitle.append(language(sub.language)));
-        subtitle.append(el('span', 'subtitle-summary', row.subtitles.length > 1 ? `${row.subtitles.length} 份字幕 · 多语言匹配` : row.subtitles[0].name));
+        const count = row.matchCount ?? row.subtitles.length;
+        subtitle.append(el('span', 'subtitle-summary', count > 1 ? `${count} 份字幕 · 多语言匹配` : row.subtitles[0].name));
       } else subtitle.append(el('span', 'subtitle-summary', '尚未关联字幕'));
       names.append(title, subtitle); copy.append(iconNode('video', 'file-icon'), names);
       const score = el('div', 'match-score'); score.setAttribute('role', 'gridcell');

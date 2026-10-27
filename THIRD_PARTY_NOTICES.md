@@ -1,6 +1,6 @@
 # Third-party notices
 
-Current release: 0.11.0-rc.2. The application contains Electron and a frozen Qt-free Python service. Qt, PySide and Shiboken are not distributed.
+Current release: 0.11.0-rc.3. The application contains Electron and a frozen Qt-free Python service. Qt, PySide and Shiboken are not distributed.
 
 The original application uses the unmodified PolyForm Noncommercial License 1.0.0. This does not relicense or limit independent MIT, BSD, OFL or other rights of third-party components.
 

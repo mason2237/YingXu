@@ -82,6 +82,28 @@ class ReviewData:
             raise ProtocolError("NOT_FOUND", "视频不属于当前扫描结果。")
         return self.by_id[row_id]
 
+    def detail_entries(self, index, section):
+        row = self.rows[index]
+        if section == 'tracks':
+            return row['embedded'].get('tracks', [])
+        if section in {'subtitles', 'warnings', 'basis'}:
+            return row[section]
+        raise ProtocolError('INVALID_REQUEST', '不支持的详情部分。')
+
+    def detail_header(self, index):
+        row = self.rows[index]
+        # Collections use version-bound pages, so a multilingual container
+        # cannot make its entire row unsendable.
+        return {**row, 'subtitles': [], 'warnings': [], 'basis': [],
+                'embedded': {**row['embedded'], 'tracks': []},
+                'detailCounts': {section: len(self.detail_entries(index, section))
+                                 for section in ('tracks', 'subtitles', 'warnings', 'basis')}}
+
+    def detail_page(self, index, section, offset=0, limit=20):
+        entries = self.detail_entries(index, section)
+        return {'entries': entries[offset:offset+limit], 'total': len(entries),
+                'offset': offset, 'section': section, 'rowId': self.rows[index]['rowId']}
+
     def query(self, params):
         keys = ("search", "status", "fileType", "sortKey", "sortDir")
         cache_key = tuple(params.get(key) for key in keys)

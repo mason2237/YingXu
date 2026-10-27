@@ -1,6 +1,6 @@
 映序架构
 ========
-状态：当前源码和已发布预发布版为 0.11.0-rc.2，包含草稿/队列恢复与 Qt 源码清理。
+状态：当前版本为 0.11.0-rc.3，包含多轨详情分页和错误隔离；发布状态见 PROGRESS.md。
 本文件描述结构与约束；当前任务见 todo.txt，开发历史见 CHANGELOG.md。
 
 1. 当前实现与目标
@@ -93,6 +93,10 @@ R1 的任务命令 codec 保留为独立学习/契约原型；桌面 v2 外层�
    "ok":true,"data":{...},"error":null}
 状态事件使用 type=event、event、sessionId 和递增 sequence；不附大结果。
 大结果通过 job.result 或用例分页读取；nextOffset 明确继续位置。单项超限报错，不截断目标名称。
+review.query 仅含列表摘要和完整数量，不附全部字幕轨。review.details 返回头部与 detailCounts；
+review.detailPage 按 tracks/subtitles/warnings/basis 查询，均绑定 scanId/revision/rowId，
+每页按实际字节预算调整。前端按明确 offset/nextOffset 拼合完整详情，不截断标题或丢轨。
+详情读取失败只影响当前详情，保留文件列表并提供重试，不能误报目录不可读取。
 外层 native、browser、reset、shutdown 和显示状态帧同样携带 v=2。
 错误格式固定为 {code,message}。未知版本/字段/命令直接拒绝。
 任务原型命令包括 search / resume / select / capture_page / confirm_download / resume_download / cancel / retry；

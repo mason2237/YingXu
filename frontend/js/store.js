@@ -1,7 +1,7 @@
 export class WorkspaceStore extends EventTarget {
   constructor(adapter) {
     super(); this.adapter = adapter; this.filters = {search: '', status: 'all', fileType: '', sortKey: 'name', sortDir: 'asc'};
-    this.summary = {scanId:null,revision:0,counts: {all: 0}}; this.view = {total: 0, ids: []}; this.selectedId = null; this.details = null; this.loading = false; this.error = ''; this.ticket = 0;this.selectionTicket = 0;
+    this.summary = {scanId:null,revision:0,counts: {all: 0}}; this.view = {total: 0, ids: []}; this.selectedId = null; this.details = null; this.detailsError = ''; this.loading = false; this.error = ''; this.ticket = 0;this.selectionTicket = 0;
     adapter.addEventListener('loading', event => this.dispatchEvent(new CustomEvent('loading', {detail: event.detail})));
     adapter.addEventListener('disconnect', event => {this.error = event.detail;this.loading = false;this.ticket++;this.selectionTicket++;this.changed();});
   }
@@ -10,7 +10,7 @@ export class WorkspaceStore extends EventTarget {
   changed(reset = false) {this.dispatchEvent(new CustomEvent('change',{detail:{reset}}));}
   async load(scenario) {
     if (this.loading) return;
-    this.loading = true;this.ticket++;this.selectionTicket++; this.error = '';this.cancelled = false; this.dispatchEvent(new Event('busy'));
+    this.loading = true;this.ticket++;this.selectionTicket++; this.error = '';this.detailsError = '';this.cancelled = false; this.dispatchEvent(new Event('busy'));
     try {
       const summary = await this.adapter.load(scenario);
       this.cancelled = Boolean(summary.cancelled);
@@ -27,9 +27,11 @@ export class WorkspaceStore extends EventTarget {
     const view = await this.adapter.request('review.query', {scanId:summary.scanId,revision:summary.revision,...this.filters, offset: 0, limit: 1,includeIds:true});
     if (ticket !== this.ticket) return;
     const selectedId = view.ids.includes(this.selectedId) ? this.selectedId : view.ids[0] || null;
-    const details = selectedId ? await this.adapter.request('review.details', {scanId:summary.scanId,revision:summary.revision,rowId:selectedId}) : null;
+    let details = null, detailsError = '';
+    try {if (selectedId) details = await this.adapter.request('review.details', {scanId:summary.scanId,revision:summary.revision,rowId:selectedId});}
+    catch (error) {detailsError = error.message;}
     if (ticket !== this.ticket) return;
-    this.summary = summary;this.view = view;this.selectedId = selectedId;this.details = details;this.changed(reset);
+    this.summary = summary;this.view = view;this.selectedId = selectedId;this.details = details;this.detailsError = detailsError;this.error = '';this.changed(reset);
   }
   async select(rowId) {
     if (!this.view.ids.includes(rowId) || this.busy) return;
@@ -37,8 +39,13 @@ export class WorkspaceStore extends EventTarget {
     try {
       const details = await this.adapter.request('review.details', this.params({rowId}));
       if (ticket !== this.selectionTicket || this.busy) return;
-      this.selectedId = rowId;this.details = details;this.dispatchEvent(new Event('selection'));
-    } catch (error) {if (ticket === this.selectionTicket && !this.busy) this.dispatchEvent(new CustomEvent('error',{detail:error.message}));}
+      this.selectedId = rowId;this.details = details;this.detailsError = '';this.dispatchEvent(new Event('selection'));
+    } catch (error) {
+      if (ticket === this.selectionTicket && !this.busy) {
+        this.selectedId = rowId;this.details = null;this.detailsError = error.message;
+        this.dispatchEvent(new Event('selection'));
+      }
+    }
   }
   async filter(patch) {if (this.busy) return; Object.assign(this.filters, patch); await this.refresh(true);}
   async mutate(action, extra = {}) {

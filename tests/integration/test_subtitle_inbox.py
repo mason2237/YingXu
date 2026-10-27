@@ -72,7 +72,7 @@ class InboxTests(unittest.TestCase):
         imported=self.client.job('online.import',{'artifactIds':[identifier],'acknowledged':True})
         self.assertEqual(imported['assigned'],1)
         summary=self.client.call('app.state')['summary'];context={'scanId':summary['scanId'],'revision':summary['revision']}
-        details=self.client.call('review.details',{**context,'rowId':'video-1'})
+        details=self.client.details({**context,'rowId':'video-1'})
         self.assertEqual(details['state'],'需确认')
         self.assertTrue(details['subtitles'][0]['imported'])
         self.client.job('review.confirm',{**context,'rowId':'video-1'})

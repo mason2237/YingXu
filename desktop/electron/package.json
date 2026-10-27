@@ -1,7 +1,7 @@
 {
   "name": "yingxu",
   "productName": "映序",
-  "version": "0.11.0-rc.2",
+  "version": "0.11.0-rc.3",
   "private": true,
   "main": "main.cjs",
   "license": "PolyForm-Noncommercial-1.0.0",

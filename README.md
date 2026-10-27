@@ -4,9 +4,11 @@
 
 拖入文件夹，核对匹配，确认整理。从查找字幕到整理完成，一处看清。
 
-[下载 Windows 版](https://github.com/mason2237/YingXu/releases/download/v0.11.0-rc.2/YingXu-0.11.0-rc.2-windows-x64.zip) · [查看更新](https://github.com/mason2237/YingXu/releases/tag/v0.11.0-rc.2)
+[下载 Windows 版](https://github.com/mason2237/YingXu/releases/download/v0.11.0-rc.3/YingXu-0.11.0-rc.3-windows-x64.zip) · [查看更新](https://github.com/mason2237/YingXu/releases/tag/v0.11.0-rc.3)
 
-适用于 Windows 11 x64 · 0.11.0-rc.2 预发布版
+适用于 Windows 11 x64 · 0.11.0-rc.3 预发布版
+
+本次修复多轨内嵌字幕导致详情加载失败、列表清空的问题。详情可以重试，已扫描的结果会保留。
 
 <img src="docs/images/workspace-dark.png" width="1100" alt="映序字幕工作台，使用生成的示例文件">
 

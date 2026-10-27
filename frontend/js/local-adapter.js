@@ -65,6 +65,23 @@ export class LocalAdapter extends EventTarget {
     if (action === 'app.state') {this.receive(response);return response.summary;}
     if(response?.jobId)return this.waitJob(response.jobId);
     if(this.client.version!==2)return response;
+    if(action==='review.details'&&response.detailCounts) {
+      await Promise.all(['tracks','subtitles','warnings','basis'].map(async section=>{
+        const total=response.detailCounts[section];
+        if(!Number.isSafeInteger(total)||total<0||total>20000)throw Error('详情数量无效，请刷新后重试。');
+        const entries=[];let offset=0;
+        while(offset<total) {
+          const page=await this.start('review.detailPage',{...params,section,offset,limit:20});
+          if(page.rowId!==params.rowId||page.section!==section||page.total!==total||page.offset!==offset||
+             !Array.isArray(page.entries)||!page.entries.length||page.entries.length>total-offset)throw Error('详情已变化，请刷新后重试。');
+          const next=offset+page.entries.length;
+          if(page.nextOffset!==(next<total?next:null))throw Error('详情分页未能继续，请重试。');
+          entries.push(...page.entries);offset=next;
+        }
+        if(section==='tracks')response.embedded.tracks=entries;else response[section]=entries;
+      }));
+      return response;
+    }
     const field=Array.isArray(response?.rows)?'rows':Array.isArray(response?.items)?'items':null;
     if(field&&response.nextOffset!=null) {
       const end=(params.offset||0)+(params.limit||20);let offset=response.nextOffset;

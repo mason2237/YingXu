@@ -53,7 +53,7 @@ async function mutate(action, params = {}) {
 }
 const dialogs = new LocalWorkspaceDialogs(store, effects, {load: scenario => load(scenario), toast, mutate, feedback});
 function renderDetails() {
-  renderInspector($('inspector-content'), store.details, {mutate: (action, params) => mutate(action, params).catch(() => {}), candidates: () => dialogs.candidates().catch(error => toast(error.message,{tone:'error'})), copy: copyName,reveal:fileId => adapter.request('file.reveal',{fileId}).catch(error => toast(error.message,{tone:'error'})), online:rowId => localWorkspace?.openSubtitles(rowId), actionsHost: $('inspector-actions')});
+  renderInspector($('inspector-content'), store.details, {error:store.detailsError,retry:() => store.select(store.selectedId),mutate: (action, params) => mutate(action, params).catch(() => {}), candidates: () => dialogs.candidates().catch(error => toast(error.message,{tone:'error'})), copy: copyName,reveal:fileId => adapter.request('file.reveal',{fileId}).catch(error => toast(error.message,{tone:'error'})), online:rowId => localWorkspace?.openSubtitles(rowId), actionsHost: $('inspector-actions')});
   if (store.busy) for (const control of document.querySelectorAll('#inspector button')) control.disabled = true;
   applyPrototypeMode(adapter.state);
 }
@@ -77,6 +77,7 @@ function updateSummary() {
   $('list-count').textContent = `${store.view.total.toLocaleString()} / ${(counts.all || 0).toLocaleString()} 个视频`;
   $('footer-status').textContent = store.error ? '读取失败，请检查目录后重新扫描' : store.loading ? '正在处理本地任务…' : !folder.folderId ? '选择文件夹，开始扫描' : folder.needsScan ? folder.finished ? '本批整理已结束，重新扫描可核对文件' : '选项已更新，请重新扫描' : `${counts['需确认'] || 0} 项待确认 · ${counts['存在冲突'] || 0} 项冲突`;
   if (!store.error && !store.loading && !folder.needsScan && folder.embeddedSatisfiedCount) $('footer-status').textContent = `${folder.embeddedSatisfiedCount} 个视频内嵌字幕已满足 · ${counts['需确认'] || 0} 项待确认`;
+  if (!store.error && !store.busy && store.detailsError) $('footer-status').textContent = '扫描结果已保留 · 当前详情未载入，可重试或选择其他视频';
   $('search-input').value = store.filters.search;
   $('file-type').value = store.filters.fileType;
   document.querySelectorAll('[data-filter]').forEach(button => {const chosen = button.dataset.filter === store.filters.status; button.classList.toggle('selected', chosen); button.setAttribute('aria-pressed', chosen);});
@@ -116,7 +117,7 @@ store.addEventListener('change', async event => {
   document.documentElement.dataset.ready = 'true'; document.documentElement.dataset.loading = 'false';
   if (!store.busy) {feedback.endLoading();feedback.workflow(2);}
 });
-store.addEventListener('selection', () => {renderDetails(); list.draw(true);});
+store.addEventListener('selection', () => {updateSummary();renderDetails(); list.draw(true);});
 store.addEventListener('error',event => toast(event.detail,{tone:'error'}));
 store.addEventListener('busy', () => {clearTimeout(searchTimer);updateSummary();feedback.startLoading();feedback.workflow(1);$('file-list').setAttribute('aria-busy','true');document.documentElement.dataset.loading = 'true';});
 store.addEventListener('loading', event => {$('footer-status').textContent = event.detail.message;feedback.setLoading(event.detail);});

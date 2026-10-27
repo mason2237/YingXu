@@ -14,7 +14,7 @@ MAX_BYTES = 8192
 def dumps(value):
     raw = json.dumps(value, ensure_ascii=False, allow_nan=False, separators=(',', ':'))
     if len(raw.encode('utf8')) > MAX_BYTES:
-        raise ProtocolError('MESSAGE_TOO_LARGE', '单条结果超出通信限制，请缩小查询范围。')
+        raise ProtocolError('MESSAGE_TOO_LARGE', '这部分信息暂时无法显示，请重试；已扫描的文件不会被修改。')
     return raw
 
 

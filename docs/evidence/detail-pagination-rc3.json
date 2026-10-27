@@ -1,0 +1,115 @@
+{
+  "version": "0.11.0-rc.3",
+  "date": "2026-10-27",
+  "scope": "Paginated review metadata and isolated detail failures; no file-processing algorithm rewrite",
+  "logicCommit": "1916bd68b063cc64c68fd92e3d23b65e0291904b",
+  "buildCommit": "94092a7",
+  "messageLimitBytes": 8192,
+  "pythonAffected": {
+    "passed": 25,
+    "seconds": 5.811
+  },
+  "frozenExistingSuites": {
+    "passed": 6,
+    "seconds": 2.304,
+    "overlapsPythonAffected": true,
+    "suites": [
+      "tests.recovery.test_workspace_drafts",
+      "tests.integration.test_subtitle_inbox"
+    ]
+  },
+  "frontendContract": {
+    "passed": true,
+    "tracksPreserved": 64,
+    "variablePageSizes": true,
+    "invalidPageRejected": true,
+    "detailFailureKeepsList": true,
+    "retry": true,
+    "lateFailureIgnored": true
+  },
+  "sourceWindow": {
+    "passed": true,
+    "mode": "source",
+    "videos": 10,
+    "actualGeneratedContainers": true,
+    "trackCounts": [
+      32,
+      64
+    ],
+    "allTrackCardsRendered": true,
+    "detailFailureKeepsList": true,
+    "otherVideoSelectable": true,
+    "retry": true,
+    "reloadDraft": true,
+    "embeddedLanguageSatisfiedWithoutExport": true,
+    "maxReplyBytes": 7634,
+    "trackPages": 20,
+    "mediaUnchanged": true,
+    "jsExceptions": 0,
+    "websiteVisited": false,
+    "exitCode": 0,
+    "output": "work\\test-results\\multitrack-1793078640103"
+  },
+  "frozenWindow": {
+    "passed": true,
+    "mode": "frozen",
+    "videos": 10,
+    "actualGeneratedContainers": true,
+    "trackCounts": [
+      32,
+      64
+    ],
+    "allTrackCardsRendered": true,
+    "detailFailureKeepsList": true,
+    "otherVideoSelectable": true,
+    "retry": true,
+    "reloadDraft": true,
+    "embeddedLanguageSatisfiedWithoutExport": true,
+    "maxReplyBytes": 7634,
+    "trackPages": 20,
+    "mediaUnchanged": true,
+    "jsExceptions": 0,
+    "websiteVisited": false,
+    "exitCode": 0,
+    "output": "work\\test-results\\multitrack-1793079228731"
+  },
+  "coreFrozenRegression": {
+    "passed": true,
+    "mode": "frozen",
+    "settingsCycles": 20,
+    "protocol": 2,
+    "qtImported": false,
+    "recoveryBanner": true,
+    "recoveryExplicitConfirmation": true,
+    "previewDoesNotModifyMedia": true,
+    "executeAndUndo": true,
+    "historyAfterReload": true,
+    "mediaRestored": true,
+    "jsExceptions": 0,
+    "websiteVisited": false,
+    "exitCode": 0,
+    "screenshots": [
+      "recovery-preview.png",
+      "organize-preview.png",
+      "organize-result.png",
+      "undo-result.png"
+    ]
+  },
+  "coreRegressionNote": "Only an empty-state CSS selector changed after this run; final EXE repeated the multitrack/retry scenario. Python and JavaScript implementations unchanged.",
+  "bundle": {
+    "entry": "outputs/releases/0.11.0-rc.3/YingXu/YingXu.exe",
+    "zip": "outputs/releases/0.11.0-rc.3/YingXu-0.11.0-rc.3-windows-x64.zip",
+    "bytes": 182626518,
+    "sha256": "6197eb93fb2fa6b0aa7f6ca8d430e22bafbf5759528182171838264fe33413b7",
+    "frozenPythonModules": 242,
+    "qtModules": [],
+    "runtime": "Electron + Python",
+    "sourcesCommittedAtBuild": true
+  },
+  "limits": [
+    "Generated samples only; user media not modified",
+    "No new full-site or performance/HDR certification",
+    "Unsigned; no clean Windows test by user request",
+    "Local candidate only; existing public release unchanged"
+  ]
+}

@@ -43,7 +43,7 @@ class WorkspaceDraftTests(unittest.TestCase):
         state=self.restart(crash=True)
         self.assertTrue(state['draft']['restored'])
         context=self.context_now()
-        first=self.client.call('review.details',{**context,'rowId':'video-1'})
+        first=self.client.details({**context,'rowId':'video-1'})
         second=self.client.call('review.details',{**context,'rowId':'video-2'})
         self.assertEqual(first['subtitles'][0]['name'],'Spare.en.srt')
         self.assertTrue(first['subtitles'][0]['manual'])

@@ -420,7 +420,9 @@ class Workspace:
                 return result
             index = data.index(params['rowId'])
             if action == 'review.details':
-                return data.rows[index]
+                return data.detail_header(index)
+            if action == 'review.detailPage':
+                return data.detail_page(index, params['section'], params.get('offset', 0), params.get('limit', 20))
             if action == 'review.candidates':
                 return self.launch('candidates', lambda worker: data.candidates(index, params.get('offset', 0), params.get('limit', 6)),
                                    lambda value: value, '正在比较候选…')
@@ -473,11 +475,15 @@ class Workspace:
 
 def list_row(row):
     embedded = row.get('embedded', {})
+    accepted = set(embedded.get('acceptedTrackIds', []))
+    shown_tracks = [track for track in embedded.get('tracks', []) if track['trackId'] in accepted][:2]
     return {key: row[key] for key in ('rowId', 'video', 'state', 'matchCount', 'subtitles', 'warnings', 'episode', 'embeddedSatisfied')} | {
         'video': {key: row['video'][key] for key in ('fileId', 'name', 'extension')},
-        'subtitles': [{key: sub[key] for key in ('name', 'language', 'score')} for sub in row['subtitles']],
-        'embedded': {'tracks': [{'trackId': track['trackId'], 'language': track['language']} for track in embedded.get('tracks', [])],
-                     'acceptedTrackIds': embedded.get('acceptedTrackIds', [])},
+        'subtitles': [{key: sub[key] for key in ('name', 'language', 'score')} for sub in row['subtitles'][:2]],
+        'warnings': row['warnings'][:1], 'warningCount': len(row['warnings']),
+        'embedded': {'tracks': [{'trackId': track['trackId'], 'language': track['language']} for track in shown_tracks],
+                     'acceptedTrackIds': [track['trackId'] for track in shown_tracks],
+                     'trackCount': len(embedded.get('tracks', [])), 'acceptedTrackCount': len(accepted)},
     }
 
 

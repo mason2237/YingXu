@@ -56,7 +56,7 @@ html[data-liquid-buttons=true] .status-filters button.liquid-button.selected:ena
 .inspector {border:1px solid var(--line);border-radius:0 11px 11px 0;background:transparent;overflow:hidden;}
 .inspector-heading {height:45px;background:color-mix(in srgb,var(--surface-soft) 60%,transparent);padding:0 18px;}.inspector-heading h2 {font-size:14px;color:var(--secondary);}
 .inspector-content {padding:20px 18px;}.inspector-content:has(.inspector-empty) {display:flex;align-items:center;justify-content:center;}
-.inspector-empty {display:flex;flex-direction:column;align-items:center;gap:21px;text-align:center;max-width:240px;}.inspector-empty > [data-icon] {color:var(--muted);opacity:.35;}.inspector-empty svg {width:47px;height:47px;stroke-width:1.25;}.inspector-empty p {font-size:14px;line-height:1.9;color:var(--muted);}
+.inspector-empty {display:flex;flex-direction:column;align-items:center;gap:21px;text-align:center;max-width:240px;}.inspector-empty > [data-icon] {color:var(--muted);opacity:.35;}.inspector-empty > svg,.inspector-empty > [data-icon] svg {width:47px;height:47px;stroke-width:1.25;}.inspector-empty p {font-size:14px;line-height:1.9;color:var(--muted);}
 .inspector-empty > span {color:var(--muted);opacity:.35;}
 .inspector-actions {background:transparent;}.subtitle-detail {background:color-mix(in srgb,var(--surface-raised) 75%,transparent);}
 .empty-state {background:var(--desktop-panel);inset:45px 0 31px;}.empty-icon {position:relative;width:86px;height:86px;border-radius:50%;background:radial-gradient(circle,#2672ee1d,#2151a307);color:#438bff;margin-bottom:22px;}

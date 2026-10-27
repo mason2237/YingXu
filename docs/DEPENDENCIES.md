@@ -1,6 +1,6 @@
 # 依赖、署名与重建
 
-当前版本 0.11.0-rc.2。源码与运行包仅使用 Electron + Python；额外 Python 运行依赖为 pymediainfo。Qt、PySide、Shiboken、QML 和旧 GUI 宿主已从当前源码及包中移除。
+当前版本 0.11.0-rc.3。源码与运行包仅使用 Electron + Python；额外 Python 运行依赖为 pymediainfo。Qt、PySide、Shiboken、QML 和旧 GUI 宿主已从当前源码及包中移除。
 
 ## 实际组件
 

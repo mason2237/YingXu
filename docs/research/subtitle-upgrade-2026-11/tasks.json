@@ -593,7 +593,7 @@
       "id": "YX-11",
       "title": "按已完成阶段完成 Windows 候选与发布验收",
       "priority": "P0_release_gate",
-      "status": "validated_windows_local_candidate",
+      "status": "published_prerelease",
       "depends_on": [
         "YX-00",
         "YX-01",
@@ -643,7 +643,8 @@
       "rollback": "保留当前已发布版本；候选未通过时不发布。",
       "completion_evidence": [
         "evidence/windows-validation.json",
-        "../../evidence/local-0.12.0-rc.2.json"
+        "../../evidence/local-0.12.0-rc.2.json",
+        "../../evidence/publication-0.12.0-rc.2.json"
       ],
       "included_in_local_candidate": "0.12.0-rc.2",
       "known_limitations": [
@@ -663,7 +664,11 @@
     "phase": "YX-00 至 YX-11 本地实施/候选完成；不自动发布",
     "baseline_local": "7f4b700",
     "clean_windows_test": "按用户原有要求取消，不作为阻塞；本机 Windows 验证保留",
-    "release": "不自动发布",
+    "release": {
+      "status": "published_prerelease",
+      "url": "https://github.com/mason2237/YingXu/releases/tag/v0.12.0-rc.2",
+      "publicSourceCommit": "d7af8af8034b81fe3a6ff2ef1ee103b8d6c1c5b6"
+    },
     "checkpoints": {
       "YX-00": "f83d89f",
       "YX-01": "codex/yx01-episode-coverage",

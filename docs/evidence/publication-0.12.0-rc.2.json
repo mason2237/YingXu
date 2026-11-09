@@ -1,0 +1,73 @@
+{
+  "version": "0.12.0-rc.2",
+  "repository": "mason2237/YingXu",
+  "url": "https://github.com/mason2237/YingXu/releases/tag/v0.12.0-rc.2",
+  "publishedAt": "2026-11-09T15:53:23Z",
+  "prerelease": true,
+  "publicSourceCommit": "d7af8af8034b81fe3a6ff2ef1ee103b8d6c1c5b6",
+  "localSourceSnapshotCommit": "8473a7b5e0235e7989f57a2a6f4412d003610661",
+  "binaryBuildSourceCommit": "a1a92505c7a2f0ef9c845f1ad7387c8c53cc0b4d",
+  "anonymousReleaseVisible": true,
+  "anonymousTaggedSourceVisible": true,
+  "tagCommitVerified": true,
+  "officialLicenseBytesVerified": true,
+  "assets": [
+    {
+      "name": "SHA256SUMS.txt",
+      "bytes": 199,
+      "sha256": "2a8bbd2ae194fea20eff77d657ec01e56d4edd06eca194c31ca03425339fc474",
+      "anonymousDownloadStatus": 200,
+      "url": "https://github.com/mason2237/YingXu/releases/download/v0.12.0-rc.2/SHA256SUMS.txt"
+    },
+    {
+      "name": "YingXu-0.12.0-rc.2-source.zip",
+      "bytes": 14972311,
+      "sha256": "ea6c56af539ae49241adef559c583a814bc7dc936d22a9613f839a5ccdbbb640",
+      "anonymousDownloadStatus": 206,
+      "url": "https://github.com/mason2237/YingXu/releases/download/v0.12.0-rc.2/YingXu-0.12.0-rc.2-source.zip"
+    },
+    {
+      "name": "YingXu-0.12.0-rc.2-windows-x64.zip",
+      "bytes": 203973895,
+      "sha256": "fcfc7322c582c6bff1d73721a38a4648fdf8ffbdcc033eda96a7ac39ae7e1f6f",
+      "anonymousDownloadStatus": 206,
+      "url": "https://github.com/mason2237/YingXu/releases/download/v0.12.0-rc.2/YingXu-0.12.0-rc.2-windows-x64.zip"
+    }
+  ],
+  "digestMethod": "GitHub-reported SHA256 and size equal full local files; full anonymous checksum download and bounded ZIP range downloads verify reachability.",
+  "runtimeSourceFilesVerified": 186,
+  "sourceFilesMatchPublicTree": 618,
+  "hostedCI": {
+    "id": 42648579082,
+    "head_sha": "d7af8af8034b81fe3a6ff2ef1ee103b8d6c1c5b6",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/mason2237/YingXu/actions/runs/42648579082",
+    "jobs": [
+      {
+        "id": 129268433763,
+        "name": "portable",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 129268434074,
+        "name": "windows",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "hostedWindowsTests": {
+    "total": 281,
+    "passed": 279,
+    "skipped": 2,
+    "skipReason": "Optional reference/audio tools absent on CI; real engines actually tested locally."
+  },
+  "publicationValidation": "docs/evidence/rc2-publication-validation.json",
+  "privateHistoryUploaded": false,
+  "oldTagsOrAssetsModified": false,
+  "oldRc3AssetDigestsPreserved": true,
+  "cleanWindowsTested": false,
+  "unsigned": true
+}

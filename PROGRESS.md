@@ -1,8 +1,8 @@
 # 当前开发检查点
 
-更新时间：2026-11-09（香港时间）。本轮“继续所有”已连续完成 YX-06 至 YX-11，交付 **0.12.0-rc.2 本地候选**。不自动上传 GitHub；根仓库无远端，不推送私有开发历史。
+更新时间：2026-11-09（香港时间）。本轮“继续所有”已连续完成 YX-06 至 YX-11，交付并按用户明确授权发布 **0.12.0-rc.2 预发布版**。根仓库无远端，使用隔离公共副本推送，不上传私有开发历史。
 
-后续用户已明确要求“继续，上传更新”：本次正在把同版发布至 mason2237/YingXu。发布中修复了云端 YAML/临时路径测试与实际原生归档编码问题，并重建候选；补充 25 项增量和两组真实冻结窗口通过；不改旧标签或旧资产，不上传私有历史。发布结果另存 docs/evidence/publication-0.12.0-rc.2.json。
+用户要求的上传已完成：[GitHub 发布页](https://github.com/mason2237/YingXu/releases/tag/v0.12.0-rc.2)。Windows/源码 ZIP 与摘要均可匿名访问，服务器 SHA256 与本地一致；发布标签 d7af8af，云端两组检查成功。完整记录见 docs/evidence/publication-0.12.0-rc.2.json。
 
 ## 交付与恢复
 
@@ -26,7 +26,7 @@
 
 入口：architecture.txt、todo.txt、docs/DEVELOPMENT.md。验收：docs/RELEASE_VALIDATION.md、docs/evidence/local-0.12.0-rc.2.json、docs/research/subtitle-upgrade-2026-11/evidence/windows-validation.json。ZIP/文件摘要及归档核对在交付目录旁档。
 
-本轮功能计划已完成；源码已推送公共历史，Windows 和跨平台云端检查均已通过，正在上传发行资产。发布前重建验证见 docs/evidence/rc2-publication-validation.json。未签名、未做干净 Windows/真实断电测试，不改 VPN、权限或 HDR 开关。持续高刷、独立实际呈现与真实片库准确率仍未验收，不用本次功能测试冒充。前一轮关闭窗口时记录一次 Chromium GPU 状态警告，正常退出且无 JS 异常，不能据此保证所有驱动的闪烁问题已解决。
+本轮功能计划已完成；源码与发行资产均已公开发布，Windows 和跨平台云端检查均已通过。发布前重建验证见 docs/evidence/rc2-publication-validation.json。未签名、未做干净 Windows/真实断电测试，不改 VPN、权限或 HDR 开关。持续高刷、独立实际呈现与真实片库准确率仍未验收，不用本次功能测试冒充。前一轮关闭窗口时记录一次 Chromium GPU 状态警告，正常退出且无 JS 异常，不能据此保证所有驱动的闪烁问题已解决。
 
 扫描/预览不改媒体；预览确认、一次性凭证、不覆盖始终保留。内嵌字幕语言符合即通过、不导出。测试仅生成样本和隔离 profile，无真实网站访问；网站验证码/登录仍需用户完成。参考文本辅助不是身份认证，仿射音频校准不保证修复不同剪辑；指纹仅覆盖头尾，不代表整段内容。详细阶段实验与局限保留在对应 evidence 和 CHANGELOG，不重复全套验收。
 

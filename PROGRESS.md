@@ -2,13 +2,13 @@
 
 更新时间：2026-11-09（香港时间）。本轮“继续所有”已连续完成 YX-06 至 YX-11，交付 **0.12.0-rc.2 本地候选**。不自动上传 GitHub；根仓库无远端，不推送私有开发历史。
 
-后续用户已明确要求“继续，上传更新”：本次正在把同版发布至 mason2237/YingXu。沿用已通过的功能验收，只更新发布材料、源码快照与公开可见性检查；不改旧标签或旧资产，不上传私有历史。发布结果另存 docs/evidence/publication-0.12.0-rc.2.json。
+后续用户已明确要求“继续，上传更新”：本次正在把同版发布至 mason2237/YingXu。发布中修复了云端 YAML/临时路径测试与实际原生归档编码问题，并重建候选；补充 25 项增量和两组真实冻结窗口通过；不改旧标签或旧资产，不上传私有历史。发布结果另存 docs/evidence/publication-0.12.0-rc.2.json。
 
 ## 交付与恢复
 
 - EXE：outputs/releases/0.12.0-rc.2/YingXu/YingXu.exe。
 - 完整包：outputs/releases/0.12.0-rc.2/YingXu-0.12.0-rc.2-windows-x64.zip；完整解压，保留同目录文件，先关闭旧版。
-- 构建源码：635b3157e7ef30c0740e8abfebe3c54229b9d98c，构建时工作区干净。后续文档/测试截图提交不改变已验证程序载荷。
+- 构建源码：a1a92505c7a2f0ef9c845f1ad7387c8c53cc0b4d，构建时工作区干净。后续文档/测试截图提交不改变已验证程序载荷。
 - 阶段提交：YX-06 07ef054、YX-07 ccd7efc、YX-08 a5a11eb、YX-09 1690fb0、YX-10 a18821c；YX-11 构建/许可/退出修复 e14c422、40f845a、ee8a561、2003714、635b315。
 - 旧 0.12.0-rc.1 与公开 0.11.0-rc.3 保留，不覆盖标签或资产。0.11/0.12 共用本地数据目录，升级前退出并备份整个 profile；回退使用升级前备份。
 
@@ -26,6 +26,8 @@
 
 入口：architecture.txt、todo.txt、docs/DEVELOPMENT.md。验收：docs/RELEASE_VALIDATION.md、docs/evidence/local-0.12.0-rc.2.json、docs/research/subtitle-upgrade-2026-11/evidence/windows-validation.json。ZIP/文件摘要及归档核对在交付目录旁档。
 
-本轮计划无剩余实施任务。未执行 GitHub 上传；远端 CI 首次运行待未来发布分支。未签名、未做干净 Windows/真实断电测试，不改 VPN、权限或 HDR 开关。持续高刷、独立实际呈现与真实片库准确率仍未验收，不用本次功能测试冒充。前一轮关闭窗口时记录一次 Chromium GPU 状态警告，正常退出且无 JS 异常，不能据此保证所有驱动的闪烁问题已解决。
+本轮功能计划已完成；源码已推送公共历史，Windows 和跨平台云端检查均已通过，正在上传发行资产。发布前重建验证见 docs/evidence/rc2-publication-validation.json。未签名、未做干净 Windows/真实断电测试，不改 VPN、权限或 HDR 开关。持续高刷、独立实际呈现与真实片库准确率仍未验收，不用本次功能测试冒充。前一轮关闭窗口时记录一次 Chromium GPU 状态警告，正常退出且无 JS 异常，不能据此保证所有驱动的闪烁问题已解决。
 
 扫描/预览不改媒体；预览确认、一次性凭证、不覆盖始终保留。内嵌字幕语言符合即通过、不导出。测试仅生成样本和隔离 profile，无真实网站访问；网站验证码/登录仍需用户完成。参考文本辅助不是身份认证，仿射音频校准不保证修复不同剪辑；指纹仅覆盖头尾，不代表整段内容。详细阶段实验与局限保留在对应 evidence 和 CHANGELOG，不重复全套验收。
+
+本次公开 CI 已验证：GitHub Actions 42648083136，Windows 与 portable 两组成功；缺工具的两项可选真实引擎检查明确跳过，本机引擎已实际验证。

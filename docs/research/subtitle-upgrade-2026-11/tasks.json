@@ -19,7 +19,7 @@
       "id": "YX-00",
       "title": "建立可复现测试基线与 Windows 验证入口",
       "priority": "P0",
-      "status": "completed_local_ci_pending",
+      "status": "validated_local_and_hosted_ci",
       "depends_on": [],
       "risk": "低；测试基础设施",
       "scope": "先解决环境诊断，不放宽业务安全策略",
@@ -679,6 +679,12 @@
       "YX-11": "635b315"
     },
     "candidate": "0.12.0-rc.2",
-    "remaining_implementation_tasks": []
+    "remaining_implementation_tasks": [],
+    "hosted_ci": {
+      "run": 42648083136,
+      "url": "https://github.com/mason2237/YingXu/actions/runs/42648083136",
+      "conclusion": "success",
+      "optional_engine_tests_skipped": 2
+    }
   }
 }

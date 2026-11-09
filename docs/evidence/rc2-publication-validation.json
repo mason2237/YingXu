@@ -1,0 +1,98 @@
+{
+  "version": "0.12.0-rc.2",
+  "sourceCommit": "a1a92505c7a2f0ef9c845f1ad7387c8c53cc0b4d",
+  "reason": "Native Windows archive listing encoding fix found during public CI; app uses actual ANSI encoding when UTF-8 decoding fails.",
+  "frozenIncremental": {
+    "tests": 25,
+    "passed": true,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "log": "work/test-results/rc2-publication-frozen.log",
+    "scope": "Native import adapter assertions use source; real host/synchronization cases use bundled EXEs."
+  },
+  "nativeArchiveTests": {
+    "tests": 14,
+    "passed": true,
+    "log": "work/test-results/rc2-ci-archive-capability-local.log",
+    "capability": "Local Windows decoded and extracted actual Chinese/bracketed 7z fixture. Unsupported Windows Server must explicitly reject without writing; test is not skipped."
+  },
+  "desktop": {
+    "features": {
+      "directory": "work/test-results/r11-desktop-1794239072392",
+      "report": {
+        "passed": true,
+        "mode": "frozen",
+        "nfoUI": true,
+        "qualityPreservesTimingPanel": true,
+        "manualPreview": true,
+        "realReferenceEngine": true,
+        "contentEvidence": true,
+        "explicitStage": true,
+        "mediaUnchanged": true,
+        "maxReplyBytes": 1234,
+        "jsExceptions": 0,
+        "websiteVisited": false,
+        "exitCode": 0,
+        "output": "work\\test-results\\r11-desktop-1794239072392"
+      }
+    },
+    "recovery": {
+      "directory": "work/test-results/r3-desktop-1794239075549",
+      "report": {
+        "passed": true,
+        "mode": "frozen",
+        "settingsCycles": 20,
+        "protocol": 2,
+        "qtImported": false,
+        "recoveryBanner": true,
+        "recoveryExplicitConfirmation": true,
+        "previewDoesNotModifyMedia": true,
+        "executeAndUndo": true,
+        "historyAfterReload": true,
+        "mediaRestored": true,
+        "jsExceptions": 0,
+        "websiteVisited": false,
+        "exitCode": 0,
+        "screenshots": [
+          "recovery-preview.png",
+          "organize-preview.png",
+          "organize-result.png",
+          "undo-result.png"
+        ]
+      }
+    }
+  },
+  "executables": {
+    "YingXu.exe": "68c3b1780ad2dd5d865177f860367dbbff9b976fee8f877cc4fe2b12a8e92945",
+    "python/YingXuBackend.exe": "2c4cdac592ccf8da549b5ba7392d392bc7f356abfe2cc7746307a540696dccd6",
+    "python/YingXuSync.exe": "77fec8925e7e60f67402538206e1fa842ebf8e7409614203041faae6ffaa7632"
+  },
+  "sourceRuntimeFiles": 187,
+  "cleanWindowsTested": false,
+  "realPowerLossTested": false,
+  "newHDRorRefreshCertification": false,
+  "noLocalInstallProvenance": true,
+  "hostedCI": {
+    "id": 42648083136,
+    "head_sha": "4e8314005771cef3d4766e4cf07d363e897b0a55",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/mason2237/YingXu/actions/runs/42648083136",
+    "jobs": [
+      {
+        "id": 129266666293,
+        "name": "portable",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 129266666836,
+        "name": "windows",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "scope": "Core suite; two optional real engine tests explicitly skipped without tools. Local engine tests actually ran."
+  }
+}

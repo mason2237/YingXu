@@ -1,0 +1,143 @@
+{
+  "date_hong_kong": "2026-11-09",
+  "task": "YX-02",
+  "baseline": "cf3d9d5",
+  "branch": "codex/yx02-release-metadata",
+  "status": "validated_source",
+  "windows_suite": {
+    "schema": 1,
+    "suite": "windows",
+    "environment": {
+      "python": "3.12.0",
+      "os": "Windows-11-10.0.26200-SP0",
+      "windows": true,
+      "media": {
+        "version": "7.0.1",
+        "dll_present": true,
+        "can_parse": true
+      }
+    },
+    "scope": "all tests",
+    "status": "completed",
+    "success": true,
+    "seconds": 20.516,
+    "total": 218,
+    "passed": 218,
+    "failures": [],
+    "errors": [],
+    "skipped": []
+  },
+  "final_incremental": {
+    "total": 19,
+    "passed": 19,
+    "log": "work/test-results/yx02-final-incremental.log",
+    "scope": "Final metadata/region/date, optional parser, migration, detail paging and architecture checks"
+  },
+  "frontend": {
+    "online": true,
+    "review_details": true
+  },
+  "score_compatibility": {
+    "baseline": "cf3d9d5",
+    "cases": [
+      {
+        "video": "Show.S01E01E02.mkv",
+        "subtitle": "Show.S01E01.chs.srt",
+        "conflict": true,
+        "before": 0.0,
+        "after": 0.0
+      },
+      {
+        "video": "Show.S01E01-E03.mkv",
+        "subtitle": "Show.S01E01.chs.srt",
+        "conflict": true,
+        "before": 0.0,
+        "after": 0.0
+      },
+      {
+        "video": "Show.S01E01E03.mkv",
+        "subtitle": "Show.S01E01E02.chs.srt",
+        "conflict": true,
+        "before": 0.0,
+        "after": 0.0
+      },
+      {
+        "video": "Show.Ｓ０１Ｅ０１.mkv",
+        "subtitle": "Show.S01E02.chs.srt",
+        "conflict": true,
+        "before": 0.0,
+        "after": 0.0
+      },
+      {
+        "video": "Show.S01E01.mkv",
+        "subtitle": "Show.S01E01.chs.srt",
+        "conflict": false,
+        "before": 1.0,
+        "after": 1.0
+      }
+    ],
+    "unchanged_single_episode_scores": 8100,
+    "one_run_seconds_not_a_performance_claim": {
+      "before": 0.027964800000063406,
+      "after": 0.009476200000335666
+    },
+    "format_recognition_is_not_quality": [
+      {
+        "file": "empty.ass",
+        "result": "subtitle_candidate"
+      },
+      {
+        "file": "reversed.srt",
+        "result": "subtitle_candidate"
+      }
+    ]
+  },
+  "source_window": {
+    "passed": true,
+    "variants": 5,
+    "purposeLabels": true,
+    "advisoryIdentity": true,
+    "correctVariantReplaced": true,
+    "forcedAndSDHRetained": true,
+    "reloadDraft": true,
+    "mediaUnchanged": true,
+    "jsExceptions": 0,
+    "websiteVisited": false,
+    "executablePackaged": false,
+    "exitCode": 0,
+    "output": "work\\test-results\\release-model-1794200496402"
+  },
+  "optional_parser": "optional-parser-trial.json",
+  "limits": [
+    "Counts overlap; not additive.",
+    "No new application EXE, GitHub upload, HDR or performance certification.",
+    "GuessIt is opt-in shadow metadata, not an allocation authority or default dependency.",
+    "Future richer matching and quality checks (YX-03 / YX-04) are not implemented.",
+    "No new clean Windows test; generated sample media only."
+  ],
+  "tested_source_sha256": {
+    "docs/research/subtitle-upgrade-2026-11/parser-trial/freeze.py": "c7e78a58c6c0b048770c79b8bd4032f851b6f4e7b6d429ecdaaeda5ab8168ca8",
+    "docs/research/subtitle-upgrade-2026-11/parser-trial/prepare.py": "376c98099b30778ebd1002c523b21fafd6aadd20ea452fc01267a5d481c1680f",
+    "docs/research/subtitle-upgrade-2026-11/parser-trial/probe.py": "651836ce225f01fac00c7a9897fdb7de9cf8d7a7361928ab85fe85f525749dd8",
+    "docs/research/subtitle-upgrade-2026-11/reproduce_matching.py": "b71c05b90d555771fc98f16edd44bebea8ff56f3e1a493ab9d3b5d1d179c2c75",
+    "frontend/js/components/icons.js": "c87fc6bdb55b27f570b5bc05ec10447b52c9fe0746c3217321573aa00fe0c1c8",
+    "frontend/js/components/inspector.js": "e0ab47eac3dd9f43ca1f4aedb56cf9f6df9cec38102cb53f28260362a3b1800e",
+    "frontend/js/components/local-dialogs.js": "0dc915562e60f46bbe0b4595da74972c29534d3ed46040eed347bbb1d14ec719",
+    "scripts/check_release_desktop.mjs": "66cf6df9d1c69d0d8f59e318e3b35e406145db36757f6fe354805072243b3915",
+    "tests/contract/test_release_parser.py": "46fb354e6e155742a645286fb69fffdf76b2c1a56672e8fc9683a64e9c6db732",
+    "tests/recovery/test_review_model_migration.py": "54f5d44727fec7c262ec700d1e845189f4872a6a4e977f353b41df982462b155",
+    "tests/unit/test_release_metadata.py": "5dad381b815bea3b6adac9e77dd8795ff07db09686efa1ec4000602127c7f85c",
+    "yingxu/adapters/guessit_parser.py": "2d480e2b5ba80dae1f4749b3c93fbec5e7a6230611141eda099f8118f94c1faf",
+    "yingxu/application/drafts.py": "6995e3cabe96782f6a9d4f32d7f4b633146ab5651e199606e285ba48baf20e1e",
+    "yingxu/application/recognition.py": "4da464a0abe38612b02581d21c9ec4788cd97d8157b10713cad9de6723144678",
+    "yingxu/application/reviewing.py": "4e52b5cc03493d2ed57d996258f0504191da1f849e027104a67c40d285f7768e",
+    "yingxu/application/scanning.py": "b1d5cc8f43c152beaf01d1f89630cdbe4c6f798b47697f9d5e6d739db386c58c",
+    "yingxu/application/workspace.py": "57704ac6cc24646f688a010239b2372db670d47fb9c1bff8ed20e1dd23d2683d",
+    "yingxu/desktop/host.py": "bcc2d265c22b03a10f7e098fcd68bcb5b73ef770d52ba1903193e89c15cdcb0e",
+    "yingxu/domain/matching.py": "48daa68448bad0f9c37d8dec4fb020c9513e4d193569720f9dd033953d181cdd",
+    "yingxu/domain/releases.py": "72d65c0f1dab683042e86eb0e63ad928e842a1dbe228c07e4f5c2527f76ae75d",
+    "yingxu/domain/review.py": "9eaa5099a16b3b143e9118409b6aa6aa96adc40c2b5cf074160e9429e99cdc10",
+    "yingxu/domain/subtitle_variants.py": "bca33472ed2c2c7ce345cfff59cd39afb6d6b360fd896feecef91d712f7f3e59",
+    "yingxu/ports/release_parser.py": "0d0b84bf10aafdeb1bdb4a3e2fa1a71b90585183a55e71589c1e4693e0a078a8"
+  }
+}

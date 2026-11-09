@@ -1,0 +1,93 @@
+{
+  "task": "YX-11",
+  "passed": true,
+  "version": "0.12.0-rc.2",
+  "source_commit": "635b3157e7ef30c0740e8abfebe3c54229b9d98c",
+  "full_report": "../../../evidence/local-0.12.0-rc.2.json",
+  "test_results": {
+    "source_baseline": {
+      "report": "work/test-results/yx11-source-windows.json",
+      "total": 279,
+      "passed": 279,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "scope": "Full source suite before final targeted fixes; final fixes verified incrementally."
+    },
+    "final_incremental": {
+      "tests": 28,
+      "passed": true,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "log": "work/test-results/yx11-frozen-host-release.log",
+      "backend": "python/YingXuBackend.exe",
+      "sync": "python/YingXuSync.exe",
+      "scope": "Host calls and real sync use frozen EXEs; pure policy/cache/Job assertions use source implementation."
+    },
+    "desktop_scenarios": 5,
+    "source_worker_fix": {
+      "tests": 7,
+      "passed": true,
+      "log": "work/test-results/yx11-worker-fix-source.log",
+      "scope": "Source fixed reference/audio engines, timeout, parent crash and descendant handles"
+    },
+    "payload": {
+      "version": "0.12.0-rc.2",
+      "modules": {
+        "YingXuBackend": {
+          "count": 270,
+          "sha256": "c2e6bf8fa6be01ee16a64a65a4ff898e888e80c2ca26f63223fbc2b688816f87",
+          "pyzSha256": "aa9f429e63a67177daeab91b97f33a37296067a1b24db05d0e1dea6863ab2f9b",
+          "forbidden": [],
+          "numpy": false,
+          "ffsubsync": false
+        },
+        "YingXuSync": {
+          "count": 1206,
+          "sha256": "44420c5f665331d57108ae88aa487b8ca1258e4eb4d44aea1329086a864e6648",
+          "pyzSha256": "dcbd3bf8df193c1706187be0bf8ff4303657c1faea4f0430146f27780b832239",
+          "forbidden": [],
+          "numpy": true,
+          "ffsubsync": true
+        }
+      },
+      "licenseFiles": 21,
+      "sourceFiles": 32,
+      "textFindings": [],
+      "sourceCommit": "635b3157e7ef30c0740e8abfebe3c54229b9d98c",
+      "exeSha256": "68c3b1780ad2dd5d865177f860367dbbff9b976fee8f877cc4fe2b12a8e92945",
+      "localInstallMetadataOmitted": true,
+      "passed": true
+    }
+  },
+  "known_limitations": [
+    "Unsigned candidate; no clean Windows or real power-loss test.",
+    "No sustained refresh-rate, independent presentation or HDR recertification; teardown GPU warning remains recorded.",
+    "Generated samples and isolated profiles only; no new real-world matching-accuracy claim or live subtitle-site certification.",
+    "Audio requires explicitly selected local FFmpeg; no FFmpeg binary, ASR/OCR or model is distributed.",
+    "Affine alignment rejects insufficient speech and inconsistent cuts; text evidence does not certify identity or automatically associate.",
+    "Test batches overlap and are not added together; hosted CI first run remains pending a future publish branch.",
+    "Private development history is not audited or published in this local candidate."
+  ],
+  "changed_files": [
+    "scripts/build_electron.py",
+    "scripts/build_sync_runtime.py",
+    "scripts/release_payload.py",
+    "scripts/sync_worker_entry.py",
+    "scripts/hooks/hook-webrtcvad.py",
+    "yingxu/desktop/streams.py",
+    "yingxu/adapters/sync_process_tree.py",
+    "yingxu/application/subtitle_needs.py",
+    "frontend/css/local-workspace.css",
+    "scripts/check_r11_desktop.mjs",
+    "scripts/check_needs_desktop.mjs",
+    "requirements-sync.txt",
+    "licenses/MPL-2.0.txt",
+    "PROGRESS.md",
+    "architecture.txt",
+    "todo.txt",
+    "CHANGELOG.md"
+  ],
+  "rollback": "Retain previous rc.1 and public rc.3 artifacts; exit app and restore pre-upgrade profile backup before rollback."
+}

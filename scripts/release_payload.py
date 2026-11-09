@@ -13,7 +13,8 @@ from yingxu.version import VERSION
 RUNTIME_PACKAGES = ('pymediainfo',)
 BUILD_PACKAGES = ('pyinstaller', 'pyinstaller-hooks-contrib', 'altgraph', 'packaging', 'pefile', 'pywin32-ctypes', 'setuptools')
 LEGAL_FILES = ('PolyForm-Noncommercial-1.0.0.txt', 'NotoSansSC-OFL.txt',
-               'pymediainfo-MIT.txt', 'MediaInfo-License.html', 'MediaInfo-ORIGIN.json', 'electron-LICENSE.txt')
+               'pymediainfo-MIT.txt', 'MediaInfo-License.html', 'MediaInfo-ORIGIN.json', 'electron-LICENSE.txt',
+               'MPL-2.0.txt', 'MPL-2.0-ORIGIN.json')
 
 
 def release_documents(folder, assets, *, inputs_path, source_hashes, **unused):
@@ -69,7 +70,12 @@ def release_documents(folder, assets, *, inputs_path, source_hashes, **unused):
         raise RuntimeError('Missing interpreter license')
     shutil.copy2(python_license,licenses/'Python-LICENSE.txt')
     documentation = folder/'docs';documentation.mkdir(exist_ok=True)
-    shutil.copy2(ROOT/'docs/DEPENDENCIES.md',documentation)
+    for name in ('DEPENDENCIES.md', 'RELEASE_VALIDATION.md'):
+        shutil.copy2(ROOT/'docs'/name,documentation)
+    evidence = ROOT/'docs/evidence'/f'local-{VERSION}.json'
+    if evidence.is_file():
+        (documentation/'evidence').mkdir(exist_ok=True)
+        shutil.copy2(evidence,documentation/'evidence'/evidence.name)
     shutil.copy2(ROOT/'architecture.txt',folder)
     manifest = {'version':VERSION,'status':'candidate','builtAt':datetime.now(timezone.utc).isoformat(),
                 **inputs,'python':sys.version,'dependencies':inventory,'applicationLicense':'PolyForm-Noncommercial-1.0.0',

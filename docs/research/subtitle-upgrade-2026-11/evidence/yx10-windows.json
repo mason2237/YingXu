@@ -1,0 +1,13 @@
+{
+  "task": "YX-10",
+  "passed": true,
+  "tests": 7,
+  "log": "work/test-results/yx10.log",
+  "scope": "same-language external reference and six name-ranked candidates; three text windows",
+  "video_bytes_read": 0,
+  "automatic_association": false,
+  "limits": [
+    "No OCR, ASR or implicit embedded track extraction.",
+    "Supplementary evidence only; no probability or release identity certification."
+  ]
+}

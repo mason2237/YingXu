@@ -1,7 +1,15 @@
 # 分发许可检查
 
-当前版本：0.11.0-rc.3。检查日期：2026-10-27。
-范围：实际分发组件的许可兼容性、署名、必要原文和来源校验。没有新增运行依赖。
+当前版本：0.12.0-rc.2 本地候选。检查日期：2026-11-09。
+范围：实际分发组件的许可兼容性、署名、必要原文和来源校验。
+
+核心业务使用 Python 标准库与原 pymediainfo。独立同步 worker 附 ffsubsync 0.5.1、NumPy、pysubs2、srt、ffmpeg-python、WebRTC VAD 及界面/编码等必要依赖；完整版本、来源摘要和许可见 SYNC_RUNTIME.json 与 licenses/sync-runtime/。这些组件以 MIT/BSD/Apache 等各自许可分发，不改变原创非商业许可。
+
+NumPy wheel 的完整许可证还包含所带 BLAS/LAPACK/GCC 运行库条款及适用的 GCC Runtime Library Exception，不能概括为“全部第三方都是 MIT”。随包保留整个原文、例外与上游给出的源码入口；不修改或删去这些声明。构建器按实际文件汇集全部许可附件。
+
+tqdm 4.67.1 采用 MPL-2.0/MIT 组合条款，随包保留原 LICENCE、Mozilla 官方完整 MPL-2.0 原文及未修改的 Python 源码（licenses/sync-runtime/tqdm/source/）和固定版本源码入口。官方原文来源与摘要见 licenses/MPL-2.0-ORIGIN.json。其独立源码不受映序原创非商业条款限制；Larger Work 不改变这些文件的许可。
+
+明确排除 GPL auditok、chardet/faust-cchardet、ASR/模型和 imageio-ffmpeg；仅启用固定引擎的 UTF-8 参考与 WebRTC 路径。实验使用的 FFmpeg 7.1 Gyan 构建未分发，应用只在用户选择后运行其本机 FFmpeg，因此未把该测试二进制及其 GPL 源码义务混入当前 ZIP。未来如捆绑 FFmpeg，需另行提供精确构建及全部对应源码。
 
 | 组件 | 许可与随包材料 |
 | --- | --- |

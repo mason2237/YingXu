@@ -22,6 +22,7 @@ INPUTS = BUILD/'release-inputs.json'
 DESKTOP_FILES = ('desktop/electron/main.cjs', 'desktop/electron/preload.cjs', 'desktop/electron/package.json',
                  'desktop/electron/online.cjs', 'desktop/electron/online-preload.cjs',
                  'scripts/desktop_backend_entry.py', 'scripts/build_electron.py', 'scripts/build_utils.py', 'scripts/release_payload.py', 'run_electron.py')
+DESKTOP_FILES += ('scripts/build_sync_runtime.py','scripts/sync_worker_entry.py','requirements-sync.txt','scripts/hooks/hook-webrtcvad.py')
 
 
 def source_hashes():
@@ -46,10 +47,16 @@ def validate_bundle(assets):
         part.lower().startswith(('pyside', 'pyqt', 'shiboken', 'qt6', 'qtwebengine')) for part in p.parts)]
     if forbidden:
         raise RuntimeError('Qt must not be distributed: '+str(forbidden[:5]))
+    if any(BUNDLE.rglob('*.dist-info/direct_url.json')):
+        raise RuntimeError('Local pip installation metadata must not be distributed')
     origin = json.loads((ROOT/'licenses/MediaInfo-ORIGIN.json').read_text(encoding='utf8'))
     if digest(internal/'pymediainfo/MediaInfo.dll') != origin['dllSha256']:
         raise RuntimeError('MediaInfo binary differs from the reviewed wheel')
     inputs = json.loads(INPUTS.read_text(encoding='utf8'))
+    if inputs.get('optionalSync'):
+        manifest=json.loads((BUNDLE/'SYNC_RUNTIME.json').read_text(encoding='utf8'))
+        if digest(BUNDLE/'python/YingXuSync.exe')!=manifest['workerSha256'] or manifest['ffmpegRedistributed']:
+            raise RuntimeError('Optional worker payload mismatch')
     if inputs['desktopSources'] != {name: digest(ROOT/name) for name in DESKTOP_FILES}:
         raise RuntimeError('Desktop sources changed since compilation; rebuild')
     for name in ('main.cjs', 'preload.cjs', 'package.json', 'online.cjs', 'online-preload.cjs'):
@@ -94,6 +101,7 @@ def finalize(assets, archive):
                      'profile': '%LOCALAPPDATA%/YingXu/Desktop', 'electron': ELECTRON_VERSION,
                      'electronArchiveSha256': ELECTRON_SHA256, 'unsigned': True,
                      'onlineContainer': 'Isolated Electron WebContentsView; no local preload or business authority'})
+    if (BUNDLE/'SYNC_RUNTIME.json').is_file():manifest['optionalSyncRuntime']=json.loads((BUNDLE/'SYNC_RUNTIME.json').read_text(encoding='utf8'))
     (BUNDLE/'BUILD_MANIFEST.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+'\n', encoding='utf8')
     hash_bundle(BUNDLE)
     if archive:
@@ -107,6 +115,7 @@ def main():
     parser.add_argument('--zip', action='store_true')
     parser.add_argument('--finalize-existing', action='store_true')
     parser.add_argument('--rebuild', action='store_true', help='Replace only this version generated candidate')
+    parser.add_argument('--with-sync',action='store_true',help='Include the reviewed private reference/audio worker, excluding FFmpeg')
     args = parser.parse_args()
     BUILD.mkdir(parents=True, exist_ok=True)
     if not BUNDLE.resolve().is_relative_to((ROOT/'outputs/releases').resolve()):
@@ -134,7 +143,7 @@ def main():
     inputs = {'host': 'electron', 'gitBase': subprocess.check_output(['git','rev-parse','HEAD'], cwd=ROOT, text=True).strip(),
               'uncommittedSourcesAtBuild': bool(subprocess.check_output(['git','status','--porcelain'], cwd=ROOT, text=True).strip()),
               'frontend': assets, 'pythonSources': source_hashes(),
-              'desktopSources': {name:digest(ROOT/name) for name in DESKTOP_FILES}, 'qml': {}}
+              'desktopSources': {name:digest(ROOT/name) for name in DESKTOP_FILES}, 'qml': {},'optionalSync':args.with_sync}
     INPUTS.write_text(json.dumps(inputs, indent=2)+'\n', encoding='utf8')
     version = staging/'windows-version.txt';version_resource(version)
     customize_executable(BUNDLE/'YingXu.exe', version)
@@ -153,6 +162,11 @@ def main():
     print('Compiling private Python helper; log: work/build/electron/pyinstaller.log', flush=True)
     with (BUILD/'pyinstaller.log').open('wb') as log:subprocess.run(command, cwd=ROOT, env=environment, stdout=log, stderr=subprocess.STDOUT, check=True)
     shutil.copytree(BUILD/'python-dist/YingXuBackend', BUNDLE/'python')
+    if args.with_sync:
+        python=ROOT/'.venv-sync/Scripts/python.exe'
+        if not python.is_file():raise RuntimeError('Optional reviewed worker build environment missing')
+        print('Compiling isolated optional worker; log: work/build/electron/sync-build.log',flush=True)
+        with (BUILD/'sync-build.log').open('wb') as log:subprocess.run([str(python),str(ROOT/'scripts/build_sync_runtime.py'),str(BUNDLE),str(version)],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,check=True)
     finalize(assets, args.zip)
     print(f'Portable app ready: {BUNDLE/"YingXu.exe"}', flush=True)
 

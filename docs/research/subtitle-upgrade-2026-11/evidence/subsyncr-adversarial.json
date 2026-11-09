@@ -1,0 +1,10 @@
+{
+  "commit": "b63c2c6ca21880b896d3c8edfa3e1b39dced9e17",
+  "call": "propose_matches([Path('Alpha.S01E01.mkv')], [Path('Zebra.S01E01.en.srt')])",
+  "video": "Alpha.S01E01.mkv",
+  "subtitle": "Zebra.S01E01.en.srt",
+  "confidence": 100.0,
+  "method": "identifier",
+  "reasons": ["episode identifier s1e1 is unique on both sides"],
+  "interpretation": "A counterexample to treating unique season/episode markers as sufficient work identity."
+}

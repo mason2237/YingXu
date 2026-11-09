@@ -27,6 +27,8 @@ class ProviderCapabilities:
     search: InteractionMode
     download: InteractionMode
     resumable_download: bool = False  # Still requires per-response Range validation.
+    local_files: bool = False
+    api_credentials: bool = False
 
 
 @dataclass(frozen=True)

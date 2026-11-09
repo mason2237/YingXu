@@ -1,0 +1,24 @@
+[
+  {
+    "case": "offset",
+    "input_scale": 1.0,
+    "input_offset_seconds": 2.5,
+    "cue_count": 100,
+    "max_start_error_seconds": 0.0,
+    "input_unchanged": true,
+    "text_unchanged": true,
+    "retval": 0,
+    "sync_was_successful": true
+  },
+  {
+    "case": "drift",
+    "input_scale": 1.0416666666666667,
+    "input_offset_seconds": 2.5,
+    "cue_count": 100,
+    "max_start_error_seconds": 0.001,
+    "input_unchanged": true,
+    "text_unchanged": true,
+    "retval": 0,
+    "sync_was_successful": true
+  }
+]

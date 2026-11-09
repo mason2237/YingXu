@@ -5,14 +5,23 @@ from pathlib import Path
 import re
 from uuid import uuid4
 
-from ..domain.matching import extract_episode, is_same_path
+from ..domain.matching import episode_conflict, episode_identity, extract_episode, is_same_path
 from ..domain.review import ReviewPlan, language_of, path_key
 from ..domain.errors import ProtocolError
+from ..domain.subtitle_variants import variant_of
+from ..domain.match_assessment import POLICY_VERSION
+from .recognition import Recognition
 
 
 def episode(path):
-    key = extract_episode(path.stem)
-    return (f"S{key[0]:02d}E{key[1]:02d}" if key[0] is not None else f"第 {key[1]} 集") if key else "未识别集数"
+    key = episode_identity(path.stem)
+    if key is None:
+        return "未识别集数"
+    if not key.complete:
+        return "季集范围需核对"
+    numbers = sorted(key.episodes)
+    return (f"S{key.season:02d}" + "".join(f"E{number:02d}" for number in numbers)
+            if key.season is not None else "第 " + "、".join(map(str, numbers)) + " 集")
 
 
 def natural(value):
@@ -21,7 +30,7 @@ def natural(value):
 
 
 class ReviewData:
-    def __init__(self, review: ReviewPlan, register, *, scan_id=None, revision=1, warnings=()):
+    def __init__(self, review: ReviewPlan, register, *, scan_id=None, revision=1, warnings=(), recognition=None):
         self.review, self.register = review, register
         self.exists = review._exists
         self.scan_id, self.revision = scan_id or uuid4().hex, revision
@@ -29,6 +38,7 @@ class ReviewData:
         self.warning_count = len(self.scan_warnings)
         self.subtitle_ids = {register(path): path for path in review.subtitles}
         self._query_cache = None
+        self.recognition = recognition or Recognition()
         self.rebuild()
 
     def rebuild(self, indices=None):
@@ -37,15 +47,33 @@ class ReviewData:
             row = self.review.rows[index]
             subtitles, warnings = [], []
             for match in row.matches:
+                variant = variant_of(match.source)
                 target = match.target
                 if target and not is_same_path(match.source, target) and self.exists(target):
                     warnings.append({"code":"TARGET_EXISTS", "message":f"目标名称已被占用：{target.name}。请重新扫描。"})
                 subtitles.append({"subtitleId":self.register(match.source), "name":match.source.name,
                     "displayPath":str(match.source), "targetName":target.name if target else "",
                     "targetPath":str(target) if target else "", "language":language_of(match.source),
+                    "variantKey":variant.key, "variantLabel":variant.label,
                     "score":match.score, "manual":match.manual, "confirmed":match.confirmed,
                     "imported":path_key(match.source) in self.review.imported})
+                upgrade=self.review.upgrades.get(path_key(match.source))
+                if upgrade:
+                    subtitles[-1]['preservedOriginal']=Path(upgrade['original']).name
             basis = [f"已识别 · {episode(row.video)}"] if extract_episode(row.video.stem) else []
+            basis.extend(self.recognition.lines(row.video.name))
+            if identity:=self.review.identities.get(path_key(row.video)):
+                basis.append(f"当前作品人工标识 · {identity['kind']} · IMDb {identity['id']}，不会传播给相邻文件")
+            for match in row.matches:
+                assessment=self.review.assessment.assess(row.video,match.source)
+                basis.extend(f'{match.source.name} · {text}' for text in (*assessment.evidence,*assessment.why_review))
+            for rank,path in enumerate(self.review.assessment.leaders(row.video),1):
+                assessment=self.review.assessment.assess(row.video,path)
+                margins=' / '.join(f'{label} {value*100:+.1f} 分' for label,value in
+                    (('视频侧差距',assessment.video_margin),('字幕侧差距',assessment.subtitle_margin)) if value is not None)
+                basis.append(f'同版分组候选 {rank} · {path.name} · 匹配分 {assessment.score*100:.1f}'+(f' · {margins}' if margins else ''))
+            if any(match.needs_review and not match.confirmed for match in row.matches):
+                basis.append('识别模型已升级，原关联已保留；请重新核对并确认')
             if not row.uses_embedded:
                 basis.append("评分来自原有文件名相似度算法，不代表准确概率")
             if row.embedded:
@@ -54,6 +82,9 @@ class ReviewData:
                     basis.append("语言依据字幕轨标签或标题；只读取信息，不导出字幕或改动视频")
             if any(match.manual for match in row.matches):
                 basis.append("人工指定保留原评分，核对后确认")
+            for match in row.matches:
+                if upgrade:=self.review.upgrades.get(path_key(match.source)):
+                    basis.append(f"升级候选待审阅 · 保留原字幕 {Path(upgrade['original']).name}；新文件单独命名，不覆盖，仍需最终预览确认")
             imported_count = sum(meta["rowIndex"] == index for meta in self.review.imported.values())
             if imported_count:
                 basis.append(f"已导入 {imported_count} 份在线字幕候选；下载来源不证明版本或时间轴一致")
@@ -65,6 +96,7 @@ class ReviewData:
                 "embedded": {**row.embedded, "active": row.uses_embedded, "ignored": row.embedded_ignored},
                 "embeddedSatisfied": row.uses_embedded,
                 "importedCandidateCount":imported_count}
+            rows[index]['matchPolicy']=POLICY_VERSION
         self.rows = rows
         self.by_id = {row["rowId"]:index for index, row in enumerate(rows)}
         self.counts = dict(Counter(self.state(row) for row in rows)); self.counts["all"] = len(rows)
@@ -125,24 +157,26 @@ class ReviewData:
         return result
 
     def candidates(self, index, offset=0, limit=50):
-        row = self.review.rows[index]; video_key = extract_episode(row.video.stem)
+        row = self.review.rows[index]
         candidates = self.review.candidates(index); rows = []
         # Cache UUIDs must not arbitrarily reorder equal-score versions/languages.
         candidates.sort(key=lambda item: (0, -item[1], item[0].name.casefold())
             if self.review.imported.get(path_key(item[0]), {}).get("rowIndex") == index else (1, 0, ""))
         for rank, (path, score, owner, language) in enumerate(candidates[offset:offset+limit], offset):
-            sub_key = extract_episode(path.stem)
-            conflict = bool(video_key and sub_key and (video_key[1] != sub_key[1] or
-                (video_key[0] is not None and sub_key[0] is not None and video_key[0] != sub_key[0])))
+            variant = variant_of(path)
+            assessment = self.review.assessment.assess(row.video,path)
+            conflict = bool(assessment.conflicts)
             current = any(match.source == path for match in row.matches)
             other = owner is not None and owner != index
-            reason = "已关联其他视频，请先移除原关联" if other else "当前已关联" if current else "集数不一致，请谨慎核对" if conflict else "按原有名称相似度排序，请核对片源与语言"
+            reason = "已关联其他视频，请先移除原关联" if other else "当前已关联" if current else '；'.join(assessment.why_review) or "名称与已知版本信息符合，请核对字幕内容"
             imported = self.review.imported.get(path_key(path))
             if imported and not other and not current:
                 reason = "在线导入 · " + ("搜索此视频时下载；" if imported["rowIndex"] == index else "来自其他视频搜索；") + "请核对实际文件、集数和片源"
             rows.append({"subtitleId":self.register(path), "name":path.name, "displayPath":str(path),
+                "variantKey":variant.key, "variantLabel":variant.label,
+                "assessment":assessment.dto(),
                 "language":language, "score":score, "episode":episode(path), "conflict":conflict,
-                "reason":reason, "disabled":other or current, "recommended":rank == 0, "rank":rank,
+                "reason":reason, "disabled":other or current, "recommended":rank == 0 and assessment.auto_eligible, "rank":rank,
                 "imported":bool(imported)})
         return {"rows":rows,"total":len(candidates),"offset":offset,"limit":limit}
 

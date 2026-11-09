@@ -15,6 +15,9 @@ from .subtitle_downloads import safe_filename, inspect_download, MAX_DOWNLOAD_BY
 from .subtitle_imports import prepare_download, private_path
 from .subtitle_sites.websites import website_for
 from .subtitle_sites.zimuku import public_https, source_url
+from .subtitle_reader import LocalSubtitleReader
+from ..domain.subtitle_quality import analyze
+from ..domain.matching import check_cancelled
 
 
 class LocalSubtitleArtifacts:
@@ -157,14 +160,18 @@ class LocalSubtitleArtifacts:
         files, warnings = prepare_download(path, self.root, file_mark(path), should_stop=stop)
         outputs = []
         for item in files:
+            check_cancelled(stop)
             private_path(item.path, self.root)
             with item.path.open('r+b') as stream:
                 os.fsync(stream.fileno())
+            quality=analyze(LocalSubtitleReader().read(item.path,should_stop=stop),should_stop=stop).summary()
             outputs.append({'relative': str(item.path.relative_to(self.directory(identifier))),
-                            'name': item.original_name, 'mark': asdict(item.mark), 'digest': digest(item.path)})
+                            'name': item.original_name, 'mark': asdict(item.mark), 'digest': digest(item.path),
+                            'quality':{key:quality[key] for key in ('status','format','encoding','cueCount','issueCount','complete','errors','warnings')}})
+            if quality['status']!='clean':warnings.append(f'{item.original_name}：字幕质检需核对（{quality["status"]}），未自动修复。')
         if before != digest(path):
             raise ValueError('解压过程中源文件发生变化。')
-        self.update(identifier, status='ready', message='已验证并准备好；等待导入审阅。',
+        self.update(identifier, status='ready', message='安全检查完成；字幕质量可单独核对，等待导入审阅。',
                     prepared=outputs, warnings=warnings[:20])
         return outputs
 
@@ -180,6 +187,18 @@ class LocalSubtitleArtifacts:
                 raise ValueError('已验证的字幕发生变化，请重新下载。')
             values.append(path)
         return values
+
+    def prepared_for_quality(self, identifier, index):
+        """Authorize one cached snapshot without hashing every other member."""
+        record=self.get(identifier)
+        if record['status']!='ready' or not 0<=index<len(record['prepared']):
+            raise ValueError('这份字幕尚未准备好或索引无效。')
+        output=record['prepared'][index]
+        path=self.directory(identifier)/output['relative']
+        private_path(path,self.directory(identifier))
+        if asdict(file_mark(path))!=output['mark']:
+            raise ValueError('已验证的字幕身份发生变化，请重新下载。')
+        return path,output['digest']
 
     def discard(self, identifier, protected):
         record = self.get(identifier)

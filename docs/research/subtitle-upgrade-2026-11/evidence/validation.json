@@ -1,0 +1,114 @@
+{
+  "date_shanghai": "2026-11-09",
+  "baseline": "c7b8056b35d02e335723366e9916512032133a13",
+  "release": {
+    "tag": "v0.11.0-rc.3",
+    "commit": "8ec090ff7b49a5b43c576339f1e53ab41456c33b",
+    "prerelease": true
+  },
+  "remote_checks": {
+    "workflow_runs": 0,
+    "commit_status": "pending",
+    "reported_statuses": 0
+  },
+  "tests": [
+    {
+      "command": "python -S -m unittest discover -s tests -v",
+      "scope": "initial baseline, fresh checkout, Linux",
+      "total": 198,
+      "passed": 141,
+      "failures": 2,
+      "errors": 32,
+      "skipped": 23,
+      "log": "yingxu-baseline.log"
+    },
+    {
+      "command": "python -S -m unittest discover -s tests/unit -v",
+      "scope": "before changes",
+      "total": 37,
+      "passed": 37,
+      "log": "yingxu-unit-before.log"
+    },
+    {
+      "command": "python -S -m unittest discover -s tests/unit -v",
+      "scope": "after changes",
+      "total": 44,
+      "passed": 44,
+      "log": "yingxu-unit-after.log"
+    },
+    {
+      "command": "python -S -m unittest discover -s tests/contract -p test_core.py -v",
+      "scope": "after changes",
+      "total": 15,
+      "passed": 15,
+      "log": "yingxu-core-after.log"
+    },
+    {
+      "command": "python -S -m unittest discover -s tests/contract -p test_subtitle_sources.py -v",
+      "scope": "after changes",
+      "total": 11,
+      "passed": 11,
+      "log": "yingxu-sources-after.log"
+    },
+    {
+      "command": "python -S -m unittest discover -s tests/integration -p test_embedded_subtitles.py -v",
+      "scope": "research venv with pymediainfo 7.0.1, Linux",
+      "total": 19,
+      "passed": 18,
+      "errors": 1,
+      "log": "yingxu-embedded.log",
+      "limitation": "Adapter requires MediaInfo.dll; Linux pymediainfo install does not satisfy Windows-native dependency."
+    },
+    {
+      "command": "node tests/frontend/online.cjs && node tests/frontend/visibility.cjs && node tests/frontend/review_details.cjs",
+      "scripts": 3,
+      "passed_scripts": 3,
+      "log": "frontend.log",
+      "scope": "frontend contracts; no Electron window proof"
+    },
+    {
+      "repository": "SubSyncr",
+      "scope": "matcher, language, speech_cache, output, boundary",
+      "total": 57,
+      "passed": 57,
+      "log": "subsyncr-tests.log"
+    },
+    {
+      "repository": "GuessIt",
+      "scope": "test_api.py, test_yml.py",
+      "total": 2344,
+      "passed": 2344,
+      "warnings": 1,
+      "log": "guessit-tests.log"
+    },
+    {
+      "repository": "ffsubsync",
+      "scope": "alignment, quality_gate, split_aligner, multi_segment",
+      "total": 36,
+      "passed": 36,
+      "log": "ffsubsync-tests.log"
+    }
+  ],
+  "probes": {
+    "matching": "matching-probe.json",
+    "sync": "sync-probe.json",
+    "subsyncr_wrong_show": "subsyncr-adversarial.json"
+  },
+  "not_executed": [
+    "Windows EXE build and clean Windows acceptance",
+    "real-film audio VAD/synchronization",
+    "live provider search/download",
+    "full upstream suites",
+    "Subtitle Edit / EpisodeMatcher .NET suites"
+  ],
+  "baseline_error_categories": {
+    "missing_test_output_directory": 9,
+    "direct_unsupported_platform": 9,
+    "host_startup_timeouts": 13,
+    "mediainfo_helper": 1
+  },
+  "baseline_failures": [
+    "integration.test_operations.OperationContracts.test_permission_error_is_per_file_and_recorded",
+    "integration.test_operations.OperationContracts.test_target_created_during_rename_is_not_overwritten"
+  ]
+}

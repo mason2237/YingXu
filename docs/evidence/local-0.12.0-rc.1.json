@@ -1,0 +1,147 @@
+{
+  "version": "0.12.0-rc.1",
+  "date_hong_kong": "2026-11-09",
+  "status": "local-candidate-validated",
+  "source_commit": "7d3bfb091bba53bee2a52d01d062b7ac6e25ad45",
+  "uncommitted_sources_at_build": false,
+  "environment": {
+    "windows": "Windows-11-10.0.26200-SP0",
+    "architecture": "AMD64",
+    "runtime": "Electron 45.0.0 + frozen Python 3.12"
+  },
+  "artifacts": {
+    "entry": "outputs/releases/0.12.0-rc.1/YingXu/YingXu.exe",
+    "zip": "outputs/releases/0.12.0-rc.1/YingXu-0.12.0-rc.1-windows-x64.zip",
+    "zip_sha256": "outputs/releases/0.12.0-rc.1/YingXu-0.12.0-rc.1-windows-x64.zip.sha256",
+    "exe_sha256": "4ab06fcd9e5c3a7d1e7625e06b1fa412472e90d43f237f9870f312a5bbec4601"
+  },
+  "quality_desktop": {
+    "report": {
+      "passed": true,
+      "mode": "frozen",
+      "sourceWindow": false,
+      "executablePackaged": true,
+      "reverseTimeLocated": true,
+      "paging": true,
+      "encodingChoice": true,
+      "pureTextPreview": true,
+      "issueFailureKeepsList": true,
+      "downloadQualityUI": true,
+      "onlineLocalAPIRestricted": true,
+      "mediaUnchanged": true,
+      "maxReplyBytes": 2375,
+      "jsExceptions": 0,
+      "websiteVisited": false,
+      "exitCode": 0,
+      "output": "work\\test-results\\quality-desktop-1794206469722"
+    },
+    "evidence_directory": "work/test-results/quality-desktop-1794206469722"
+  },
+  "variants_desktop": {
+    "report": {
+      "passed": true,
+      "variants": 5,
+      "purposeLabels": true,
+      "advisoryIdentity": true,
+      "correctVariantReplaced": true,
+      "forcedAndSDHRetained": true,
+      "reloadDraft": true,
+      "mediaUnchanged": true,
+      "jsExceptions": 0,
+      "websiteVisited": false,
+      "mode": "frozen",
+      "executablePackaged": true,
+      "exitCode": 0,
+      "output": "work\\test-results\\release-model-1794206503624"
+    },
+    "evidence_directory": "work/test-results/release-model-1794206503624"
+  },
+  "recovery_desktop": {
+    "report": {
+      "passed": true,
+      "mode": "frozen",
+      "settingsCycles": 20,
+      "protocol": 2,
+      "qtImported": false,
+      "recoveryBanner": true,
+      "recoveryExplicitConfirmation": true,
+      "previewDoesNotModifyMedia": true,
+      "executeAndUndo": true,
+      "historyAfterReload": true,
+      "mediaRestored": true,
+      "jsExceptions": 0,
+      "websiteVisited": false,
+      "exitCode": 0,
+      "screenshots": [
+        "recovery-preview.png",
+        "organize-preview.png",
+        "organize-result.png",
+        "undo-result.png"
+      ]
+    },
+    "evidence_directory": "work/test-results/r3-desktop-1794206541053"
+  },
+  "frozen_host": {
+    "passed": true,
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "log": "work/test-results/local-012rc1-frozen-host.log",
+    "cases": [
+      "downloaded invalid SRT quality",
+      "report paging and stale context",
+      "400 Unicode diagnostics within 8192-byte protocol",
+      "embedded preferred language passes without extraction",
+      "conflict preserves existing file",
+      "download/extract/restart/import/execute/export/cache protection/undo"
+    ]
+  },
+  "frozen_module_audit": {
+    "passed": true,
+    "inspected": "Packaged YingXuBackend.exe embedded PYZ.pyz",
+    "backendSha256": "d70b3e91930db9807d7f973807a35d6db385ed2a60a001102216887484d8aa49",
+    "moduleCount": 253,
+    "qtModules": [],
+    "guessitBundled": false,
+    "qualityModulesBundled": [
+      "yingxu.domain.match_assessment",
+      "yingxu.domain.subtitle_document",
+      "yingxu.domain.subtitle_quality",
+      "yingxu.application.quality",
+      "yingxu.adapters.subtitle_reader"
+    ]
+  },
+  "resources": {
+    "production_frontend_assets": 66,
+    "reviewed_source_and_asset_digests_checked_by_builder": true,
+    "licenses_and_origins_checked_by_builder": true,
+    "no_new_runtime_dependency": true
+  },
+  "visual_inspection": {
+    "image": "work/test-results/quality-desktop-1794206469722/quality.png",
+    "observations": "Rendered window, list and Chinese quality preview remain visible; text and controls fit within the captured window."
+  },
+  "diagnostic_log_notes": [
+    "Online permission-rejection diagnostic was deliberately triggered by a negative test.",
+    "Quality window close logged a pending request rejected after backend exit; normal process exit 0 and no renderer JS exception.",
+    "Recovery smoke logged one Chromium GPU state warning at teardown; no renderer JS exception and normal exit 0. This is not a new frame-pacing certification."
+  ],
+  "scope": {
+    "generated_samples_only": true,
+    "isolated_profiles": true,
+    "uses_bundled_backend": true,
+    "website_visited": false,
+    "github_upload": false,
+    "old_releases_preserved": true,
+    "system_settings_changed": false
+  },
+  "limits": [
+    "Unsigned candidate; no clean Windows test.",
+    "Prior source suites retained; counts overlap and are not summed.",
+    "No new real-world matching-accuracy, sustained high-refresh or HDR recertification.",
+    "Read-only quality does not prove release identity or timing synchronisation and does not repair files.",
+    "A forced process exit is not a real power-loss test.",
+    "Future YX-05 and later feature cards are not part of this local candidate."
+  ]
+}

@@ -1,0 +1,38 @@
+# Research environment only; not YingXu runtime dependencies.
+# ffsubsync and guessit were built from source-lock.json commits.
+# For exact reproduction, install their checked-out source with --no-deps after other packages.
+auditok==0.1.5
+babelfish==0.6.1
+chardet==7.7.0
+charset-normalizer==3.5.2
+faust-cchardet==3.2.0
+ffmpeg-python==0.2.0
+ffsubsync==0.5.1
+future==1.0.0
+guessit==4.4.0
+iniconfig==2.3.1
+markdown-it-py==4.2.0
+mdurl==0.1.2
+numpy==2.5.4
+packaging==26.3
+pip==25.0.1
+platformdirs==4.14.5
+pluggy==1.7.0
+py-cpuinfo2==10.1.1
+Pygments==2.21.0
+pymediainfo==7.0.1
+pysubs2==1.9.1
+pytest-benchmark==5.3.1
+pytest-mock==3.17.0
+pytest-timeout==2.4.0
+pytest==9.2.0
+python-dateutil==4.0.0
+PyYAML==6.0.3
+RapidFuzz==3.14.6
+rebulk==6.0.1
+rich==15.0.0
+srt==3.5.3
+tqdm==4.70.1
+typing_extensions==4.16.0
+tzdata==2026.6
+webrtcvad-wheels==2.0.14.post1

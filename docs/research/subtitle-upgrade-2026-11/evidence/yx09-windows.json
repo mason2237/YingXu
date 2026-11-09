@@ -1,0 +1,115 @@
+{
+  "task": "YX-09",
+  "passed": true,
+  "tests": 11,
+  "log": "work/test-results/yx09.log",
+  "audio": [
+    {
+      "status": "succeeded",
+      "scale": 1.0,
+      "offsetMs": -2370,
+      "engine": "ffsubsync-0.5.1",
+      "metrics": {
+        "scope": "entire owned Job, including Python launcher and FFmpeg; excludes parent hashing",
+        "peakJobMemoryBytes": 85520384,
+        "readBytes": 129557209,
+        "writeBytes": 36824324,
+        "cpuSeconds": 0.984375,
+        "processCount": 4
+      },
+      "quality": {
+        "accepted": true,
+        "reason": "三个时间窗口通过重叠核对",
+        "overlap": 0.9223,
+        "windows": [
+          0.9127,
+          0.9231,
+          0.9316
+        ]
+      },
+      "cacheHit": false,
+      "seconds": 1.1410000000005311
+    },
+    {
+      "status": "succeeded",
+      "scale": 0.96,
+      "offsetMs": -2270,
+      "engine": "ffsubsync-0.5.1",
+      "metrics": {
+        "scope": "entire owned Job, including Python launcher and FFmpeg; excludes parent hashing",
+        "peakJobMemoryBytes": 48660480,
+        "readBytes": 8055683,
+        "writeBytes": 3023,
+        "cpuSeconds": 0.453125,
+        "processCount": 3
+      },
+      "quality": {
+        "accepted": true,
+        "reason": "三个时间窗口通过重叠核对",
+        "overlap": 0.9223,
+        "windows": [
+          0.9127,
+          0.9231,
+          0.9316
+        ]
+      },
+      "cacheHit": true,
+      "seconds": 0.7179999999998472
+    }
+  ],
+  "benchmark": [
+    {
+      "case": "cold",
+      "seconds": 1.125,
+      "cacheHit": false,
+      "status": "succeeded",
+      "mediaBytes": 16896862,
+      "workers": 1,
+      "metrics": {
+        "scope": "entire owned Job, including Python launcher and FFmpeg; excludes parent hashing",
+        "peakJobMemoryBytes": 85876736,
+        "readBytes": 129618957,
+        "writeBytes": 36824359,
+        "cpuSeconds": 1.046875,
+        "processCount": 4
+      }
+    },
+    {
+      "case": "hot",
+      "seconds": 0.781,
+      "cacheHit": true,
+      "status": "succeeded",
+      "mediaBytes": 16896862,
+      "workers": 1,
+      "metrics": {
+        "scope": "entire owned Job, including Python launcher and FFmpeg; excludes parent hashing",
+        "peakJobMemoryBytes": 48599040,
+        "readBytes": 8055683,
+        "writeBytes": 3022,
+        "cpuSeconds": 0.390625,
+        "processCount": 3
+      }
+    }
+  ],
+  "before_thread_limit_peak_job_bytes": 726302720,
+  "tests_include": [
+    "real generated speech offset/drift <=300ms cue start error",
+    "silence/sparse/wrong track/wrong version/severe split refused",
+    "corrupt cache rebuild and same-size/same-time middle edit invalidation",
+    "parent crash kills owned child Job",
+    "protected transformation cache",
+    "timeouts and forged success rejected"
+  ],
+  "ffmpeg_test_build": {
+    "version": "7.1-essentials_build-www.gyan.dev",
+    "sha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+    "redistributed": false
+  },
+  "limits": [
+    "Only reviewed ffsubsync/WebRTC engine, no unreviewed fallback.",
+    "Affine alignment; severe segmented cuts are refused, not automatically repaired.",
+    "FFmpeg remains user-selected external tool and is not shipped due corresponding-source requirements.",
+    "Max four-hour analysis; full-content hashing verifies cache only on user-triggered audio action.",
+    "Benchmark is generated media and Job counters, not main-window memory or refresh certification."
+  ]
+}

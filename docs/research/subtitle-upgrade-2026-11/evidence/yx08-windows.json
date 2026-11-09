@@ -1,0 +1,14 @@
+{
+  "task": "YX-08",
+  "passed": true,
+  "tests": 10,
+  "log": "work/test-results/yx08.log",
+  "engine": "ffsubsync 0.5.1 optional isolated worker",
+  "reference_cases": "two generated 100-cue offset/drift; max start error <= 1 ms",
+  "gpl_auditok_installed": false,
+  "original_media_modified": false,
+  "limits": [
+    "Reference/cue interval quality is not proof of identity.",
+    "Optional audio is next stage; not enabled by this checkpoint."
+  ]
+}

@@ -1,16 +1,19 @@
 """One authority for browser-assisted search. Views only send commands/facts."""
 import json
+import time
+import random
 from uuid import uuid4
 
 from ..domain.errors import ProtocolError
 from ..domain.models import ACTIVE_PHASES, SubtitlePhase, WorkflowCommand, WorkflowError, canonical_json
 from ..ports.browser_provider import BrowserProvider
 from ..ports.workspace import Settings
+from ..domain.provider_policy import classify,retry_delay,public_retry
 from .subtitles import SubtitleWorkflow
 
 
 class Discovery:
-    def __init__(self, workspace, workflow: SubtitleWorkflow, provider: BrowserProvider, send, settings: Settings):
+    def __init__(self, workspace, workflow: SubtitleWorkflow, provider: BrowserProvider, send, settings: Settings, *, clock=time.time, jitter=random.random):
         self.workspace, self.workflow, self.provider, self.send = workspace, workflow, provider, send
         self.entries = {}
         self.active = None
@@ -19,6 +22,12 @@ class Discovery:
         self.page_pending = None
         self.restore_pending = True
         self.settings = settings
+        self.clock,self.jitter=clock,jitter
+        self.disabled=set();self.last_sent={}
+        if workspace.drafts:
+            saved=workspace.drafts.store.load('provider-stops')
+            if saved and isinstance(saved.get('providers'),list):
+                self.disabled={p for p in saved['providers'] if p in {'zimuku','srtku','subhd','subhd-one'}}
         self.language = settings.read().get('language', 'bilingual')
         if self.language not in {'bilingual', 'zh-Hans', 'zh-Hant', 'en'}:
             self.language = 'bilingual'
@@ -40,6 +49,7 @@ class Discovery:
         if self.active:
             self.send({'type': 'browser.stop', 'generation': self.generation})
         for identifier in self.entries:
+            if 'retry' in self.entries[identifier]:self.entries[identifier]['retry'].update(paused=True,nextAttempt=None)
             task = self.workflow.get_task(identifier)
             if task.phase not in {SubtitlePhase.CANCELLED, SubtitlePhase.REVIEW_READY}:
                 self.command(task, 'cancel')
@@ -72,6 +82,7 @@ class Discovery:
             downloads.invalidate()
             downloads.paused = list(dict.fromkeys(pending))
         for identifier in self.entries:
+            if 'retry' in self.entries[identifier]:self.entries[identifier]['retry'].update(paused=True,nextAttempt=None)
             task = self.workflow.get_task(identifier)
             if task.phase in ACTIVE_PHASES:
                 self.command(task,'interrupt',{'reason':'页面或应用已关闭；草稿保留，需要明确继续。'},internal=True)
@@ -91,6 +102,7 @@ class Discovery:
             data.index(entry['rowId'])
             for candidate in entry['candidates']: self.provider.url(candidate,entry['provider'])
             restored[identifier] = entry
+            if 'retry' in entry:entry['retry'].update(paused=True,nextAttempt=None)
         self.entries = restored
         self.generation = max(self.generation,saved['generation'])+1
         if self.downloads:
@@ -103,16 +115,17 @@ class Discovery:
 
     def open(self, params):
         data = self.workspace.require_review(params)
-        if self.entries and (not params.get('rowId') or any(entry['rowId']==params['rowId'] for entry in self.entries.values())):
-            for identifier in self.entries: self.get(identifier)
-            return {'opened':True,'taskCount':len(self.entries),'remaining':0,'restored':True}
-        indices = [data.index(params['rowId'])] if 'rowId' in params else [
-            index for index, row in enumerate(data.review.rows)
-            if not row.matches and not row.skipped and not row.uses_embedded]
+        if params.get('needsId'):self.workspace.needs.require(data,params['needsId'])
+        indices = [data.index(params['rowId'])] if 'rowId' in params else self.workspace.needs.missing_indices(data)
         if not indices:
             raise ProtocolError('NOT_FOUND', '没有需要查找字幕的视频。')
-        if any(data.review.rows[index].uses_embedded for index in indices):
+        if any(data.review.rows[index].uses_embedded and not self.workspace.needs.has_missing(data,index) for index in indices):
             raise ProtocolError('ALREADY_SATISFIED', '视频内字幕已满足语言要求；请先改为仍需外挂。')
+        eligible={data.rows[index]['rowId'] for index in indices}
+        if self.entries and (params.get('rowId') and any(entry['rowId']==params['rowId'] for entry in self.entries.values())
+                or not params.get('rowId') and {entry['rowId'] for entry in self.entries.values()}<=eligible):
+            for identifier in self.entries:self.get(identifier)
+            return {'opened':True,'taskCount':len(self.entries),'remaining':0,'restored':True}
         self.invalidate()
         for index in indices[:200]:
             row = data.rows[index]
@@ -136,14 +149,30 @@ class Discovery:
             task, _ = self.get(identifier)
             values.append({'taskId': identifier, 'rowId': entry['rowId'], 'videoName': entry['videoName'],
                            'query': entry['query'], 'provider': entry['provider'], 'phase': task.phase.value,
-                           'reason': task.data.get('reason', ''), 'candidateCount': len(entry['candidates'])})
+                           'reason': task.data.get('reason', ''), 'candidateCount': len(entry['candidates']),
+                           'retry':public_retry(entry.get('retry',{})), 'providerStopped':entry['provider'] in self.disabled})
         return {'tasks': values, 'offset': offset, 'total': len(self.entries), 'downloadAvailable': self.downloads is not None,
-                'language': self.language, 'pausedCount':len(self.downloads.paused) if self.downloads else 0}
+                'language': self.language, 'pausedCount':len(self.downloads.paused) if self.downloads else 0,
+                'stoppedProviders':sorted(self.disabled),'capabilities':{'remoteLocalFiles':False,'apiCredentialsRequired':False,'searchConcurrency':1,'automaticRetryLimit':3}}
 
     def dispatch(self, action, params, request_id):
+        if action=='online.provider':
+            self.workspace.require_idle()
+            if params['enabled']:self.disabled.discard(params['provider'])
+            else:
+                self.disabled.add(params['provider'])
+                for identifier,entry in self.entries.items():
+                    if entry['provider']==params['provider']:
+                        if 'retry' in entry:entry['retry'].update(paused=True,nextAttempt=None)
+                        if self.active and self.active[0]==identifier:
+                            task=self.workflow.get_task(identifier);self.command(task,'interrupt',{'reason':'来源已暂停。'},internal=True)
+                            self.active=None;self.send({'type':'browser.stop','generation':self.generation})
+            if self.workspace.drafts:self.workspace.drafts.store.save('provider-stops',{'v':1,'providers':sorted(self.disabled)})
+            self.persist();return {'provider':params['provider'],'enabled':params['enabled']}
         if action == 'online.query':
             return self.query(params.get('offset', 0), params.get('limit', 20))
-        if self.downloads and action in {'online.download', 'online.downloads', 'online.retryDownload', 'online.discardDownload', 'online.compactDownload', 'online.import', 'online.resumeQueue'}:
+        if self.downloads and action in {'online.download', 'online.downloads', 'online.retryDownload', 'online.discardDownload', 'online.compactDownload', 'online.import', 'online.resumeQueue',
+                'online.qualityFiles','online.quality','online.qualityResult','online.qualityPage'}:
             return self.downloads.dispatch(action, params)
         if action not in {'online.cancel', 'online.candidates'}:
             self.workspace.require_idle()
@@ -166,6 +195,9 @@ class Discovery:
             rows = [{key: value for key, value in row.items() if key != 'url'} for row in entry['candidates']]
             return {'rows': rows[offset:offset+limit], 'offset': offset, 'total': len(rows)}
         if action == 'online.start':
+            if params['provider'] in self.disabled:raise ProtocolError('PROVIDER_STOPPED','此来源已暂停，请先恢复来源。')
+            retry=entry.get('retry',{})
+            if retry.get('nextAttempt') and retry['nextAttempt']>self.clock():raise ProtocolError('RATE_LIMITED','来源仍在退避等待，请稍后继续。')
             if self.active:
                 raise ProtocolError('BUSY', '请先完成或取消当前网站搜索。')
             query = params['query'].strip()
@@ -176,11 +208,14 @@ class Discovery:
             task = self.command(task, 'resume' if resume else 'search',
                                 None if resume else {'query': query, 'provider_id': params['provider']}, command_id=request_id)
             entry.update(query=query, provider=params['provider'], language=self.language, candidates=[])
+            entry['retry']={'attempt':0,'nextAttempt':None,'error':None,'paused':False}
+            self.last_sent[params['provider']]=self.clock()
             self.active = (task.task_id, task.active_effect_id)
             self.send({'type': 'browser.search', 'taskId': task.task_id, 'effectId': task.active_effect_id,
                        'generation': self.generation, 'resume': resume, 'plan': plan})
             return {'phase': task.phase.value}
         if action == 'online.cancel':
+            if 'retry' in entry:entry['retry'].update(paused=True,nextAttempt=None)
             self.command(task, 'cancel', command_id=request_id)
             if self.downloads:
                 self.downloads.cancel(task.task_id)
@@ -224,9 +259,15 @@ class Discovery:
         task, entry = self.get(frame['taskId'])
         status = frame['status']
         if status in {'manual', 'failed'}:
-            self.command(task, 'needs_user' if status == 'manual' else 'fail',
+            task=self.command(task, 'needs_user' if status == 'manual' else 'fail',
                          {'reason': frame.get('message', '请在网站完成必要验证，再继续搜索。')[:200]}, internal=True)
             self.active = None
+            kind='manual' if status=='manual' else classify(frame.get('statusCode'),frame.get('errorClass'))
+            retry=entry.setdefault('retry',{'attempt':0})
+            delay=retry_delay(kind,retry['attempt'],self.clock(),frame.get('retryAfter'),self.jitter())
+            retry.update(error=kind,nextAttempt=self.clock()+delay if delay is not None else None,
+                         revision=task.revision,paused=delay is None)
+            self.persist()
         else:
             parsed, rows = self.provider.results(frame.get('raw', '{}'), entry['provider'], entry['videoName'], entry.get('language', 'bilingual'))
             for row in rows:
@@ -247,3 +288,22 @@ class Discovery:
                 self.active = None
         self.workspace.emit('online.changed')
         return True
+
+    def tick(self):
+        if self.active or self.workspace.busy or self.workspace.session_id is None:return
+        if self.downloads and (self.downloads.current or self.downloads.armed or self.downloads.queue or self.downloads.receiving):return
+        for identifier,entry in self.entries.items():
+            retry=entry.get('retry',{});due=retry.get('nextAttempt')
+            if retry.get('paused') or due is None or due>self.clock() or entry['provider'] in self.disabled:continue
+            task,_=self.get(identifier)
+            if task.phase!=SubtitlePhase.FAILED or task.revision!=retry.get('revision'):
+                retry.update(paused=True,nextAttempt=None);continue
+            if self.clock()<self.last_sent.get(entry['provider'],0)+2:continue
+            plan=self.provider.plan(entry['query'],entry['provider'])
+            task=self.command(task,'search',{'query':entry['query'],'provider_id':entry['provider']})
+            retry.update(attempt=retry['attempt']+1,nextAttempt=None)
+            self.active=(task.task_id,task.active_effect_id);self.last_sent[entry['provider']]=self.clock()
+            self.persist()
+            self.send({'type':'browser.search','taskId':task.task_id,'effectId':task.active_effect_id,
+                       'generation':self.generation,'resume':False,'plan':plan})
+            self.workspace.emit('online.changed');return

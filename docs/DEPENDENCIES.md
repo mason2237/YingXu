@@ -1,8 +1,10 @@
 # 依赖、署名与重建
 
-当前版本 0.11.0-rc.3。源码与运行包仅使用 Electron + Python；额外 Python 运行依赖为 pymediainfo。Qt、PySide、Shiboken、QML 和旧 GUI 宿主已从当前源码及包中移除。
+当前本地候选版本 0.12.0-rc.2。源码与运行包仅使用 Electron + Python；核心额外依赖为 pymediainfo。按需独立同步 worker 另附 requirements-sync.txt 的固定依赖，两个私有 EXE 共享同一 Python/_internal。没有 Qt；GuessIt 对照库不分发。
 
 ## 实际组件
+
+YX-02 源码提供可选 GuessIt 4.4.0 对照适配器，默认关闭且没有加入上述运行依赖或发布包。隔离 wheel、许可证及冻结替换实验见 [可选解析器试验](research/subtitle-upgrade-2026-11/GUESSIT_TRIAL.md)。适配器原创代码不改变第三方库许可；未来若分发库本身，须单独汇集 LGPL/GPL 原文、库源码、依赖署名与替换说明。
 
 | 组件 | 固定版本/来源 | 许可及材料 |
 | --- | --- | --- |
@@ -19,6 +21,14 @@
 当前包不捆绑 PresentMon 或 PyWinRT，它们仅用于可选诊断，许可原文保留在源码 licenses/。RAR/7z 使用用户 Windows 的 `%SystemRoot%/System32/tar.exe`，不复制系统文件；格式支持不足时提示使用 ZIP。ZIP 和直接字幕由 Python 标准库处理。
 
 ## 源码与重建
+
+可选同步 worker 使用 ffsubsync 0.5.1（MIT）、NumPy（BSD，含附带许可）、pysubs2/srt（MIT）、ffmpeg-python（Apache-2.0）、WebRTC VAD wheel（MIT/BSD 声明）及 requirements-sync.txt 的必要依赖；完整原文随包，实际清单/版本/源码来源摘要在 SYNC_RUNTIME.json。上游入口 [ffsubsync](https://github.com/smacke/ffsubsync)、[NumPy](https://github.com/numpy/numpy)、[pysubs2](https://github.com/tkarabela/pysubs2)、[srt](https://github.com/cdown/srt)、[ffmpeg-python](https://github.com/kkroening/ffmpeg-python)、[webrtcvad-wheels](https://github.com/daanzu/py-webrtcvad-wheels)。
+
+仅启用 UTF-8 参考与 WebRTC，按已审查清单以 `--no-deps -r requirements-sync.txt` 安装到隔离 `.venv-sync`，另装相同 requirements-build.txt 构建工具。auditok、chardet/faust-cchardet、imageio-ffmpeg、模型不分发。FFmpeg 由用户选择本机工具；实验构建 7.1 的 SHA256 仅在阶段证据中登记，不能据此宣称已经汇集其全部对应源码或将其捆绑。构建完整候选时附 `--with-sync`；它合并相同 Python 文件及标准库，冲突即中止。
+
+该发行所用 wheel 来源清单保存在 licenses/sync-WHEEL-ORIGINS.json，与随包 SYNC_RUNTIME.json 一致。重建同步运行时时，先取得并审查固定版本的实际安装 wheel，再把各自 wheel 名、SHA256 和许可元数据保存为 work/tools/sync-install-review.json（格式见该清单）。不要把原发行摘要当成新下载文件已经核验的证明。srt 3.5.3 原版从官方源包本地构建 wheel；PyPI 源包 SHA256 为 4884315043a4f0740fd1f878ed6caa376ac06d70e135f306a6dc44632eed0cc0，本地构建 wheel 的时间戳可能使其摘要不同。普通不带同步引擎的构建不需要该清单。
+
+NumPy wheel 的完整许可涵盖 BLAS/LAPACK 和 GCC runtime 及其适用例外，原文全部保留。tqdm 4.67.1 的 MPL-2.0/MIT 原声明、官方完整 MPL 及未修改 Python 源码一并放在 licenses/sync-runtime/tqdm/，其源码仍适用原许可，不受映序原创非商业限制；固定源码入口 https://github.com/tqdm/tqdm/tree/v4.67.1。
 
 运行包不需要用户安装 Node、Python 或开发服务器。源码运行见 [开发指南](DEVELOPMENT.md)，当前构建入口只有 scripts/build_electron.py。
 

@@ -1,0 +1,18 @@
+# Optional isolated worker only. Install with --no-deps after reviewing wheels.
+# ffsubsync declares optional auditok/chardet/faust-cchardet; these are deliberately
+# excluded. Only UTF-8 canonical input and WebRTC VAD are enabled by our worker.
+ffsubsync==0.5.1
+numpy==2.3.4
+pysubs2==1.8.0
+srt==3.5.3
+ffmpeg-python==0.2.0
+future==1.0.0
+rich==14.2.0
+markdown-it-py==4.2.0
+mdurl==0.1.2
+Pygments==2.21.0
+tqdm==4.67.1
+typing_extensions==4.15.0
+webrtcvad-wheels==2.0.14
+charset-normalizer==3.4.4
+colorama==0.4.6

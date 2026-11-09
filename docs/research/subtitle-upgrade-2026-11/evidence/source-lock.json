@@ -1,0 +1,78 @@
+{
+  "observed_date": "2026-11-09",
+  "source": "指定研究聊天中记录的 Git 检出；本机未重复检出上游",
+  "sources": [
+    {
+      "repository": "mason2237/YingXu",
+      "url": "https://github.com/mason2237/YingXu",
+      "commit": "c7b8056b35d02e335723366e9916512032133a13",
+      "branch_at_checkout": "origin/main",
+      "commit_date": "2026-10-27T13:52:22+08:00",
+      "subject": "docs: record verified rc.3 release and public downloads"
+    },
+    {
+      "repository": "morpheus65535/bazarr",
+      "url": "https://github.com/morpheus65535/bazarr",
+      "commit": "bfe4593b04caa16eb4a09c2a233777b0bd7723b6",
+      "branch_at_checkout": "origin/master",
+      "commit_date": "2026-10-11T16:12:30-04:00",
+      "subject": "no log: Delete schedule.yaml since we now rely on an external scheduler"
+    },
+    {
+      "repository": "SubtitleEdit/subtitleedit",
+      "url": "https://github.com/SubtitleEdit/subtitleedit",
+      "commit": "d6b1928eaad1fdc5d712b9dad9b0dd85aa86ded6",
+      "branch_at_checkout": "origin/main",
+      "commit_date": "2026-11-08T17:13:51+01:00",
+      "subject": "Merge pull request #16749 from hisui3393/Japanese-for-SE5.5-beta2"
+    },
+    {
+      "repository": "Cosmopolyte/supersubber",
+      "url": "https://github.com/Cosmopolyte/supersubber",
+      "commit": "3ed81011b20840bff3e2148c0017934453c6d250",
+      "branch_at_checkout": "origin/main",
+      "commit_date": "2026-10-21T20:16:56+02:00",
+      "subject": "1.6.8: settings window keeps its size when the folder path row toggles"
+    },
+    {
+      "repository": "jessielw/SubSyncr",
+      "url": "https://github.com/jessielw/SubSyncr",
+      "commit": "b63c2c6ca21880b896d3c8edfa3e1b39dced9e17",
+      "branch_at_checkout": "origin/main",
+      "commit_date": "2026-10-01T12:14:25-04:00",
+      "subject": "ci: release on bare and pre-release version tags"
+    },
+    {
+      "repository": "denizsafak/AutoSubSync",
+      "url": "https://github.com/denizsafak/AutoSubSync",
+      "commit": "db7875b8ab89832c0223ca4253f050ecb724860f",
+      "branch_at_checkout": "origin/main",
+      "commit_date": "2026-08-17T09:56:24+03:00",
+      "subject": "v6.5"
+    },
+    {
+      "repository": "smacke/ffsubsync",
+      "url": "https://github.com/smacke/ffsubsync",
+      "commit": "de310ac6944b8260431a48ee741e7063cec49b0f",
+      "branch_at_checkout": "origin/master",
+      "commit_date": "2026-07-23T21:50:44-07:00",
+      "subject": "[no ci] update history"
+    },
+    {
+      "repository": "BoxOfSnoo/EpisodeMatcher",
+      "url": "https://github.com/BoxOfSnoo/EpisodeMatcher",
+      "commit": "86aacb714c134af09b46eae12f68eadfa458b3f9",
+      "branch_at_checkout": "origin/master",
+      "commit_date": "2026-03-30T17:41:26-04:00",
+      "subject": "Add AI usage policy (#2)"
+    },
+    {
+      "repository": "guessit-io/guessit",
+      "url": "https://github.com/guessit-io/guessit",
+      "commit": "3c73072b8971d412935c6f749be63c564dd41385",
+      "branch_at_checkout": "origin/develop",
+      "commit_date": "2026-07-31T22:39:21Z",
+      "subject": "chore(release): release v4.4.0"
+    }
+  ]
+}

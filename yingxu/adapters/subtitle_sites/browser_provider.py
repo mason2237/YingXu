@@ -18,7 +18,11 @@ class BrowserSiteProvider:
 
     def results(self, raw, provider, video_name, language='bilingual'):
         status, rows = candidates.parse_candidates(raw, website_for(provider))
-        return status, candidates.rank_candidates(rows, video_name, language)
+        ranked=candidates.rank_candidates(rows,video_name,language)
+        for row in ranked:
+            row.update(provider=provider,sourceKind='browser',purpose='unverified',
+                       sourceEvidence=list(row['reasons']),contentVerified=False)
+        return status,ranked
 
     def url(self, candidate, provider):
         site = website_for(provider)

@@ -1,0 +1,291 @@
+{
+  "version": "0.12.0-rc.2",
+  "date_hong_kong": "2026-11-09",
+  "status": "local-candidate-validated",
+  "source_commit": "635b3157e7ef30c0740e8abfebe3c54229b9d98c",
+  "uncommitted_sources_at_build": false,
+  "environment": {
+    "windows": "Windows-11-10.0.26200-SP0",
+    "architecture": "AMD64",
+    "runtime": "Electron 45.0.0 + shared frozen Python 3.12"
+  },
+  "artifacts": {
+    "entry": "outputs/releases/0.12.0-rc.2/YingXu/YingXu.exe",
+    "zip": "outputs/releases/0.12.0-rc.2/YingXu-0.12.0-rc.2-windows-x64.zip",
+    "zip_sha256": "outputs/releases/0.12.0-rc.2/YingXu-0.12.0-rc.2-windows-x64.zip.sha256",
+    "archive_verification": "outputs/releases/0.12.0-rc.2/ARCHIVE_VERIFICATION.json",
+    "exe_sha256": "68c3b1780ad2dd5d865177f860367dbbff9b976fee8f877cc4fe2b12a8e92945"
+  },
+  "source_baseline": {
+    "report": "work/test-results/yx11-source-windows.json",
+    "total": 279,
+    "passed": 279,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "scope": "Full source suite before final targeted fixes; final fixes verified incrementally."
+  },
+  "incremental_tests": [
+    {
+      "tests": 17,
+      "passed": true,
+      "log": "work/test-results/yx11-needs-incremental.log",
+      "scope": "Source subtitle policy and upgrade recovery"
+    },
+    {
+      "tests": 7,
+      "passed": true,
+      "log": "work/test-results/yx11-worker-fix-source.log",
+      "scope": "Source fixed reference/audio engines, timeout, parent crash and descendant handles"
+    },
+    {
+      "tests": 28,
+      "passed": true,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "log": "work/test-results/yx11-frozen-host-release.log",
+      "backend": "python/YingXuBackend.exe",
+      "sync": "python/YingXuSync.exe",
+      "scope": "Host calls and real sync use frozen EXEs; pure policy/cache/Job assertions use source implementation."
+    }
+  ],
+  "desktop": {
+    "new_features": {
+      "evidence_directory": "work/test-results/r11-desktop-1794228726091",
+      "report": {
+        "passed": true,
+        "mode": "frozen",
+        "nfoUI": true,
+        "qualityPreservesTimingPanel": true,
+        "manualPreview": true,
+        "realReferenceEngine": true,
+        "contentEvidence": true,
+        "explicitStage": true,
+        "mediaUnchanged": true,
+        "maxReplyBytes": 1234,
+        "jsExceptions": 0,
+        "websiteVisited": false,
+        "exitCode": 0,
+        "output": "work\\test-results\\r11-desktop-1794228726091"
+      }
+    },
+    "needs": {
+      "evidence_directory": "work/test-results/needs-desktop-1794228729183",
+      "report": {
+        "passed": true,
+        "mode": "frozen",
+        "policyPreference": true,
+        "missingAndSatisfiedStates": true,
+        "forcedIsNotFull": true,
+        "boundedLayout": true,
+        "smallWindow1000x760": true,
+        "upgradeRequiresAcknowledgement": true,
+        "stagedReviewKeepsOriginal": true,
+        "separateTargetName": true,
+        "mediaUnchanged": true,
+        "maxReplyBytes": 1541,
+        "jsExceptions": 0,
+        "websiteVisited": false,
+        "exitCode": 0,
+        "output": "work\\test-results\\needs-desktop-1794228729183"
+      }
+    },
+    "quality": {
+      "evidence_directory": "work/test-results/quality-desktop-1794228731503",
+      "report": {
+        "passed": true,
+        "mode": "frozen",
+        "sourceWindow": false,
+        "executablePackaged": true,
+        "reverseTimeLocated": true,
+        "paging": true,
+        "encodingChoice": true,
+        "pureTextPreview": true,
+        "issueFailureKeepsList": true,
+        "downloadQualityUI": true,
+        "onlineLocalAPIRestricted": true,
+        "mediaUnchanged": true,
+        "maxReplyBytes": 2375,
+        "jsExceptions": 0,
+        "websiteVisited": false,
+        "exitCode": 0,
+        "output": "work\\test-results\\quality-desktop-1794228731503"
+      }
+    },
+    "variants": {
+      "evidence_directory": "work/test-results/release-model-1794228734616",
+      "report": {
+        "passed": true,
+        "variants": 5,
+        "purposeLabels": true,
+        "advisoryIdentity": true,
+        "correctVariantReplaced": true,
+        "forcedAndSDHRetained": true,
+        "reloadDraft": true,
+        "mediaUnchanged": true,
+        "jsExceptions": 0,
+        "websiteVisited": false,
+        "mode": "frozen",
+        "executablePackaged": true,
+        "exitCode": 0,
+        "output": "work\\test-results\\release-model-1794228734616"
+      }
+    },
+    "recovery": {
+      "evidence_directory": "work/test-results/r3-desktop-1794228737011",
+      "report": {
+        "passed": true,
+        "mode": "frozen",
+        "settingsCycles": 20,
+        "protocol": 2,
+        "qtImported": false,
+        "recoveryBanner": true,
+        "recoveryExplicitConfirmation": true,
+        "previewDoesNotModifyMedia": true,
+        "executeAndUndo": true,
+        "historyAfterReload": true,
+        "mediaRestored": true,
+        "jsExceptions": 0,
+        "websiteVisited": false,
+        "exitCode": 0,
+        "screenshots": [
+          "recovery-preview.png",
+          "organize-preview.png",
+          "organize-result.png",
+          "undo-result.png"
+        ]
+      }
+    }
+  },
+  "frozen_audio": [
+    {
+      "status": "succeeded",
+      "scale": 1.0,
+      "offsetMs": -2370,
+      "engine": "ffsubsync-0.5.1",
+      "metrics": {
+        "scope": "entire owned Job, including Python launcher and FFmpeg; excludes parent hashing",
+        "peakJobMemoryBytes": 91152384,
+        "readBytes": 128649249,
+        "writeBytes": 36824359,
+        "cpuSeconds": 0.859375,
+        "processCount": 3
+      },
+      "quality": {
+        "accepted": true,
+        "reason": "三个时间窗口通过重叠核对",
+        "overlap": 0.9223,
+        "windows": [
+          0.9127,
+          0.9231,
+          0.9316
+        ]
+      },
+      "cacheHit": false,
+      "seconds": 1.1720000000004802
+    },
+    {
+      "status": "succeeded",
+      "scale": 0.96,
+      "offsetMs": -2270,
+      "engine": "ffsubsync-0.5.1",
+      "metrics": {
+        "scope": "entire owned Job, including Python launcher and FFmpeg; excludes parent hashing",
+        "peakJobMemoryBytes": 55963648,
+        "readBytes": 6776867,
+        "writeBytes": 3283,
+        "cpuSeconds": 0.4375,
+        "processCount": 1
+      },
+      "quality": {
+        "accepted": true,
+        "reason": "三个时间窗口通过重叠核对",
+        "overlap": 0.9223,
+        "windows": [
+          0.9127,
+          0.9231,
+          0.9316
+        ]
+      },
+      "cacheHit": true,
+      "seconds": 0.8909999999996217
+    }
+  ],
+  "frozen_payload": {
+    "version": "0.12.0-rc.2",
+    "modules": {
+      "YingXuBackend": {
+        "count": 270,
+        "sha256": "c2e6bf8fa6be01ee16a64a65a4ff898e888e80c2ca26f63223fbc2b688816f87",
+        "pyzSha256": "aa9f429e63a67177daeab91b97f33a37296067a1b24db05d0e1dea6863ab2f9b",
+        "forbidden": [],
+        "numpy": false,
+        "ffsubsync": false
+      },
+      "YingXuSync": {
+        "count": 1206,
+        "sha256": "44420c5f665331d57108ae88aa487b8ca1258e4eb4d44aea1329086a864e6648",
+        "pyzSha256": "dcbd3bf8df193c1706187be0bf8ff4303657c1faea4f0430146f27780b832239",
+        "forbidden": [],
+        "numpy": true,
+        "ffsubsync": true
+      }
+    },
+    "licenseFiles": 21,
+    "sourceFiles": 32,
+    "textFindings": [],
+    "sourceCommit": "635b3157e7ef30c0740e8abfebe3c54229b9d98c",
+    "exeSha256": "68c3b1780ad2dd5d865177f860367dbbff9b976fee8f877cc4fe2b12a8e92945",
+    "localInstallMetadataOmitted": true,
+    "passed": true
+  },
+  "public_hygiene": {
+    "report": "work/test-results/yx11-public-audit-final.json",
+    "currentFilesChecked": 615,
+    "findings": [],
+    "privateHistoryExamined": false,
+    "limits": "Pattern checks exclude binary/large/ignored files; not an exhaustive secret guarantee."
+  },
+  "visual_inspection": {
+    "screenshots": [
+      "docs/images/subtitle-needs-rc2.png",
+      "docs/images/subtitle-timing-rc2.png",
+      "docs/images/subtitle-content-rc2.png"
+    ],
+    "observations": "Chinese text, protected upgrade acknowledgement and timing/text results visible; scrolling and 1000x760 bounded layout verified."
+  },
+  "first_frozen_failure": {
+    "log": "work/test-results/yx11-frozen-host.log",
+    "status": "fixed_and_retested",
+    "cause": "Windowed frozen exception dialog blocked invalid-audio-track exit; asynchronous Job cleanup raced descendant file handles.",
+    "fix_commit": "2003714cb642da54d4ec5a03b136484605038c80"
+  },
+  "diagnostic_log_notes": [
+    "UNTRUSTED_ONLINE_FRAME was an intentional negative test.",
+    "Earlier candidate teardown logged GPU state invalid after WaitForGetOffsetInRange; final packaging rerun did not repeat it. All exits 0 and no JS exception; not a driver/flicker guarantee."
+  ],
+  "scope": {
+    "generated_samples_only": true,
+    "isolated_profiles": true,
+    "uses_bundled_backend": true,
+    "website_visited": false,
+    "github_upload": false,
+    "old_releases_preserved": true,
+    "system_settings_changed": false
+  },
+  "limits": [
+    "Unsigned candidate; no clean Windows or real power-loss test.",
+    "No sustained refresh-rate, independent presentation or HDR recertification; teardown GPU warning remains recorded.",
+    "Generated samples and isolated profiles only; no new real-world matching-accuracy claim or live subtitle-site certification.",
+    "Audio requires explicitly selected local FFmpeg; no FFmpeg binary, ASR/OCR or model is distributed.",
+    "Affine alignment rejects insufficient speech and inconsistent cuts; text evidence does not certify identity or automatically associate.",
+    "Test batches overlap and are not added together; hosted CI first run remains pending a future publish branch.",
+    "Private development history is not audited or published in this local candidate."
+  ],
+  "packaging_hygiene": {
+    "commit": "635b3157e7ef30c0740e8abfebe3c54229b9d98c",
+    "omitted": "pip local-wheel direct_url.json only; full original licenses and reviewed upstream digests retained",
+    "text_payload_patterns": "No matching credentials or developer absolute paths in text assets below 5 MB. Binary/large files not covered."
+  }
+}

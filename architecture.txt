@@ -1,6 +1,6 @@
 映序架构
 ========
-状态：当前版本为 0.11.0-rc.3，包含多轨详情分页和错误隔离；发布状态见 PROGRESS.md。
+状态：已发布版本为 0.11.0-rc.3；R11 源码完成 YX-00 至 YX-10，0.12.0-rc.2 本地候选包含全部字幕能力，最终验证见 PROGRESS.md。0.12.0-rc.1 原包保留，均未上传新版本。
 本文件描述结构与约束；当前任务见 todo.txt，开发历史见 CHANGELOG.md。
 
 1. 当前实现与目标
@@ -11,10 +11,14 @@
 下载、内容验证、安全解压、条件续传、待审阅导入与记录导出已接通。
 当前已移除 Qt 宿主、回退入口、QML、Qt 构建代码与钩子；旧实现仅保留在 Git 历史和既有发布包。
 默认 requirements.txt 指向 requirements-runtime.txt（仅 pymediainfo），不包含 Qt。
+时间校准由独立按需 YingXuSync.exe 执行，与后台共享同一个 Python/_internal，不引入 Qt 或另一套解释器。固定 ffsubsync/WebRTC worker 不维护工作流状态；它只返回有界结果。异常写入日志并非零退出，Windows Job 回收会等待自有后代释放句柄，避免弹窗阻止退出或临时文件清理竞态。
+参考字幕模式开箱可用；音轨模式仅在主动选择本机 FFmpeg 后启用。本包不分发 FFmpeg 二进制、不下载模型。NumPy 与 tqdm 等组件保留各自许可；tqdm 的完整 MPL 和未修改源码随包提供，不套用原创非商业限制。
 候选包仅由 scripts/build_electron.py 构建，通用打包工具在 scripts/build_utils.py，不依赖 GUI 模块。
 删除 Qt 是运行依赖和业务解耦工作；更换图形栈本身不构成性能提升证明。
 
 2. 分层与依赖方向
+
+media_identity.py 的 NFO/IMDb 与 OpenSubtitles 指纹是来源证据，不授予文件操作权限。MediaIdentityReader 只读同名 NFO（512 KiB、禁 XML 实体）及主动请求的视频头尾各 64 KiB；缓存每次仍重验边界摘要，不能检测未读取的中部改动。人工 ID 限当前视频，存入草稿，修改时撤回旧匹配确认；不会继承邻片或 tvshow 的 ID。
 
 frontend/                工作区、搜索框、选择、弹窗、列表与可见状态
 desktop/electron/        窗口/系统对话框/远程网页隔离；当前路径暂保留
@@ -33,6 +37,29 @@ desktop 负责调用用例，不包含匹配/命名/文件提交算法。展示�
 新层有导入边界检查；application 不导入具体适配器、桌面宿主或旧 web_ui。
 core.py/review.py/operations.py/embedded_subtitles.py 现在是兼容导出；算法只有一份。
 匹配/命名/审阅/语言政策在 domain；目录、元数据、旧执行器和站点规则在 adapters。
+
+EpisodeIdentity 是标准库不可变的季集集合与完整性标记；matching 的共享冲突门槛用于本地评分、审阅说明和网站推荐。
+兼容 extract_episode 的单集接口；多集展示使用完整集合，混合季/倒序/超大范围保留待核对。
+releases.py 提供不可变 ParsedRelease；保守的作品/年份/季集/剪辑信息用于采纳关卡，未知或冲突交给人工核对，片源/发行组分开解释。
+subtitle_variants.py 将语言/文字脚本/区域与 forced、SDH、commentary 分开；按变体键控制共存及替换，目标名保留用途后缀。
+Recognition 通过 ReleaseParser port 可选对照 GuessIt 4.4.0；YINGXU_RELEASE_PARSER_SHADOW=1 只开启本地对照，关闭用户配置读取，不改变分配。
+GuessIt 不进入默认依赖或冻结包；独立冻结原型验证外置库替换、缺库回退与来源许可材料，生产可选包仍需单独组装完整署名及源码。
+草稿外层存储保持 v1；reviewModel=variants-1 标记审阅语义。旧模型恢复保留人工关联/跳过，撤回匹配确认、增加审阅版本并标记重新核对；读取不覆盖旧检查点，未知模型拒绝自动转换。
+match_assessment.py 在原评分之外检查作品/年份/季集/剪辑、同版分组和视频/字幕双向竞争；仅保留分组前两项与计数，不保存全量得分矩阵。
+assessment-1 策略沿用原自动门槛再加冲突/歧义关卡；0.85/0.08 只作 shadow，不用于授权。草稿 matchPolicy 变化撤回确认并增加 revision，未知策略保留原草稿并停止恢复。
+subtitle_document.py / subtitle_quality.py 分开保存格式、cue、原始行/样式/设置与诊断规则，覆盖 SRT/ASS/SSA/VTT；不输出修复文件，不把质量检查等同版本或同步验证。
+SubtitleReader port 隔离有界读取与严格解码；Windows 固定祖先目录及文件句柄，拒绝链接/类型变化。8 MiB、50000 cues、500 条问题、单行/总行数均有上限，超限明确未完整检查。
+application/quality.py 拥有会话/审阅/文件绑定的报告快照，后台线程读取，最多保留 2 份与 60000 cues；报告不是执行授权，不恢复到新会话。
+工作区按需检查一份已登记字幕；下载暂存保留自动轻量摘要，也可按 artifact ID / fileIndex 重新检查单文件，不为单份质检读取整批缓存。
+问题及前五条片段按独立白名单分页传递，保留每帧 8 KiB；编码不确定时显示候选并由用户选择，预览纯文本，失败仅影响检查面板。
+下载本地页仍独立限制动作，远程网站没有 preload 或本地业务权限；异步下载列表先组装再提交，旧回执不能清空/覆盖新列表。
+subtitle_policy.py 定义只读需求差集和保守升级决策；完整/forced、语言/脚本及 SDH 政策分开。未知质量或归属进入待核对，诊断错误不能自动视为满足。
+application/subtitle_needs.py 是需求政策/报告/升级审阅的唯一所有者。用户触发本地检查，读取经 SubtitleReader 隔离；每次 512 文件/64 MiB 总预算，单文件 8 MiB，报告按当前会话/扫描/审阅/政策绑定并分页，不恢复旧报告。
+按作品/年份/季集/剪辑与变体分桶比较，已有完整字幕不再进入默认缺失批次；已存在但未关联的合适字幕交给人工，避免重复下载。搜索/下载仍需各自明确操作。
+升级只建立新候选关联，锁定/已确认字幕受保护；保留原文件，目标独立命名。原来源与两份 SHA256 存入草稿，加入审阅及最终预览前再读验证；执行、恢复与撤销继续使用原事务模块。
+subtitle-policy.json 保存偏好，草稿 subtitlePolicy=needs-1 标记当前语义；旧草稿或偏好不一致保留人工关联、撤回确认并增加 revision。先保存偏好后草稿失败的中断也通过此比较安全恢复；未知版本保留原草稿并停止恢复。
+domain 保持标准库依赖，文件事务与撤销算法不变；身份补充、provider 治理与同步仍在后续卡实施。
+scripts/check_platform_tests.py 区分 portable 子集与 Windows 全量，机器可读结果独立记录 skip/环境错误；CI 不访问真实字幕网站或发布。
 单行跳过/确认只复制目标行并刷新该行显示；改配涉及共享目标名时仍完整重规划。
 正式执行使用 application/executing.py，通过 ports/operation_journal.py 与 transaction_files.py
 隔离存储及 Windows 文件提交。legacy_operations 仅用于回退兼容和原有只读预览检查。
@@ -83,6 +110,7 @@ R1 的任务命令 codec 保留为独立学习/契约原型；桌面 v2 外层�
 由 desktop/workspace_protocol.py 按用例路由，不能把任务 codec 与桌面外层混用。
 传输目标为 UTF-8 JSON Lines/stdin/stdout；stdout 只输出协议，日志写 stderr。
 一条消息最多 8 KiB；不传文件字节、整个工作区、任意系统命令或原始下载凭据。
+requirements.policy/configure/check/query/stage 是明确白名单；query/stage 使用 needsId，stage 还要求 offerId 与确认勾选，均重新校验当前审阅。网页不能提供本地字幕路径或内容摘要充当授权。
 目录选择、候选和文件由宿主登记 ID；分页查询/有序事件已接入，不静默截断结果。
 
 桌面请求格式：
@@ -114,6 +142,10 @@ Electron 独占外观设置，Python 不保留第二套主题状态；在线本�
 Electron 必须限制 IPC 来源，启用沙箱/上下文隔离；网站不共享本地 preload 或业务权限。
 
 5. 持久化、文件提交与撤销
+
+Synchronizing 拥有同步用例：主动选择已关联文字字幕 → 手动偏移/可信参考 → 限额隔离 worker → 质量门控 → 私有 transforms 收据与候选 → 新审阅 → 现有预览/确认/事务/撤销。时间重写只修改 SRT/ASS/SSA/VTT 的时间字段，保留正文、样式、层、注释和 cue 设置；负时间拒绝，不隐式裁剪。ffsubsync 固定 0.5.1，仅 UTF-8 canonical 输入和 WebRTC 路径；不安装/打包 auditok。校验返回值/成功标记/输出/参数一致，再按三个时间窗口独立核对。结果可在重启后重新审阅，不自动采用。核心 Python 不导入 numpy/ffsubsync。
+音频由用户选择音轨和本机 FFmpeg；工具摘要每次重验，视频与工具句柄在分析时保持保护。Windows 以挂起启动、分配 Job 后恢复，kill-on-close 回收整树，作业内存上限 1 GiB；数值线程限 1，避免默认线程栈占用。最多分析四小时，仿射模型不冒充分段修复。只启用已审查 ffsubsync/WebRTC，不向未审查引擎静默回退。
+SpeechCache 按视频完整 SHA256/轨道/参数/引擎/VAD/工具摘要建立键，32 份/128 MiB 配额，NPY 使用 allow_pickle=False 和只读 mmap/形状/类型限制，内容摘要及持有句柄保护读取；无法验证则重建。仅用户触发音频操作时读取完整视频。分析缓存独立清理，处理结果若被草稿、恢复或撤销引用则禁止删除；缓存清理不删除原媒体或事务备份。
 
 任务元数据：SQLite WAL + synchronous=FULL，任务快照与去重回执在同一事务提交。
 纯状态转换在事务中短时运行；禁止在事务回调里做文件、网络或 GUI 操作。
@@ -151,6 +183,8 @@ WindowsFile 用打开的句柄核对与操作对象；源/视频/相关目录在
 
 6. 外部字幕供应服务
 
+provider_policy.py 将临时故障、限流、认证、人工步骤、不支持、安全及永久错误分开；仅已授权搜索可自动重试最多 3 次，遵守 Retry-After、指数退避和抖动，始终单并发。Discovery 拥有 nextAttempt/attempt 与版本/effect，checkpoint 保存后才发送；取消/刷新/重启暂停，来源停止状态独立持久化。浏览器无本地文件或 API 凭证权限，网站验证不重试绕过；中断下载仍需明确确认。
+
 SubtitleProvider 保留为独立原型接口；当前站点接入使用 BrowserProvider 的 plan/results/url，
 声明搜索/下载能力及人工步骤。下载资源通过 SubtitleArtifacts 管理，不信任网页提供的本地路径。
 每个网站单独适配；验证码/不支持自动化时明确 awaiting_user 或 unsupported。
@@ -167,6 +201,8 @@ ETag/Last-Modified 等；核对 206、Content-Range 起点/总长及对象验证
 可能含短期签名参数，不导出、不提交仓库；失效时需要回原网站获取。
 
 7. 性能与验证
+
+ContentMatching 只在用户明确选择本地参考后读取其与文件名排名前六份字幕，不读取视频、不提取轨道、不联网、不修改关联。标准库 NFKC/字符 bigram cosine、三个文本窗口、独特对白与最小信息量门控；共同片头/重复歌曲降权，跨语言或乱码证据不足，前两项差距不足保留歧义。12 份内容摘要缓存按实际字节摘要绑定，回执绑定当前审阅/会话，分值不是身份概率。
 
 先测业务耗时，再测 IPC/渲染；匹配打分、单行审阅更新、路径检查次数各自建立 benchmark。
 benchmark 独立于正确性 tests，记录数据规模/环境，不用屏幕帧率代替业务吞吐量。

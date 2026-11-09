@@ -35,8 +35,10 @@ async function acknowledge(){assert.equal(await enabled('execute-button'),false)
     path.join(output,'recovery-media'),profile],{cwd:ROOT,encoding:'utf8',windowsHide:true,env:{...process.env,PYTHONUTF8:'1'}});
   assert.equal(seed.status,0,seed.stderr);const recovery=JSON.parse(seed.stdout);
   const server=net.createServer();await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const port=server.address().port;await new Promise(resolve=>server.close(resolve));
+  const env={...process.env,YINGXU_PYTHON:path.join(ROOT,'.venv-core/Scripts/python.exe')};delete env.ELECTRON_RUN_AS_NODE;
+  if(process.argv[2])delete env.YINGXU_PYTHON;
   child=spawn(process.argv[2]||path.join(ROOT,'work/tools/electron-45.0.0/electron.exe'),[...(process.argv[2]?[]:[path.join(ROOT,'desktop/electron')]),'--diagnostics',`--profile=${profile}`,`--test-folder=${media}`,`--remote-debugging-port=${port}`,'--remote-debugging-address=127.0.0.1'],
-    {cwd:ROOT,windowsHide:false,stdio:['ignore','pipe','pipe'],env:{...process.env,YINGXU_PYTHON:path.join(ROOT,'.venv-core/Scripts/python.exe'),ELECTRON_RUN_AS_NODE:undefined}});
+    {cwd:ROOT,windowsHide:false,stdio:['ignore','pipe','pipe'],env});
   child.stdout.on('data',v=>{logs+=v;});child.stderr.on('data',v=>{errors+=v;});
   const target=await until(async()=>{try{return (await fetch(`http://127.0.0.1:${port}/json/list`).then(v=>v.json())).find(v=>v.url==='yingxu://app/workspace.html');}catch{return null;}});
   cdp=new CDP(target.webSocketDebuggerUrl);await cdp.call('Runtime.enable');await cdp.call('Page.enable');

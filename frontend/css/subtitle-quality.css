@@ -1,0 +1,7 @@
+.subtitle-quality {margin-top:10px;padding-top:9px;border-top:1px solid var(--line, #314459);font-size:13px;line-height:1.65;}
+.subtitle-quality .quality-summary {font-weight:600;margin:8px 0 4px;}
+.subtitle-quality small {display:block;line-height:1.65;}
+.subtitle-quality select {max-width:100%;margin:6px 0;padding:6px;background:var(--surface, #172438);color:var(--ink, #e1e9f3);border:1px solid var(--line, #314459);border-radius:6px;}
+.subtitle-quality .quality-entry {padding:9px 0;border-top:1px solid var(--line, #314459);}
+.quality-excerpt {font:inherit;white-space:pre-wrap;overflow-wrap:anywhere;max-height:150px;overflow:auto;line-height:1.65;margin:5px 0;}
+.subtitle-quality button {white-space:normal;}

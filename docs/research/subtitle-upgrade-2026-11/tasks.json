@@ -1,0 +1,684 @@
+{
+  "schema_version": 1,
+  "project": "映序 YingXu",
+  "observed_date": "2026-11-09",
+  "baseline_commit": "c7b8056b35d02e335723366e9916512032133a13",
+  "report": "REPORT.zh-CN.md",
+  "execution_rules": [
+    "先读取当前仓库指令、architecture.txt、docs/DEVELOPMENT.md、todo.txt；fetch 并检查工作区，基线变化先审差异，不覆盖用户改动。",
+    "每张任务卡使用独立分支，先复现问题或记录基线，再实现、验证、提交可审阅差异；不把计划结果当成实际结果。",
+    "新增文件路径为拟议位置；除 YX-01 外，列出的新增测试命令是实施后必须满足的契约，当前未必存在。",
+    "domain 只用标准库；application 依赖 ports/domain；第三方库封装在 adapters 或隔离 worker；GUI 与 CLI 共用用例。",
+    "下载、同步与最终整理授权分开；启动恢复不自动联网、不恢复旧确认令牌；保持 8 KiB 分页和 revision/effect_id 检查。",
+    "全部写媒体目录行为继续通过既有 preview/execution/journal/undo；禁止原地重写、绕过文件身份检查或强杀文件提交线程。",
+    "后续 agent 不因本报告自行发布、覆盖 Release 或合并主分支；先完成所选阶段、Windows 验证和可审阅候选。",
+    "完成状态必须包含真实 test_results、known_limitations、changed_files 与 rollback；不能用 mock 证明 Windows 文件语义或真实音频质量。"
+  ],
+  "tasks": [
+    {
+      "id": "YX-00",
+      "title": "建立可复现测试基线与 Windows 验证入口",
+      "priority": "P0",
+      "status": "completed_local_ci_pending",
+      "depends_on": [],
+      "risk": "低；测试基础设施",
+      "scope": "先解决环境诊断，不放宽业务安全策略",
+      "existing_files": [
+        "docs/DEVELOPMENT.md",
+        "tests/contract/test_operation_consent.py",
+        "tests/contract/test_review_detail_pages.py",
+        "tests/integration/test_noqt_host.py",
+        "tests/integration/test_operations.py",
+        "yingxu/adapters/mediainfo.py",
+        "yingxu/adapters/windows_files.py"
+      ],
+      "proposed_files": [
+        "scripts/check_platform_tests.py",
+        ".github/workflows/tests.yml"
+      ],
+      "steps": [
+        "统一创建 work/test-results，新增预检输出 Python/OS/依赖及 MediaInfo.dll 状态。",
+        "明确 portable 与 Windows 两条测试入口，portable 不把 Windows skip 算作通过。",
+        "在 Windows 重现基线 2 个 legacy operation failure；定位 platform assumption 与实际产品缺陷，分别修复，不直接改断言为成功。",
+        "CI 分离 Linux 标准库规则测试与 Windows 文件/宿主/恢复测试，禁用真实网站和发布副作用。"
+      ],
+      "test_commands": [
+        "python -S -m unittest discover -s tests -v",
+        "node tests/frontend/online.cjs",
+        "node tests/frontend/visibility.cjs",
+        "node tests/frontend/review_details.cjs"
+      ],
+      "acceptance": [
+        "新克隆不依赖旧 work 目录即可运行；环境错误在预检给出明确原因。",
+        "Windows 全套得到真实结果并保存失败/skip 清单；portable 与平台专用计数分开。",
+        "CI 中无真实媒体、账户密钥、网络字幕下载或自动发布。"
+      ],
+      "rollback": "仅撤销测试/CI 提交；不修改用户 profile。",
+      "completion_evidence": [
+        "evidence/windows-baseline.json"
+      ],
+      "test_results": {
+        "evidence": "evidence/windows-baseline.json",
+        "windows_passed": 205,
+        "portable_subset_passed": 80,
+        "overlapping_counts": true
+      },
+      "known_limitations": [
+        "CI hosted run pending; no new frozen EXE or release."
+      ],
+      "included_in_local_candidate": "0.12.0-rc.2"
+    },
+    {
+      "id": "YX-01",
+      "title": "阻止多集覆盖与全角季集号造成的明确误配",
+      "priority": "P0",
+      "status": "validated_windows_source",
+      "depends_on": [],
+      "risk": "低；标准库规则增量",
+      "existing_files": [
+        "yingxu/domain/matching.py",
+        "yingxu/application/reviewing.py",
+        "yingxu/adapters/subtitle_sites/candidates.py"
+      ],
+      "proposed_files": [
+        "tests/unit/test_episode_coverage.py"
+      ],
+      "steps": [
+        "已新增 EpisodeIdentity、NFKC 规范化、有限多集集合与共享冲突函数。",
+        "已同步详情、候选解释与在线排序，保留人工指定/确认。",
+        "由下一执行者按 YX-00 在 Windows 复验，审阅后决定是否合入。"
+      ],
+      "test_commands": [
+        "python -S -m unittest discover -s tests/unit -v",
+        "python -S -m unittest discover -s tests/contract -p test_core.py -v",
+        "python -S -m unittest discover -s tests/contract -p test_subtitle_sources.py -v",
+        "python -S docs/research/subtitle-upgrade-2026-11/reproduce_matching.py"
+      ],
+      "acceptance": [
+        "四个已复现错误配对评分为 0；8100 组普通单集原分数完全保留。",
+        "相同多集集合仍可匹配；倒序/过大/跨季不确定范围不能自动接受。",
+        "临时目录人工审阅不改变任何视频或字幕字节；无新运行依赖或 schema 迁移。"
+      ],
+      "rollback": "撤销本卡代码提交；无数据库迁移。保留报告、测试和故障样例。",
+      "completion_evidence": [
+        "evidence/windows-baseline.json",
+        "evidence/matching-probe.json"
+      ],
+      "test_results": {
+        "evidence": "evidence/windows-baseline.json",
+        "windows_passed": 205,
+        "portable_subset_passed": 80,
+        "overlapping_counts": true
+      },
+      "known_limitations": [
+        "CI hosted run pending; no new frozen EXE or release."
+      ],
+      "upstream_implementation_commit": "feecdc0fa31b284052e40a4fc681529400dee839",
+      "local_delta": "Added coverage for 1x01-02x03 and fixed its bare range continuation.",
+      "included_in_local_candidate": "0.12.0-rc.2"
+    },
+    {
+      "id": "YX-02",
+      "title": "结构化作品/片源与字幕语言用途模型",
+      "priority": "P1",
+      "status": "validated_windows_source",
+      "depends_on": [
+        "YX-00",
+        "YX-01"
+      ],
+      "risk": "中；扩展模型、候选与草稿版本",
+      "existing_files": [
+        "yingxu/domain/matching.py",
+        "yingxu/domain/review.py",
+        "yingxu/domain/media.py",
+        "yingxu/domain/planning.py",
+        "yingxu/application/drafts.py",
+        "yingxu/adapters/sqlite_checkpoint.py"
+      ],
+      "proposed_files": [
+        "yingxu/domain/releases.py",
+        "yingxu/domain/subtitle_variants.py",
+        "yingxu/ports/release_parser.py",
+        "yingxu/adapters/guessit_parser.py",
+        "tests/unit/test_release_metadata.py",
+        "tests/contract/test_release_parser.py"
+      ],
+      "steps": [
+        "定义 ParsedRelease 和 SubtitleVariant 不可变模型，episodes 保留集合/顺序语义，不取首元素；保留未知、来源和 parser_version。",
+        "引入可选 GuessIt 4.4.0 适配器，先 shadow 对比，fallback 保留 YX-01；domain 不 import GuessIt。",
+        "language/script/region 与 forced/sdh/commentary 独立，规范 chs/cht/eng/zh-Hans 等，不把简繁合并；按变体键管理一视频多字幕。",
+        "迁移草稿版本时保留人工选择，标记待重新评估；新旧数据都不得恢复执行授权。",
+        "在独立打包试验中核查 LGPL 可替换性、源码与通知材料，未完成前不将库加入默认运行包。"
+      ],
+      "test_commands": [
+        "python -S -m unittest discover -s tests/unit -p test_release_metadata.py -v",
+        "python -m unittest discover -s tests/contract -p test_release_parser.py -v",
+        "python -S -m unittest discover -s tests/unit -p test_architecture_boundaries.py -v"
+      ],
+      "acceptance": [
+        "覆盖电影年份/重拍、WEB-DL/BluRay/REMUX/HDTV、发行组、中文季集、多集、SP、日期、动画绝对编号和异常名。",
+        "不存在库、库抛异常、字段超长均可安全退化；来源标注清楚。",
+        "en 与 en.forced/en.sdh、zh-Hans 与 zh-Hant 可共存；相同变体重复仍需用户选择。",
+        "旧草稿兼容和许可打包报告可审阅。"
+      ],
+      "rollback": "关闭 structured_parser 功能开关，回到 YX-01；保留旧字段读路径和完整 profile 备份。",
+      "completion_evidence": [
+        "evidence/yx02-windows.json",
+        "evidence/optional-parser-trial.json"
+      ],
+      "branch": "codex/yx02-release-metadata",
+      "test_results": {
+        "windows_total": 218,
+        "windows_passed": 218,
+        "final_incremental_passed": 19,
+        "overlapping": true,
+        "frontend_scripts": 2,
+        "window_variants": 5,
+        "single_episode_scores_unchanged": 8100
+      },
+      "known_limitations": [
+        "Default package does not include GuessIt; optional distribution needs separate final license assembly.",
+        "Structured metadata is advisory; ambiguity and quality work follow in YX-03 / YX-04."
+      ],
+      "included_in_local_candidate": "0.12.0-rc.2"
+    },
+    {
+      "id": "YX-03",
+      "title": "双向歧义判断与可解释多字幕分配",
+      "priority": "P1",
+      "status": "validated_windows_source",
+      "depends_on": [
+        "YX-02"
+      ],
+      "risk": "中；匹配行为",
+      "existing_files": [
+        "yingxu/domain/matching.py",
+        "yingxu/domain/planning.py",
+        "yingxu/domain/review.py",
+        "yingxu/application/reviewing.py",
+        "yingxu/application/drafts.py",
+        "frontend/js/components/local-dialogs.js"
+      ],
+      "proposed_files": [
+        "yingxu/domain/match_assessment.py",
+        "tests/unit/test_match_assessment.py",
+        "tests/contract/test_match_explanations.py",
+        "benchmarks/matching_quality.py"
+      ],
+      "steps": [
+        "作品身份/年份/季集为冲突门槛；edition 差异阻止自动采纳，片源/发行组提供单独证据；不让同目录/语言加分覆盖冲突。",
+        "先按可信同版语言用途分组；计算视频侧 top1/top2 和字幕侧竞争差距，保留 unmatched。",
+        "先使用确定性分配与显式歧义，不为提高覆盖率强制全匹配；仅在基准证明必要时增加全局分配算法。",
+        "详情展示前两候选、加分证据、冲突、缺失字段和 why-review；分数不称概率。",
+        "临时 0.85/0.08 阈值仅 shadow，通过按作品分割的保留集后启用；policy_version 变化使旧预览失效。"
+      ],
+      "test_commands": [
+        "python -S -m unittest discover -s tests/unit -p test_match_assessment.py -v",
+        "python -S -m unittest discover -s tests/contract -p test_match_explanations.py -v",
+        "python -S benchmarks/matching_quality.py --split heldout"
+      ],
+      "acceptance": [
+        "Alpha.S01E01 对 Zebra.S01E01 不自动通过；年份、季集集合、版本硬冲突样例零自动接受。",
+        "两视频竞争一字幕、同分候选、同作品多语言、同语言不同用途均有可解释结果。",
+        "报告 precision/覆盖率/审阅率/错误数/置信区间，至少 1000 个自动建议后评估 99.5% 目标；不足则明确不宣称达标。",
+        "手动配对、取消、分页、旧草稿与预览失效测试通过。"
+      ],
+      "rollback": "禁用新分配策略，回退保守规则；保留人工审阅选择与证据日志，不复用旧执行授权。",
+      "completion_evidence": [
+        "evidence/yx03-windows.json"
+      ],
+      "branch": "codex/yx03-match-assessment",
+      "test_results": {
+        "windows": 226,
+        "incremental": 12,
+        "overlapping": true,
+        "benchmark": "evidence/yx03-windows.json",
+        "source_window": true
+      },
+      "known_limitations": [
+        "Real-library accuracy target unverified; synthetic metrics only."
+      ],
+      "included_in_local_candidate": "0.12.0-rc.2"
+    },
+    {
+      "id": "YX-04",
+      "title": "只读字幕解析、编码与质量诊断",
+      "priority": "P1",
+      "status": "validated_windows_source",
+      "depends_on": [
+        "YX-00"
+      ],
+      "risk": "中；解析不可信输入，但不改原文件",
+      "existing_files": [
+        "yingxu/adapters/subtitle_downloads.py",
+        "yingxu/adapters/subtitle_imports.py",
+        "yingxu/application/reviewing.py",
+        "yingxu/desktop/workspace_protocol.py"
+      ],
+      "proposed_files": [
+        "yingxu/domain/subtitle_document.py",
+        "yingxu/domain/subtitle_quality.py",
+        "yingxu/ports/subtitle_reader.py",
+        "yingxu/adapters/subtitle_reader.py",
+        "tests/unit/test_subtitle_quality.py",
+        "tests/integration/test_subtitle_quality_import.py",
+        "tests/frontend/subtitle_quality.cjs"
+      ],
+      "steps": [
+        "定义 cue/源行/格式/样式引用和 QualityIssue；有界读取与解码在 adapter，检查规则在 domain。",
+        "实现 SRT/ASS/SSA/VTT，保留 VTT NOTE/STYLE/REGION、cue settings、ASS Format/Layer/Comment/正文逗号。",
+        "BOM 优先、严格解码；GB18030/Big5/Shift-JIS 等不确定时提供候选和人工选择，记录 replacement，绝不默默重编码。",
+        "报告反向/非法/零时长、乱序、空正文、重复、疑似乱码、可配置阅读速度；合法 ASS 多层重叠只提示。",
+        "接入下载暂存与选中字幕详情分页；诊断错误不清空工作区；首版不提供自动修复。"
+      ],
+      "test_commands": [
+        "python -S -m unittest discover -s tests/unit -p test_subtitle_quality.py -v",
+        "python -S -m unittest discover -s tests/integration -p test_subtitle_quality_import.py -v",
+        "node tests/frontend/subtitle_quality.cjs"
+      ],
+      "acceptance": [
+        "空 Events ASS 与反向 SRT 不再显示质量合格；有效双语/多层 ASS 不被全盘拒绝。",
+        "8 MiB、50000 cues、500 问题上限；超限显示未完整检查，IPC 单帧仍不超 8 KiB。",
+        "错误有 cue/行号/时间定位；预览文本无 HTML 执行；对原字节无副作用。",
+        "编码混淆、UTF BOM、截断、恶意长行、VTT 特殊块与 ASS 格式字段变化都有样本。"
+      ],
+      "rollback": "关闭质量检查入口，保留原下载安全检查；不改数据库中原始 artifact 或源文件。",
+      "completion_evidence": [
+        "evidence/yx04-windows.json"
+      ],
+      "branch": "codex/yx04-subtitle-quality",
+      "test_results": {
+        "full_windows_passed": 237,
+        "final_incremental_passed": 17,
+        "counts_overlap": true,
+        "source_window": true,
+        "download_window": true,
+        "frontend_contract_scripts": 3,
+        "new_runtime_dependencies": 0
+      },
+      "known_limitations": [
+        "Read-only quality diagnosis does not prove synchronization or identity.",
+        "No new EXE or release; bitmap subtitles not parsed."
+      ],
+      "included_in_local_candidate": "0.12.0-rc.2"
+    },
+    {
+      "id": "YX-05",
+      "title": "本地缺失字幕清单与保守升级规则",
+      "priority": "P1",
+      "status": "validated_windows_source",
+      "depends_on": [
+        "YX-03",
+        "YX-04"
+      ],
+      "risk": "中；用户政策与已有文件",
+      "existing_files": [
+        "yingxu/domain/media.py",
+        "yingxu/application/discovery.py",
+        "yingxu/application/downloading.py",
+        "yingxu/domain/review.py"
+      ],
+      "proposed_files": [
+        "yingxu/domain/subtitle_policy.py",
+        "tests/unit/test_subtitle_policy.py",
+        "tests/recovery/test_subtitle_upgrade_policy.py"
+      ],
+      "steps": [
+        "按视频及语言/脚本/用途计算需求差集，整合外部和内嵌轨道证据，输出缺失原因。",
+        "forced/commentary/unknown 不默认满足完整字幕；SDH 取代普通字幕需明确政策。",
+        "升级同时比较身份、版本、用途、质量与内容摘要，保留人工锁定与原来源历史。",
+        "升级结果仍进入暂存审阅，只有新的最终预览/确认才执行；旧文件和恢复备份不可提前删除。"
+      ],
+      "test_commands": [
+        "python -S -m unittest discover -s tests/unit -p test_subtitle_policy.py -v",
+        "python -S -m unittest discover -s tests/recovery -p test_subtitle_upgrade_policy.py -v"
+      ],
+      "acceptance": [
+        "再次扫描不重复下载已满足的变体；错误语言/forced-only/损坏字幕不会误判全部满足。",
+        "人工修改字幕不能被新下载覆盖；政策变更、旧草稿、升级失败可解释且可恢复。",
+        "零自动联网或自动媒体目录写入。"
+      ],
+      "rollback": "恢复旧缺失判断，停用升级建议；保留原字幕、历史与新候选。",
+      "completion_evidence": [
+        "evidence/yx05-windows.json"
+      ],
+      "branch": "codex/yx05-subtitle-needs",
+      "test_results": {
+        "full_windows_passed": 252,
+        "final_incremental_passed": 32,
+        "counts_overlap": true,
+        "source_window": true,
+        "small_window": true,
+        "frontend_contract_scripts": 4,
+        "new_runtime_dependencies": 0
+      },
+      "known_limitations": [
+        "Read-only diagnostic improvements do not prove timing synchronisation or release identity.",
+        "Unknown release/encoding/bitmap subtitles remain reviewable; no automatic repair.",
+        "Keeping originals can leave more than one same-purpose subtitle; no automatic deletion.",
+        "Needs reports are per-session snapshots; preferences and staged source history are persistent.",
+        "No new EXE, GitHub publication, clean Windows test, HDR recertification or sustained refresh certification."
+      ],
+      "included_in_local_candidate": "0.12.0-rc.2"
+    },
+    {
+      "id": "YX-06",
+      "title": "NFO/IMDb 与按需 OpenSubtitles 哈希证据",
+      "priority": "P1",
+      "status": "validated_windows_source",
+      "depends_on": [
+        "YX-02"
+      ],
+      "risk": "中；局部文件读取与外部身份",
+      "existing_files": [
+        "yingxu/ports/workspace.py",
+        "yingxu/adapters/local_filesystem.py",
+        "yingxu/application/discovery.py"
+      ],
+      "proposed_files": [
+        "yingxu/ports/media_identity.py",
+        "yingxu/adapters/nfo_identity.py",
+        "yingxu/adapters/opensubtitles_hash.py",
+        "tests/unit/test_media_identity.py",
+        "tests/integration/test_bounded_media_hash.py"
+      ],
+      "steps": [
+        "NFO 默认同名；剧集区分 tvshow ID/episode ID；混合目录不继承邻片 ID。512 KiB 限额，禁用 XML 实体与网络解析。",
+        "保存 IMDb ID 类型、来源和冲突；手动修正限定当前作品，跨作品不批量传播。",
+        "用户触发增强识别时只读前后各 64 KiB，计算规范 64 位 hash，验证读取前后文件身份；不足 128 KiB 返回 unsupported。",
+        "哈希按视频身份缓存，取消及时，未明确执行搜索不发网络请求；hash 命中仍核对作品与季集。"
+      ],
+      "test_commands": [
+        "python -S -m unittest discover -s tests/unit -p test_media_identity.py -v",
+        "python -S -m unittest discover -s tests/integration -p test_bounded_media_hash.py -v"
+      ],
+      "acceptance": [
+        "标准向量、小文件、恰好边界、读取中替换、同大小同 mtime 内容变化、取消均验证。",
+        "XML 实体/超大 NFO/冲突 ID/多影片同目录不会污染识别或发起网络。",
+        "哈希不被当作 SHA256 或可靠文件所有权证明。"
+      ],
+      "rollback": "关闭增强识别，仅保留来源信息，不改原文件和已确认 ID。",
+      "completion_evidence": [
+        "evidence/yx06-windows.json"
+      ],
+      "included_in_local_candidate": "0.12.0-rc.2"
+    },
+    {
+      "id": "YX-07",
+      "title": "供应服务契约与有界重试调度",
+      "priority": "P1",
+      "status": "validated_windows_source",
+      "depends_on": [
+        "YX-05",
+        "YX-06"
+      ],
+      "risk": "中；异步网络与持久化",
+      "existing_files": [
+        "yingxu/ports/subtitle_provider.py",
+        "yingxu/ports/browser_provider.py",
+        "yingxu/application/subtitles.py",
+        "yingxu/application/discovery.py",
+        "yingxu/adapters/sqlite_workflow_store.py",
+        "yingxu/adapters/http_transfer.py"
+      ],
+      "proposed_files": [
+        "yingxu/domain/provider_policy.py",
+        "tests/unit/test_provider_retry_policy.py",
+        "tests/contract/test_provider_capabilities.py",
+        "tests/recovery/test_provider_retry_restart.py"
+      ],
+      "steps": [
+        "统一候选字段、来源、语言/用途、片源证据与 capability；浏览器 provider 和 API provider 仍保持不同权限。",
+        "分类 transient/rate_limited/auth/manual/unsupported/security/permanent；尊重 Retry-After，默认自动重试最多 3 次，指数退避加抖动。",
+        "每 provider 单独限流、有限并发和停止开关；队列存 attempt/next_attempt/error，注入时钟便于测试。",
+        "所有异步回调检查 task/revision/effect ID；取消不再重试；重启等待用户恢复，不把过期令牌写入日志或 UI。"
+      ],
+      "test_commands": [
+        "python -S -m unittest discover -s tests/unit -p test_provider_retry_policy.py -v",
+        "python -S -m unittest discover -s tests/contract -p test_provider_capabilities.py -v",
+        "python -S -m unittest discover -s tests/recovery -p test_provider_retry_restart.py -v"
+      ],
+      "acceptance": [
+        "429/5xx/超时、验证码、登录、取消、过期回调、崩溃恢复均有确定性测试。",
+        "不能因网站失败绕过验证或切换到未授权来源；不会重复下载/导入同一 effect。",
+        "默认不用 Sonarr/Radarr，不引入常驻服务器。"
+      ],
+      "rollback": "停用新调度策略，回到手动重试；持久任务保留 paused/interrupted，兼容旧 schema。",
+      "completion_evidence": [
+        "evidence/yx07-windows.json"
+      ],
+      "included_in_local_candidate": "0.12.0-rc.2"
+    },
+    {
+      "id": "YX-08",
+      "title": "可选同步 MVP：手动偏移与参考字幕",
+      "priority": "P2",
+      "status": "validated_windows_source",
+      "depends_on": [
+        "YX-00",
+        "YX-04"
+      ],
+      "risk": "中；生成新字幕，隔离后可控",
+      "existing_files": [
+        "yingxu/ports/subtitle_artifacts.py",
+        "yingxu/application/downloading.py",
+        "yingxu/application/executing.py",
+        "yingxu/desktop/workspace_protocol.py"
+      ],
+      "proposed_files": [
+        "yingxu/ports/subtitle_sync.py",
+        "yingxu/domain/sync_models.py",
+        "yingxu/application/synchronizing.py",
+        "yingxu/adapters/sync_worker.py",
+        "tests/unit/test_subtitle_shift.py",
+        "tests/integration/test_reference_sync.py",
+        "tests/recovery/test_sync_result_staging.py"
+      ],
+      "steps": [
+        "新增明确 succeeded/low_quality/failed/cancelled 的 SyncResult，GUI/后续 CLI 共用用例；正偏移表示延后。",
+        "手动毫秒偏移保留正文/样式/注释；负时间不静默裁剪，展示策略与预览；输入保持原样。",
+        "ffsubsync 固定版本放在可选独立 worker，先只支持可信本地参考字幕；argv 白名单、超时、有界输出与 stderr 日志。",
+        "验证 retval、sync_was_successful、输出重解析、cue/正文保真与质量前后差异；低质量产物不能变成功。",
+        "输出进入私有 artifact，再用现有审阅/预览/事务/撤销发布，不直接 overwrite。"
+      ],
+      "test_commands": [
+        "python -S -m unittest discover -s tests/unit -p test_subtitle_shift.py -v",
+        "python -m unittest discover -s tests/integration -p test_reference_sync.py -v",
+        "python -S -m unittest discover -s tests/recovery -p test_sync_result_staging.py -v"
+      ],
+      "acceptance": [
+        "SRT/ASS/SSA/VTT 正负偏移、跨小时、样式和 cue 设置保真；不能写入零长度或无效输出。",
+        "重现本报告两组 100 cues 参考字幕实验，误差<=30ms；另外验证错误参考、超时、磁盘满、取消。",
+        "伪造 success/零退出码/旧 effect/越界 artifact 被拒绝；媒体原文件摘要不变。"
+      ],
+      "rollback": "关闭 sync 功能，保留已生成暂存结果与原文件；绝不需要反向推算时间轴恢复原文件。",
+      "completion_evidence": [
+        "evidence/yx08-windows.json",
+        "evidence/yx08-reference-probe.json"
+      ],
+      "included_in_local_candidate": "0.12.0-rc.2"
+    },
+    {
+      "id": "YX-09",
+      "title": "音频同步、计算复用、取消和有限引擎回退",
+      "priority": "P2",
+      "status": "validated_windows_source",
+      "depends_on": [
+        "YX-08"
+      ],
+      "risk": "高；原生进程、缓存、质量与发行依赖",
+      "existing_files": [
+        "yingxu/adapters/thread_tasks.py",
+        "yingxu/adapters/transaction_files.py",
+        "scripts/build_electron.py",
+        "scripts/release_payload.py",
+        "docs/DEPENDENCIES.md"
+      ],
+      "proposed_files": [
+        "yingxu/adapters/sync_process_tree.py",
+        "yingxu/adapters/speech_cache.py",
+        "yingxu/domain/sync_engine_policy.py",
+        "tests/integration/test_audio_sync.py",
+        "tests/recovery/test_sync_worker_crash.py",
+        "benchmarks/subtitle_sync.py"
+      ],
+      "steps": [
+        "用户主动选择音轨；优先已有文本参考；音频初始只启用一种 VAD，先并发 1。",
+        "按参考文件身份/轨道/选项分组复用分析；明确组取消影响；Windows Job Object 管整棵 worker/FFmpeg 进程树。",
+        "跨会话缓存加入引擎/VAD/参数版本和可靠内容验证；无法可靠核对时只做本次运行缓存；有配额、引用保护、损坏回退与 allow_pickle=False。",
+        "区分多窗口采样与 split-penalty 修正；独立质量门控，不把原始 raw score 当概率。",
+        "仅失败/低质量且可恢复的结果允许进入配置的下一引擎；取消、权限和非法输出禁止回退；alass/lapse 分别核查许可/校验值/格式能力后再加入。",
+        "最终包登记所用 FFmpeg 构建及许可证、源码材料、二进制 SHA256，工具缺失时提供明确能力缺失状态。"
+      ],
+      "test_commands": [
+        "python -m unittest discover -s tests/integration -p test_audio_sync.py -v",
+        "python -S -m unittest discover -s tests/recovery -p test_sync_worker_crash.py -v",
+        "python benchmarks/subtitle_sync.py --cases synthetic --workers 1"
+      ],
+      "acceptance": [
+        "真实生成音频+字幕验证偏移/漂移/分段，加入静音、寡对白、错轨、错版本，不能只用 mock。",
+        "取消/超时/父进程崩溃后没有遗留 FFmpeg；同组已完成结果不丢，未完成不被回退重新启动。",
+        "缓存命中/失效/损坏与同大小同时间替换文件均正确；记录冷/热耗时、内存与 I/O。",
+        "打包体积、许可和 Windows 干净机均可复核；无默认模型下载或远程媒体读取。"
+      ],
+      "rollback": "禁用音频、缓存与后备引擎，退到参考字幕/手动偏移；原文件与历史均保留。",
+      "completion_evidence": [
+        "evidence/yx09-windows.json"
+      ],
+      "included_in_local_candidate": "0.12.0-rc.2"
+    },
+    {
+      "id": "YX-10",
+      "title": "用户触发的字幕文本辅助匹配",
+      "priority": "P3",
+      "status": "validated_windows_source",
+      "depends_on": [
+        "YX-03",
+        "YX-04",
+        "YX-09"
+      ],
+      "risk": "中；误判和视频读取成本",
+      "existing_files": [
+        "yingxu/application/reviewing.py",
+        "yingxu/ports/workspace.py"
+      ],
+      "proposed_files": [
+        "yingxu/domain/content_matching.py",
+        "yingxu/application/content_matching.py",
+        "tests/unit/test_content_matching.py",
+        "tests/integration/test_content_matching_opt_in.py"
+      ],
+      "steps": [
+        "仅选中的疑难条目与用户指定文本轨/参考字幕启用，显示读取范围，不默认全盘提取或 OCR。",
+        "同语言文本规范化，比较字符 bigram cosine；Jaro-Winkler 作可选小权重补充；剔除/降权公共片头和回顾。",
+        "开头/中部/尾部有限窗口与最小信息量门槛；短文本、异语言、共同片头返回 insufficient_evidence。",
+        "展示前两候选、差距与本地短片段，作为匹配附加证据；不自动重命名视频或向外上传正文。"
+      ],
+      "test_commands": [
+        "python -S -m unittest discover -s tests/unit -p test_content_matching.py -v",
+        "python -m unittest discover -s tests/integration -p test_content_matching_opt_in.py -v"
+      ],
+      "acceptance": [
+        "共同片头、重复歌曲、寡对白、错语言、乱码、不同剪辑与真正同集均有标注样本。",
+        "未点击功能时视频内容读取为零；取消及时；缓存绑定文件/轨道身份。",
+        "高歧义需人工确认，内容评分不直接继承 EpisodeMatcher 的 0.20/0.03 阈值。"
+      ],
+      "rollback": "隐藏内容辅助入口；删除无活跃引用的派生缓存，不动媒体。",
+      "completion_evidence": [
+        "evidence/yx10-windows.json"
+      ],
+      "included_in_local_candidate": "0.12.0-rc.2"
+    },
+    {
+      "id": "YX-11",
+      "title": "按已完成阶段完成 Windows 候选与发布验收",
+      "priority": "P0_release_gate",
+      "status": "validated_windows_local_candidate",
+      "depends_on": [
+        "YX-00",
+        "YX-01",
+        "YX-02",
+        "YX-03",
+        "YX-04",
+        "YX-05",
+        "YX-06",
+        "YX-07",
+        "YX-08",
+        "YX-09",
+        "YX-10"
+      ],
+      "risk": "高；发行质量门槛",
+      "dynamic_dependencies": "将本次拟发布的所有任务加入依赖；不要求等到 YX-10 才能发布较小改进。",
+      "existing_files": [
+        "scripts/build_electron.py",
+        "scripts/check_noqt_desktop.cjs",
+        "scripts/check_recovery_desktop.cjs",
+        "scripts/check_subtitle_desktop.cjs",
+        "docs/RELEASE_VALIDATION.md",
+        "THIRD_PARTY_NOTICES.md",
+        "desktop/electron/package.json"
+      ],
+      "proposed_files": [
+        "docs/research/subtitle-upgrade-2026-11/evidence/windows-validation.json"
+      ],
+      "steps": [
+        "按用户已确认范围，在当前 Windows x64 运行完整 tests 并核查 skip，保存确切提交、环境、结果；不增加干净 Windows 测试。",
+        "构建候选；同一用例验证源码与冻结后台；真实桌面用生成媒体核对详情/候选/最终预览/整理/恢复/撤销。",
+        "覆盖中文长路径、锁定、跨卷、目标竞争、同大小同时间编辑、取消和崩溃。",
+        "新引擎若纳入，额外验证缺工具、全进程树回收、坏输出、低质量拒绝、原文件保护与许可材料。",
+        "最终标题/版本/说明只写已完成内容，给出 SHA256 与可审阅候选；发布/合并按用户授权执行。"
+      ],
+      "test_commands": [
+        "python -S -m unittest discover -s tests -v",
+        "node scripts/check_noqt_desktop.cjs",
+        "node scripts/check_recovery_desktop.cjs",
+        "node scripts/check_subtitle_desktop.cjs",
+        "python scripts/build_electron.py --zip"
+      ],
+      "acceptance": [
+        "完整 Windows 测试无未解释 failure/error；关键文件安全用例不得跳过。",
+        "冻结模块无 Qt；相关依赖与可选工具许可完整；原媒体保护和回退可验证。",
+        "界面可见实测有记录；不以 Linux 单测或 rAF 代替 EXE/120fps/断电验收。"
+      ],
+      "rollback": "保留当前已发布版本；候选未通过时不发布。",
+      "completion_evidence": [
+        "evidence/windows-validation.json",
+        "../../evidence/local-0.12.0-rc.2.json"
+      ],
+      "included_in_local_candidate": "0.12.0-rc.2",
+      "known_limitations": [
+        "Unsigned candidate; no clean Windows or real power-loss test.",
+        "No sustained refresh-rate, independent presentation or HDR recertification; teardown GPU warning remains recorded.",
+        "Generated samples and isolated profiles only; no new real-world matching-accuracy claim or live subtitle-site certification.",
+        "Audio requires explicitly selected local FFmpeg; no FFmpeg binary, ASR/OCR or model is distributed.",
+        "Affine alignment rejects insufficient speech and inconsistent cuts; text evidence does not certify identity or automatically associate.",
+        "Test batches overlap and are not added together; hosted CI first run remains pending a future publish branch.",
+        "Private development history is not audited or published in this local candidate."
+      ]
+    }
+  ],
+  "transport_note": "从指定聊天的完整卡片文本恢复；YX-11 的末尾回退字段因工具截断按报告补全。原交付 ZIP 与完整日志尚未传到本机，不将其标为已校验。",
+  "local_execution": {
+    "date": "2026-11-09",
+    "phase": "YX-00 至 YX-11 本地实施/候选完成；不自动发布",
+    "baseline_local": "7f4b700",
+    "clean_windows_test": "按用户原有要求取消，不作为阻塞；本机 Windows 验证保留",
+    "release": "不自动发布",
+    "checkpoints": {
+      "YX-00": "f83d89f",
+      "YX-01": "codex/yx01-episode-coverage",
+      "YX-02": "codex/yx02-release-metadata",
+      "YX-03": "db0387a",
+      "YX-04": "codex/yx04-subtitle-quality",
+      "YX-05": "f701918",
+      "YX-06": "07ef054",
+      "YX-07": "ccd7efc",
+      "YX-08": "a5a11eb",
+      "YX-09": "1690fb0",
+      "YX-10": "a18821c",
+      "YX-11": "635b315"
+    },
+    "candidate": "0.12.0-rc.2",
+    "remaining_implementation_tasks": []
+  }
+}

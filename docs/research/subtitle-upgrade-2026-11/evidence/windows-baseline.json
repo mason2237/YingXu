@@ -1,0 +1,137 @@
+{
+  "date_hong_kong": "2026-11-09",
+  "phase": "R11 baseline: YX-00 / YX-01",
+  "baseline": {
+    "local": "7f4b700",
+    "public": "c7b8056b35d02e335723366e9916512032133a13",
+    "matching_blob_verified_identical": "7ae550f683388eaf314917d04698e59e540c3285",
+    "public_main_checked_via": "GitHub connector, 2026-11-09"
+  },
+  "windows": {
+    "schema": 1,
+    "suite": "windows",
+    "environment": {
+      "python": "3.12.0",
+      "os": "Windows-11-10.0.26200-SP0",
+      "windows": true,
+      "media": {
+        "version": "7.0.1",
+        "dll_present": true,
+        "can_parse": true
+      }
+    },
+    "scope": "all tests",
+    "status": "completed",
+    "success": true,
+    "seconds": 20.391,
+    "total": 205,
+    "passed": 205,
+    "failures": [],
+    "errors": [],
+    "skipped": []
+  },
+  "portable_subset_on_windows": {
+    "schema": 1,
+    "suite": "portable",
+    "environment": {
+      "python": "3.12.0",
+      "os": "Windows-11-10.0.26200-SP0",
+      "windows": true,
+      "media": {
+        "version": "7.0.1",
+        "dll_present": true,
+        "can_parse": true
+      }
+    },
+    "scope": {
+      "unit": "all",
+      "contract": [
+        "test_core.py",
+        "test_subtitle_sources.py",
+        "test_desktop_protocol.py"
+      ],
+      "excluded": "other contracts, integration and recovery; run on Windows"
+    },
+    "status": "completed",
+    "success": true,
+    "seconds": 0.407,
+    "total": 80,
+    "passed": 80,
+    "failures": [],
+    "errors": [],
+    "skipped": []
+  },
+  "frontend": {
+    "online": true,
+    "visibility": true,
+    "review_details": true
+  },
+  "source_window": {
+    "passed": true,
+    "mode": "source",
+    "startupMs": 1492,
+    "resizeWidths": [
+      1000,
+      1360
+    ],
+    "minimizeRestore": true,
+    "protocol": 2,
+    "runtime": "Electron + Python",
+    "qtImported": false,
+    "videos": 300,
+    "scanPreview": true,
+    "unconfirmedExecutionBlocked": true,
+    "themes": true,
+    "languagePreference": true,
+    "remoteHasLocalAPI": false,
+    "websiteVisited": false,
+    "reload": true,
+    "mediaUnchanged": true,
+    "rendering": {
+      "passed": true,
+      "checks": [
+        "selection_reuses_nodes_and_cached_data",
+        "five_thousand_rows_bounded_buffered_scroll",
+        "filter_and_scan_identity_invalidate_cache",
+        "out_of_order_replies_do_not_repaint_new_results",
+        "concurrent_same_page_queries_coalesced",
+        "empty_restore_and_untrusted_filename_plain_text"
+      ],
+      "queries": 44
+    },
+    "exitCode": 0,
+    "screenshot": "work\\test-results\\noqt-desktop-1794198738676\\workspace.png",
+    "output": "work/test-results/noqt-desktop-1794198738676"
+  },
+  "matching_probe": "matching-probe.json",
+  "commands": [
+    ".venv-core/Scripts/python.exe -S scripts/check_platform_tests.py --suite windows --output work/test-results/r11-windows-baseline.json",
+    ".venv-core/Scripts/python.exe -S scripts/check_platform_tests.py --suite portable --output work/test-results/r11-portable-baseline.json",
+    "node tests/frontend/online.cjs",
+    "node tests/frontend/visibility.cjs",
+    "node tests/frontend/review_details.cjs",
+    ".venv-core/Scripts/python.exe -S docs/research/subtitle-upgrade-2026-11/reproduce_matching.py --baseline-ref 7f4b700",
+    "node scripts/check_noqt_desktop.cjs"
+  ],
+  "limits": [
+    "Overlapping test sets; counts are not additive.",
+    "Portable runner tested on this Windows host, not a new Linux run.",
+    "GitHub Actions configured, not yet run remotely.",
+    "No new frozen EXE, release, performance, HDR or clean Windows certification.",
+    "Generated samples only; no user media changed.",
+    "Original research ZIP/full logs not transferred; upstream claims retain their own provenance."
+  ],
+  "tested_source_sha256": {
+    "yingxu/domain/matching.py": "c473bc99e758735c549e152b6dfb6d8386798a033134b2eea711f661cf29fb9f",
+    "yingxu/application/reviewing.py": "bdd0aa3533433f1f915c40aeac641238a312a67cb752c0abdf0ead5f43421688",
+    "yingxu/adapters/subtitle_sites/candidates.py": "bb55c7417f76c48d44eca3f679c8097fe115a0033a46e6e55ea1615506c01c61",
+    "tests/unit/test_episode_coverage.py": "993c2df0bbf2bee52097cab016dba2a3f909a8d2ea429be216d4d91a31f5f90a",
+    "scripts/check_platform_tests.py": "0a33f5fd821b225f2279320c86a5fac20033ee107c54edd9329d9b2f04be2eb8"
+  },
+  "checkpoint": {
+    "test_infrastructure_commit": "f83d89f",
+    "implementation_branch": "codex/yx01-episode-coverage",
+    "implementation_commit": "git log -1 on the saved phase branch",
+    "source_hash_scope": "Working-tree UTF-8 file bytes tested on this Windows machine."
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "task": "YX-05",
+  "date_hong_kong": "2026-11-09",
+  "branch": "codex/yx05-subtitle-needs",
+  "base_commit": "b8e3aad",
+  "scope": "Windows source stage; existing 0.12.0-rc.1 package remains YX-00 through YX-04",
+  "windows_full_suite_before_final_incremental": {
+    "schema": 1,
+    "suite": "windows",
+    "environment": {
+      "python": "3.12.0",
+      "os": "Windows-11-10.0.26200-SP0",
+      "windows": true,
+      "media": {
+        "version": "7.0.1",
+        "dll_present": true,
+        "can_parse": true
+      }
+    },
+    "scope": "all tests",
+    "status": "completed",
+    "success": true,
+    "seconds": 21.985,
+    "total": 252,
+    "passed": 252,
+    "failures": [],
+    "errors": [],
+    "skipped": []
+  },
+  "final_incremental": {
+    "passed": 32,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "counts_overlap": true,
+    "log": "work/test-results/yx05-final-incremental.log",
+    "command": ".venv-core/Scripts/python.exe -S -m unittest tests.unit.test_subtitle_policy tests.recovery.test_subtitle_upgrade_policy tests.recovery.test_review_model_migration tests.contract.test_match_explanations tests.contract.test_workspace_v2 tests.integration.test_noqt_host.NoQtHostIntegration.test_real_scan_manual_review_preview_and_no_unconfirmed_execution tests.integration.test_noqt_host.NoQtHostIntegration.test_confirmed_execute_restart_history_and_undo -v"
+  },
+  "frontend_contracts": {
+    "passed": 4,
+    "scripts": [
+      "online.cjs",
+      "review_details.cjs",
+      "subtitle_quality.cjs",
+      "visibility.cjs"
+    ]
+  },
+  "source_window": {
+    "passed": true,
+    "mode": "source",
+    "policyPreference": true,
+    "missingAndSatisfiedStates": true,
+    "forcedIsNotFull": true,
+    "boundedLayout": true,
+    "smallWindow1000x760": true,
+    "upgradeRequiresAcknowledgement": true,
+    "stagedReviewKeepsOriginal": true,
+    "separateTargetName": true,
+    "mediaUnchanged": true,
+    "maxReplyBytes": 1521,
+    "jsExceptions": 0,
+    "websiteVisited": false,
+    "exitCode": 0,
+    "output": "work\\test-results\\needs-desktop-1794220412791"
+  },
+  "window_evidence": "work/test-results/needs-desktop-1794220412791/",
+  "source_digests": {
+    "frontend/css/local-workspace.css": "40df2f5950a5a284d260062f335b11c2483b3de9ed390e42938c8d644d215f44",
+    "frontend/js/components/dialogs.js": "e45e224e68df2ee68066907a22fb373e4f1c4416d9af381e814e3c1a20f051af",
+    "frontend/js/components/local-workspace.js": "e91d6dcd40b35451626a326d74fa93e2e9e7a9ea364e04a3da611ff7f64fcfd0",
+    "frontend/js/components/subtitle-needs.js": "f637582ab27578d86911383a5b5d689ddb3cd5de368d2b17eb5d3c0cb895eb5d",
+    "scripts/check_needs_desktop.mjs": "7c008a6faaa735a2ed6b3d2b9ff45e1ffd6a25280c0e03d454636f087b9f19ae",
+    "scripts/check_window_bounds.py": "9804320e268572e6586b4b4dd539e0c8880e9d701adb2e69acd2b237c56858ef",
+    "tests/recovery/test_subtitle_upgrade_policy.py": "da627ddc324048c2eb639c0f9c00e5d1c592e9ca2aba00e69c05e42e0b1f3113",
+    "tests/unit/test_subtitle_policy.py": "2156423620c3b55a08bc990fba6c09708bbb9c59b052b1d09984186c7d93a80c",
+    "yingxu/application/discovery.py": "8aaf9ba154073678466a9b19ffd30260ab0f5a1a6b04ac29cd83eabda014f2fb",
+    "yingxu/application/downloading.py": "762d3275f51bde170ac9cffe897ec4697c26fefaf9c7401a220ba6772381e925",
+    "yingxu/application/drafts.py": "95cc9398f1e2a0d0976e48486681af7a46e1a6aedfbe1e96c05a4651fb7e1da0",
+    "yingxu/application/reviewing.py": "ffef443e8db2a5b56784f0592feb1411d01b250c1f6a7e8081fb6b223184e1f6",
+    "yingxu/application/subtitle_needs.py": "e98c9c901102da15db510591a94dee8595c0de134f8021aa1227943f4abb5d44",
+    "yingxu/application/workspace.py": "fdb1cba0b51118740c75f4c1ceaa305bf2e069e7d94194f614f11e2ea7e01674",
+    "yingxu/desktop/assets.py": "038797a55dac978435f565c1aefca7bdae9d8f94c23ada524ee494f1a63a704d",
+    "yingxu/desktop/host.py": "04472f673e9977c03ecbe67413bdab79a89831a398c7cfbc9f9b49ae6039deb2",
+    "yingxu/desktop/workspace_protocol.py": "92aafac83d95d582f237bd30d228b06314863eecf4fc52beb3fa8c9c2787835e",
+    "yingxu/domain/media.py": "95b9565987428f80186ceea6dfda4da799acb4d0e2eaee56646d1726564bc7cc",
+    "yingxu/domain/review.py": "36217f7b0df7d3e59c92f87bf0fc737fc891a57d3543c3b1ad6c9cf73f13ae62",
+    "yingxu/domain/subtitle_policy.py": "dfb4f42dc526dced9050126c9e796181443a36fa4c6cd44196daa48685cbb4cb"
+  },
+  "acceptance": {
+    "needs_by_language_script_purpose": true,
+    "embedded_is_not_extracted": true,
+    "sdh_requires_policy": true,
+    "unknown_quality_or_identity_is_review": true,
+    "existing_satisfied_not_bulk_searched": true,
+    "no_automatic_network": true,
+    "manual_and_confirmed_protected": true,
+    "upgrade_stages_only_after_acknowledgement": true,
+    "original_preserved": true,
+    "duplicate_content_not_upgrade": true,
+    "staged_digests_checked_before_final_preview": true,
+    "restart_recovery_and_undo": true,
+    "policy_checkpoint_mismatch_revokes_approval": true,
+    "byte_budget_and_cancel": true,
+    "protocol_8192_unchanged": true
+  },
+  "environment_notes": [
+    "Initial restricted child processes could not initialise their own generated cache directories; normal process permission tests passed without changing any system permission configuration.",
+    "A test-only window resize CDP call was unsupported at that endpoint; changed the script to the existing PID-verified native window helper and passed.",
+    "Full-suite evidence preceded final preview/digest and byte-budget refinements; final 32 incremental tests cover these. Test batches overlap and are not summed."
+  ],
+  "limits": [
+    "Read-only diagnostic improvements do not prove timing synchronisation or release identity.",
+    "Unknown release/encoding/bitmap subtitles remain reviewable; no automatic repair.",
+    "Keeping originals can leave more than one same-purpose subtitle; no automatic deletion.",
+    "Needs reports are per-session snapshots; preferences and staged source history are persistent.",
+    "No new EXE, GitHub publication, clean Windows test, HDR recertification or sustained refresh certification."
+  ],
+  "rollback": "Return to b8e3aad or the preserved local 0.12.0-rc.1 package with its pre-upgrade profile backup; keep all media, download buffers and operation journal files."
+}

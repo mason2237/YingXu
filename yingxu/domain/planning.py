@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from .matching import (strip_language_tag, is_same_path, check_cancelled,
                        similarity, MATCH_THRESHOLD, AUTO_APPLY_THRESHOLD)
+from .match_assessment import AssessmentIndex
 
 
 def destination_for(video: Path, subtitle: Path, reserved: set[str], move_to_video: bool = False, *, exists) -> Path:
@@ -21,10 +22,11 @@ def destination_for(video: Path, subtitle: Path, reserved: set[str], move_to_vid
 
 
 def build_plan(videos: list[Path], subtitles: list[Path], move_to_video: bool = False,
-               *, exists, should_stop=None, progress=None) -> list[dict]:
+               *, exists, should_stop=None, progress=None, assessment=None) -> list[dict]:
     plan: list[dict] = []
     available = set(range(len(subtitles)))
     reserved_destinations: set[str] = set()
+    assessment = assessment or AssessmentIndex(videos,subtitles,should_stop)
 
     for position, video in enumerate(videos):
         check_cancelled(should_stop)
@@ -54,12 +56,14 @@ def build_plan(videos: list[Path], subtitles: list[Path], move_to_video: bool = 
         available.remove(best_index)
         target = destination_for(video, subtitle, reserved_destinations, move_to_video, exists=exists)
         reserved_destinations.add(os.path.normcase(os.path.abspath(target)))
-        status = "已符合" if is_same_path(subtitle, target) else ("待整理" if best_score >= AUTO_APPLY_THRESHOLD else "需确认")
+        needs_review = not assessment.assess(video,subtitle).auto_eligible
+        status = "需确认" if needs_review else "已符合" if is_same_path(subtitle, target) else "待整理"
         plan.append({
             "video": video,
             "subtitle": subtitle,
             "target": target,
             "score": best_score,
+            "needs_review": needs_review,
             "status": status,
             "error": "",
         })

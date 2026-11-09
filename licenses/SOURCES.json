@@ -1305,6 +1305,13 @@
       "mode": "verified-wheel-member",
       "member": "pymediainfo/License.html",
       "wheelSha256": "13224fa7590e198763b8baf072e704ea81d334e71aa32a469091460e243893c7"
+    },
+    {
+      "file": "MPL-2.0.txt",
+      "url": "https://www.mozilla.org/media/MPL/2.0/index.txt",
+      "resolvedURL": "https://www.mozilla.org/media/MPL/2.0/index.txt",
+      "sha256": "3f3d9e0024b1921b067d6f7f88deb4a60cbe7a78e76c64e3f1d7fc3b779b9d04",
+      "mode": "verbatim"
     }
   ],
   "indexes": {

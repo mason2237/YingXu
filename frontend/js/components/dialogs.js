@@ -6,7 +6,7 @@ export class WorkspaceDialogs {
   constructor(store, effects, {load, toast, mutate, feedback}) {
     Object.assign(this, {store, effects, load, toast, mutate, feedback}); this.page = 0;
     this.modals = {};
-    for (const name of ['appearance', 'candidate', 'preview', 'history', 'scan-options'].filter(name => $(`${name}-dialog`))) {
+    for (const name of ['appearance', 'candidate', 'preview', 'history', 'scan-options', 'needs'].filter(name => $(`${name}-dialog`))) {
       this.modals[name] = modal($(`${name}-dialog`), {reduced: () => effects.reduced, fadeClose: name === 'appearance', focusFallback: () => $('file-list').focus({preventScroll:true}), onClose: () => {
         if (name === 'preview') {store.adapter.request('preview.discard',this.plan?.snapshotId ? {snapshotId:this.plan.snapshotId} : {}).catch(error => toast(error.message,{tone:'error'}));if (this.plan) this.plan.canExecute = false;this.syncExecution?.();feedback.workflow(store.busy ? 1 : 2);}
       }});

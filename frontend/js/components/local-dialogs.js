@@ -65,18 +65,25 @@ export class LocalWorkspaceDialogs extends WorkspaceDialogs {
     $('candidate-video').textContent = row.video.name;$('candidate-list').replaceChildren();
     for (const candidate of response.rows) {
       const card = el('article',`candidate-card${candidate.recommended ? ' recommended' : ''}`);card.dataset.candidateId = candidate.subtitleId;
-      const header = el('header');header.append(language(candidate.language),el('span','',candidate.recommended ? '优先核对' : `候选 ${candidate.rank+1}`));
-      card.append(header,el('h3','',candidate.name),el('div','candidate-score',`${Math.round(candidate.score*100)}%`),el('p','subtle-text','文件名相似度，不代表匹配概率'),el('p','',candidate.reason),el('p','',`集数标识 · ${candidate.episode}`));
+      const header = el('header');header.append(language(candidate.variantLabel || candidate.language),el('span','',candidate.recommended ? '优先核对' : `候选 ${candidate.rank+1}`));
+      card.append(header,el('h3','',candidate.name),el('div','candidate-score',`${Math.round(candidate.score*100)} 分`),el('p','subtle-text','文件名匹配分，不代表匹配概率'),el('p','',candidate.reason),el('p','',`集数标识 · ${candidate.episode}`));
+      if (candidate.assessment) {
+        const evidence=el('ul','basis-list');
+        for (const text of [...candidate.assessment.evidence,...candidate.assessment.missing,...candidate.assessment.whyReview]) evidence.append(el('li','',text));
+        for (const [label,value] of [['视频侧差距',candidate.assessment.videoMargin],['字幕侧差距',candidate.assessment.subtitleMargin]]) if (value!=null) evidence.append(el('li','',`${label} ${(value*100).toFixed(1)} 分`));
+        card.append(evidence);
+      }
       const path = el('p','subtle-text',candidate.displayPath);path.title = candidate.displayPath;
       if (candidate.imported) {
         const location = el('details','path-details');location.append(el('summary','','本机暂存 · 展开完整路径'),path);card.append(location);
       } else card.append(path);
-      if (candidate.conflict) {const warning = el('div','notice warning');warning.append(iconNode('alert'),document.createTextNode('集数不一致，请核对后选择。'));card.append(warning);}
-      const assign = button(candidate.disabled ? candidate.reason : row.subtitles.some(sub => sub.language === candidate.language) ? '替换此语言字幕' : '使用这份字幕',candidate.recommended ? 'primary' : 'secondary',async () => {
+      if (candidate.conflict) {const warning = el('div','notice warning');warning.append(iconNode('alert'),document.createTextNode(candidate.assessment?.conflicts.join('；') || '匹配信息有冲突，请核对后选择。'));card.append(warning);}
+      const sameVariant = sub => sub.variantKey && candidate.variantKey ? sub.variantKey === candidate.variantKey : sub.language === candidate.language;
+      const assign = button(candidate.disabled ? candidate.reason : row.subtitles.some(sameVariant) ? '替换相同语言与用途' : '使用这份字幕',candidate.recommended ? 'primary' : 'secondary',async () => {
         if (this.store.busy) return;assign.disabled = true;
         try {
           if (this.store.selectedId !== row.rowId) throw new Error('选择已变化，请重新打开候选字幕。');
-          const replace = row.subtitles.find(sub => sub.language === candidate.language);
+          const replace = row.subtitles.find(sameVariant);
           await this.mutate('review.assign',{subtitleId:candidate.subtitleId,replaceId:replace?.subtitleId || null});await this.modals.candidate.close();
         } catch (error) {this.toast(error.message,{tone:'error'});assign.disabled = Boolean(candidate.disabled);}
       });

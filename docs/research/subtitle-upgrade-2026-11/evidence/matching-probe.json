@@ -1,0 +1,55 @@
+{
+  "baseline": "7f4b700",
+  "cases": [
+    {
+      "video": "Show.S01E01E02.mkv",
+      "subtitle": "Show.S01E01.chs.srt",
+      "conflict": true,
+      "before": 0.9095652173913044,
+      "after": 0.0
+    },
+    {
+      "video": "Show.S01E01-E03.mkv",
+      "subtitle": "Show.S01E01.chs.srt",
+      "conflict": true,
+      "before": 0.9095652173913044,
+      "after": 0.0
+    },
+    {
+      "video": "Show.S01E01E03.mkv",
+      "subtitle": "Show.S01E01E02.chs.srt",
+      "conflict": true,
+      "before": 0.9630769230769232,
+      "after": 0.0
+    },
+    {
+      "video": "Show.Ｓ０１Ｅ０１.mkv",
+      "subtitle": "Show.S01E02.chs.srt",
+      "conflict": true,
+      "before": 0.9400000000000001,
+      "after": 0.0
+    },
+    {
+      "video": "Show.S01E01.mkv",
+      "subtitle": "Show.S01E01.chs.srt",
+      "conflict": false,
+      "before": 1.0,
+      "after": 1.0
+    }
+  ],
+  "unchanged_single_episode_scores": 8100,
+  "one_run_seconds_not_a_performance_claim": {
+    "before": 0.027092400000015004,
+    "after": 0.009056299999997464
+  },
+  "format_recognition_is_not_quality": [
+    {
+      "file": "empty.ass",
+      "result": "subtitle_candidate"
+    },
+    {
+      "file": "reversed.srt",
+      "result": "subtitle_candidate"
+    }
+  ]
+}

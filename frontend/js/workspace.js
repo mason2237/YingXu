@@ -8,6 +8,9 @@ import {appearance, bindThemeControls} from './appearance.js';
 import {WorkspaceFeedback, InspectorDrawer} from './components/workspace-feedback.js';
 import {prepareLocalWorkspace, LocalWorkspace} from './components/local-workspace.js';
 import {applyPrototypeMode} from './components/prototype-mode.js';
+import {SubtitleQuality} from './components/subtitle-quality.js';
+import {mountIdentity} from './components/media-identity.js';
+import {mountSync} from './components/subtitle-sync.js';
 
 const $ = id => document.getElementById(id);
 const {LocalAdapter} = await import('./local-adapter.js');
@@ -15,6 +18,8 @@ const {LocalWorkspaceDialogs} = await import('./components/local-dialogs.js');
 prepareLocalWorkspace();
 icons(); bindKeyboardFocus(); bindThemeControls();
 const adapter = new LocalAdapter(), store = new WorkspaceStore(adapter);
+const quality = new SubtitleQuality((action,params)=>adapter.request(action,params));
+const mountQuality=(host,sub)=>{const context=store.params({rowId:store.details.rowId,subtitleId:sub.subtitleId});const reportHost=el('div','quality-report');host.append(reportHost);quality.mount(reportHost,{scope:'review',...context});mountSync(host,{context,request:(a,p)=>adapter.request(a,p),refresh:()=>load('restore')});};
 const electronHost = globalThis.yingxuHost;
 if (electronHost?.kind === 'electron' && !electronHost.prototype) {
   const unsubscribe = electronHost.workspace.onNativeUi(identifier => {
@@ -53,10 +58,12 @@ async function mutate(action, params = {}) {
 }
 const dialogs = new LocalWorkspaceDialogs(store, effects, {load: scenario => load(scenario), toast, mutate, feedback});
 function renderDetails() {
-  renderInspector($('inspector-content'), store.details, {error:store.detailsError,retry:() => store.select(store.selectedId),mutate: (action, params) => mutate(action, params).catch(() => {}), candidates: () => dialogs.candidates().catch(error => toast(error.message,{tone:'error'})), copy: copyName,reveal:fileId => adapter.request('file.reveal',{fileId}).catch(error => toast(error.message,{tone:'error'})), online:rowId => localWorkspace?.openSubtitles(rowId), actionsHost: $('inspector-actions')});
-  if (store.busy) for (const control of document.querySelectorAll('#inspector button')) control.disabled = true;
+  renderInspector($('inspector-content'), store.details, {error:store.detailsError,retry:() => store.select(store.selectedId),mutate: (action, params) => mutate(action, params).catch(() => {}), candidates: () => dialogs.candidates().catch(error => toast(error.message,{tone:'error'})), copy: copyName,reveal:fileId => adapter.request('file.reveal',{fileId}).catch(error => toast(error.message,{tone:'error'})), online:rowId => localWorkspace?.openSubtitles(rowId), actionsHost: $('inspector-actions'),quality:mountQuality});
+  mountIdentityHandler();
+  if (store.busy) for (const control of document.querySelectorAll('#inspector button')) if(!control.closest('.subtitle-quality'))control.disabled = true;
   applyPrototypeMode(adapter.state);
 }
+function mountIdentityHandler(){if(store.details&&!store.detailsError)mountIdentity($('inspector-content'),{request:(a,p)=>adapter.request(a,p),context:store.params({rowId:store.details.rowId}),refresh:()=>load('restore')});}
 function updateSummary() {
   const {counts = {}, subtitleCount = 0} = store.summary;
   $('overview').replaceChildren();
@@ -73,7 +80,7 @@ function updateSummary() {
   for (const control of document.querySelectorAll('.collection-tools input,.collection-tools button,.collection-tools select,.list-heading button,.list-heading select')) control.disabled = store.busy;
   $('inspector').inert = store.busy;
   $('file-list').setAttribute('aria-busy',String(store.busy));
-  for (const control of document.querySelectorAll('#inspector button')) control.disabled = store.busy;
+  for (const control of document.querySelectorAll('#inspector button')) if(!control.closest('.subtitle-quality'))control.disabled = store.busy;
   $('list-count').textContent = `${store.view.total.toLocaleString()} / ${(counts.all || 0).toLocaleString()} 个视频`;
   $('footer-status').textContent = store.error ? '读取失败，请检查目录后重新扫描' : store.loading ? '正在处理本地任务…' : !folder.folderId ? '选择文件夹，开始扫描' : folder.needsScan ? folder.finished ? '本批整理已结束，重新扫描可核对文件' : '选项已更新，请重新扫描' : `${counts['需确认'] || 0} 项待确认 · ${counts['存在冲突'] || 0} 项冲突`;
   if (!store.error && !store.loading && !folder.needsScan && folder.embeddedSatisfiedCount) $('footer-status').textContent = `${folder.embeddedSatisfiedCount} 个视频内嵌字幕已满足 · ${counts['需确认'] || 0} 项待确认`;

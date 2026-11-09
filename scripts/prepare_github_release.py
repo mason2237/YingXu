@@ -62,7 +62,7 @@ def main():
             saved = archive.read(f"YingXu-{VERSION}-source/{relative}")
             current = (ROOT / relative).read_bytes()
             if saved == current:continue
-            if Path(relative).suffix not in {'.py','.js','.cjs','.json','.css','.html','.svg'} or saved.replace(b'\r\n',b'\n') != current.replace(b'\r\n',b'\n'):
+            if Path(relative).suffix not in {'.py','.js','.cjs','.json','.css','.html','.svg','.txt'} or saved.replace(b'\r\n',b'\n') != current.replace(b'\r\n',b'\n'):
                 raise RuntimeError('Exported runtime source differs: ' + relative)
             line_endings += 1
     shutil.copy2(package, output / package.name)

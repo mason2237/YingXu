@@ -1,0 +1,44 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portable:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -S scripts/check_platform_tests.py --suite portable
+      - run: node tests/frontend/online.cjs
+      - run: node tests/frontend/visibility.cjs
+      - run: node tests/frontend/review_details.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: portable-results
+          path: work/test-results/platform-tests.json
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --only-binary=:all: -r requirements-runtime.txt
+      - run: python -S scripts/check_platform_tests.py --suite windows
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-results
+          path: work/test-results/platform-tests.json

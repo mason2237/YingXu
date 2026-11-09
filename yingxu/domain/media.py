@@ -57,10 +57,11 @@ def track_info(track, number):
     yes = lambda value: clean(value).casefold() in {"yes", "true", "1"}
     forced = yes(track.forced) or bool(re.search(r"\bforced\b|强制|強制|(?:仅|僅).{0,3}(?:歌曲|对白|對白)|signs?\s*(?:&|and|/)\s*songs?", title, re.I))
     commentary = bool(re.search(r"\bcommentary\b|导演.{0,2}(?:评论|解说)|導演.{0,2}(?:評論|解說)", title, re.I))
+    sdh = bool(re.search(r"\b(?:sdh|hearing impaired)\b|听障|聽障",title,re.I))
     return {"trackId": f"track-{number}", "title": title, "language": label,
             "declaredLanguage": raw, "families": sorted(families), "script": script,
             "codec": codec, "kind": "bitmap" if re.search(r"pgs|vobsub|dvb|rle", codec, re.I) else "text",
-            "default": yes(track.default), "forced": forced, "commentary": commentary,
+            "default": yes(track.default), "forced": forced, "commentary": commentary, "sdh": sdh,
             "ambiguous": ambiguous, "languageSource": "metadata+title" if declared and bilingual and not {"zh","en"} <= declared else "metadata" if declared else "title" if families else "unknown"}
 
 

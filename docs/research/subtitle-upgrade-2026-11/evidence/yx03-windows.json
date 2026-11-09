@@ -1,0 +1,98 @@
+{
+  "date_hong_kong": "2026-11-09",
+  "task": "YX-03",
+  "baseline": "1179086",
+  "branch": "codex/yx03-match-assessment",
+  "windows": {
+    "schema": 1,
+    "suite": "windows",
+    "environment": {
+      "python": "3.12.0",
+      "os": "Windows-11-10.0.26200-SP0",
+      "windows": true,
+      "media": {
+        "version": "7.0.1",
+        "dll_present": true,
+        "can_parse": true
+      }
+    },
+    "scope": "all tests",
+    "status": "completed",
+    "success": true,
+    "seconds": 19.672,
+    "total": 226,
+    "passed": 226,
+    "failures": [],
+    "errors": [],
+    "skipped": []
+  },
+  "incremental_passed": 12,
+  "overlapping_counts": true,
+  "frontend_review_details": true,
+  "source_window": {
+    "passed": true,
+    "variants": 5,
+    "purposeLabels": true,
+    "advisoryIdentity": true,
+    "correctVariantReplaced": true,
+    "forcedAndSDHRetained": true,
+    "reloadDraft": true,
+    "mediaUnchanged": true,
+    "jsExceptions": 0,
+    "websiteVisited": false,
+    "executablePackaged": false,
+    "exitCode": 0,
+    "output": "work\\test-results\\release-model-1794202731975"
+  },
+  "generated_filename_benchmark": {
+    "corpus": "Original generated filenames; disjoint work names from unit fixtures; no real subtitle text",
+    "split": "heldout",
+    "cases": 1600,
+    "video_rows": 1700,
+    "metrics": {
+      "new": {
+        "auto": 2400,
+        "correct": 2400,
+        "review_rows": 400,
+        "unmatched_rows": 100,
+        "precision": 1.0,
+        "precision_wilson_95": [
+          0.998401950009391,
+          1
+        ],
+        "wrong_accepts": 0,
+        "coverage": 1.0,
+        "review_rate": 0.23529411764705882,
+        "unmatched_rate": 0.058823529411764705
+      },
+      "baseline": {
+        "auto": 2800,
+        "correct": 2400,
+        "review_rows": 0,
+        "unmatched_rows": 100,
+        "precision": 0.8571428571428571,
+        "precision_wilson_95": [
+          0.8436919459555997,
+          0.8696151469644141
+        ],
+        "wrong_accepts": 400,
+        "coverage": 1.0,
+        "review_rate": 0.0,
+        "unmatched_rate": 0.058823529411764705
+      }
+    },
+    "hard_conflict_auto_accepts": 0,
+    "thresholds_085_008": "shadow only",
+    "accuracy_target_verified": false,
+    "limits": [
+      "Synthetic heldout names are not an independently labeled real library.",
+      "Wrong accepts include ambiguous ownership that requires review, not proof of wrong subtitle content."
+    ],
+    "baseline_commit": "1179086"
+  },
+  "limits": [
+    "Generated corpus is not a real subtitle library accuracy claim.",
+    "0.85/0.08 remains shadow only.",
+    "No new application EXE, release, network or performance/HDR certification."
+  ]
+}

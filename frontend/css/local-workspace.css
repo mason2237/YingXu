@@ -31,3 +31,22 @@ html[data-workspace-mode=local] .detail-actions {flex-wrap:wrap;}
 html[data-workspace-mode=local] .online-current {width:100%;justify-content:center;margin-top:4px;}
 #online-subtitles-button {flex-shrink:0;min-height:40px;border-radius:14px;}
 @media(max-width:1000px) {html[data-workspace-mode=local] .page-heading .overview {display:none;}}
+/* Local requirement review uses the same type, focus and surface system. */
+.needs-dialog { width:min(760px,calc(100vw - 40px));max-height:calc(100vh - 60px);overflow:auto;padding:24px; }
+.needs-languages { display:flex;flex-wrap:wrap;gap:12px 20px;margin:16px 0;padding:14px;border:1px solid var(--line);border-radius:12px; }
+.needs-languages legend { padding:0 6px; }
+.needs-languages label,.needs-option { display:flex;align-items:center;gap:8px;font-size:14px; }
+.needs-option { margin:10px 0; }
+.needs-actions { display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;margin-top:16px; }
+.needs-rows { display:grid;gap:12px; }
+.needs-row { padding:16px;border:1px solid var(--line);border-radius:12px; }
+.needs-row h3,.needs-upgrade p { font-size:15px;overflow-wrap:anywhere;margin:0 0 10px; }
+.needs-row p { margin:10px 0; }
+.needs-row small { display:block;margin-top:4px;color:var(--secondary);font-size:13px; }
+.needs-satisfied { color:var(--success); }.needs-missing { color:var(--warning); }.needs-review { color:var(--ink); }
+.needs-upgrade { margin-top:12px;padding-top:12px;border-top:1px solid var(--line); }
+.subtitle-sync { margin-top:12px;border-top:1px solid var(--line);padding-top:10px; }
+.subtitle-sync > select,.subtitle-sync > input,.subtitle-sync > button { display:block;max-width:100%;margin:8px 0; }
+.subtitle-sync > input[type=number] { width:100%;min-height:36px;padding:7px 10px;border:1px solid var(--control-line);border-radius:7px;background:var(--surface-soft);color:var(--ink);font:inherit;font-size:14px; }
+.subtitle-sync > input[type=number]:focus-visible { outline:2px solid var(--focus-line);outline-offset:2px; }
+.sync-result { overflow-wrap:anywhere;font-size:13px; }

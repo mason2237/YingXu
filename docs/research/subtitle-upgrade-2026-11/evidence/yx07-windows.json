@@ -1,0 +1,11 @@
+{
+  "task": "YX-07",
+  "passed": true,
+  "tests": 18,
+  "log": "work/test-results/yx07.log",
+  "frontend": "node tests/frontend/online.cjs passed",
+  "limits": [
+    "Automatic retry is bounded to authorized search; interrupted downloads still need confirmation.",
+    "Restart and page reset pause retries. No site verification bypass."
+  ]
+}

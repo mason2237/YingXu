@@ -5,7 +5,8 @@ const path=require('node:path');
 const fs=require('node:fs');
 
 const ACTIONS=new Set(['online.query','online.configure','online.start','online.cancel','online.candidates','online.select','online.openCandidate',
-  'online.resumeQueue','online.usePage','online.download','online.downloads','online.retryDownload','online.discardDownload','online.compactDownload','online.import','online.cache']);
+  'online.resumeQueue','online.usePage','online.download','online.downloads','online.retryDownload','online.discardDownload','online.compactDownload','online.import','online.cache',
+  'online.qualityFiles','online.quality','online.qualityResult','online.qualityPage','online.provider']);
 function safeHttps(value,hosts=null) {
   try {
     const url=new URL(value),host=url.hostname.toLowerCase();
@@ -49,11 +50,18 @@ class OnlineWindow {
       callback({cancel:Boolean(upload)||(!safeHttps(details.url)&&!details.url.startsWith('data:'))});
     });
     session.on('will-download',(event,item,source)=>this.download(event,item,source));
+    session.webRequest.onHeadersReceived((details,callback)=>{
+      if(details.resourceType==='mainFrame'&&this.ticket&&details.statusCode>=400){
+        const retry=Object.entries(details.responseHeaders||{}).find(([name])=>name.toLowerCase()==='retry-after')?.[1]?.[0];
+        this.finish(this.ticket,{status:'failed',statusCode:details.statusCode,...(retry?{retryAfter:String(retry).slice(0,100)}:{}),message:`字幕来源暂时返回 ${details.statusCode}，请按提示等待或处理。`});
+      }
+      callback({cancel:false});
+    });
     const navigation=(event,url)=>{if(!safeHttps(url,this.ticket?.plan.hosts||this.hosts))event.preventDefault();};
     contents.on('will-navigate',navigation);contents.on('will-redirect',navigation);
     contents.setWindowOpenHandler(({url})=>{if(safeHttps(url,this.ticket?.plan.hosts||this.hosts))contents.loadURL(url).catch(()=>{});return {action:'deny'};});
     contents.on('did-finish-load',()=>this.documentReady().then(()=>this.downloadReady()).catch(()=>this.fail('网站页面未能解析，请切换来源或手动浏览。')));
-    contents.on('did-fail-load',(_event,code,_text,_url,isMainFrame)=>{if(isMainFrame&&code!==-3)this.fail('网站加载失败，请重试或切换备用来源。');});
+    contents.on('did-fail-load',(_event,code,_text,_url,isMainFrame)=>{if(isMainFrame&&code!==-3){if(this.ticket)this.finish(this.ticket,{status:'failed',errorClass:[-7,-21,-101,-102,-103,-105,-106,-118].includes(code)?'transient':'permanent',message:'网站连接未完成，临时故障会有限重试；必要验证需手动处理。'});else this.fail('网站加载失败，请重试或切换备用来源。');}});
     contents.on('render-process-gone',()=>this.fail('网站页面已退出，请重新查找。'));
     this.window.contentView.addChildView(this.view);
     this.view.setVisible(false);

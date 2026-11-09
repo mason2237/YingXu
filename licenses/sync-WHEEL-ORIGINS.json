@@ -1,0 +1,147 @@
+[
+  {
+    "wheel": "ffsubsync-0.5.1-py2.py3-none-any.whl",
+    "sha256": "a312ea5d3c7e3e15a13565b2327022e2568ed6f12104b3ecf940ec4566d9ab4e",
+    "metadata": [
+      "Name: ffsubsync",
+      "Version: 0.5.1",
+      "License: MIT",
+      "License-File: LICENSE"
+    ]
+  },
+  {
+    "wheel": "numpy-2.3.4-cp312-cp312-win_amd64.whl",
+    "sha256": "985f1e46358f06c2a09921e8921e2c98168ed4ae12ccd6e5e87a4f1857923f32",
+    "metadata": [
+      "Name: numpy",
+      "Version: 2.3.4",
+      "License: Copyright (c) 2005-2025, NumPy Developers."
+    ]
+  },
+  {
+    "wheel": "pysubs2-1.8.0-py3-none-any.whl",
+    "sha256": "05716f5039a9ebe32cd4d7673f923cf36204f3a3e99987f823ab83610b7035a0",
+    "metadata": [
+      "Name: pysubs2",
+      "Version: 1.8.0",
+      "License: MIT",
+      "License-File: LICENSE.txt"
+    ]
+  },
+  {
+    "wheel": "srt-3.5.3-py3-none-any.whl",
+    "sha256": "185c81326ec3447f7fb89ab6eefef583ecc08a751d6c55d733d8313707a14df4",
+    "metadata": [
+      "Name: srt",
+      "Version: 3.5.3",
+      "License: MIT",
+      "License-File: LICENSE"
+    ]
+  },
+  {
+    "wheel": "ffmpeg_python-0.2.0-py3-none-any.whl",
+    "sha256": "ac441a0404e053f8b6a1113a77c0f452f1cfc62f6344a769475ffdc0f56c23c5",
+    "metadata": [
+      "Name: ffmpeg-python",
+      "Version: 0.2.0",
+      "License: UNKNOWN"
+    ]
+  },
+  {
+    "wheel": "future-1.0.0-py3-none-any.whl",
+    "sha256": "929292d34f5872e70396626ef385ec22355a1fae8ad29e1a734c3e43f9fbc216",
+    "metadata": [
+      "Name: future",
+      "Version: 1.0.0",
+      "License: MIT",
+      "License-File: LICENSE.txt"
+    ]
+  },
+  {
+    "wheel": "rich-14.2.0-py3-none-any.whl",
+    "sha256": "76bc51fe2e57d2b1be1f96c524b890b816e334ab4c1e45888799bfaab0021edd",
+    "metadata": [
+      "Name: rich",
+      "Version: 14.2.0",
+      "License: MIT"
+    ]
+  },
+  {
+    "wheel": "markdown_it_py-4.2.0-py3-none-any.whl",
+    "sha256": "9f7ebbcd14fe59494226453aed97c1070d83f8d24b6fc3a3bcf9a38092641c4a",
+    "metadata": [
+      "Name: markdown-it-py",
+      "Version: 4.2.0",
+      "License-File: LICENSE",
+      "License-File: LICENSE.markdown-it"
+    ]
+  },
+  {
+    "wheel": "mdurl-0.1.2-py3-none-any.whl",
+    "sha256": "84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8",
+    "metadata": [
+      "Name: mdurl",
+      "Version: 0.1.2"
+    ]
+  },
+  {
+    "wheel": "pygments-2.21.0-py3-none-any.whl",
+    "sha256": "2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9",
+    "metadata": [
+      "Name: Pygments",
+      "Version: 2.21.0",
+      "License-Expression: BSD-2-Clause",
+      "License-File: AUTHORS",
+      "License-File: LICENSE"
+    ]
+  },
+  {
+    "wheel": "tqdm-4.67.1-py3-none-any.whl",
+    "sha256": "26445eca388f82e72884e0d580d5464cd801a3ea01e63e5601bdff9ba6a48de2",
+    "metadata": [
+      "Name: tqdm",
+      "Version: 4.67.1",
+      "License: MPL-2.0 AND MIT",
+      "License-File: LICENCE"
+    ]
+  },
+  {
+    "wheel": "typing_extensions-4.15.0-py3-none-any.whl",
+    "sha256": "f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548",
+    "metadata": [
+      "Name: typing_extensions",
+      "Version: 4.15.0",
+      "License-Expression: PSF-2.0",
+      "License-File: LICENSE"
+    ]
+  },
+  {
+    "wheel": "webrtcvad_wheels-2.0.14-cp312-cp312-win_amd64.whl",
+    "sha256": "4010b95b31b9b360fd1bf47a8344b06b946ec866cf3d14fb39fc692307ddf312",
+    "metadata": [
+      "Name: webrtcvad-wheels",
+      "Version: 2.0.14",
+      "License: MIT",
+      "License-File: LICENSE"
+    ]
+  },
+  {
+    "wheel": "charset_normalizer-3.4.4-cp312-cp312-win_amd64.whl",
+    "sha256": "a79cfe37875f822425b89a82333404539ae63dbdddf97f84dcbc3d339aae9525",
+    "metadata": [
+      "Name: charset-normalizer",
+      "Version: 3.4.4",
+      "License: MIT",
+      "License-File: LICENSE"
+    ]
+  },
+  {
+    "wheel": "colorama-0.4.6-py2.py3-none-any.whl",
+    "sha256": "4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6",
+    "metadata": [
+      "Name: colorama",
+      "Version: 0.4.6",
+      "License-File: LICENSE.txt"
+    ]
+  }
+]

@@ -27,7 +27,7 @@ function renderActions(host, row, handlers) {
   view.main.disabled = Boolean(row.embeddedSatisfied);
 }
 
-export function renderInspector(host, row, {mutate, candidates, copy, reveal, online, actionsHost, error = '', retry}) {
+export function renderInspector(host, row, {mutate, candidates, copy, reveal, online, actionsHost, error = '', retry, quality,identity}) {
   host.replaceChildren();
   renderActions(actionsHost, row, {mutate, candidates, online});
   if (!row) {
@@ -38,6 +38,7 @@ export function renderInspector(host, row, {mutate, candidates, copy, reveal, on
   }
   const header = el('section'); header.append(el('span', 'detail-label', `视频 · ${row.video.extension.slice(1).toUpperCase()}`), el('h3', 'detail-video', row.video.name));
   const state = el('div', 'detail-status'); state.append(badge(stateOf(row)), el('span', '', row.episode)); header.append(state); host.append(header);
+  identity?.(host,row);
   if (row.warnings.length) {const warning = el('div', 'notice warning'); warning.style.marginTop = '17px'; warning.append(iconNode('alert'), document.createTextNode(row.warnings[0].message)); host.append(warning);}
   if (row.embedded?.status) {
     const embedded = el('section','detail-section embedded-details');
@@ -58,12 +59,14 @@ export function renderInspector(host, row, {mutate, candidates, copy, reveal, on
   if (!row.subtitles.length) subtitles.append(el('p', 'subtle-text', row.embeddedSatisfied ? '已有符合要求的内嵌字幕，不需要外挂。' : row.importedCandidateCount ? `已导入 ${row.importedCandidateCount} 份候选，请点击“选择字幕”核对具体版本。` : '还没有找到合适的字幕。你可以从候选中人工选择。'));
   for (const sub of row.subtitles) {
     const item = el('article', 'subtitle-detail'); const title = el('header');
-    title.append(language(sub.language), el('span', '', sub.imported ? `在线导入 · ${sub.confirmed ? '已核对' : '待核对'}` : sub.manual ? '人工指定' : '自动匹配'));
+    title.append(language(sub.variantLabel || sub.language), el('span', '', sub.imported ? `在线导入 · ${sub.confirmed ? '已核对' : '待核对'}` : sub.manual ? '人工指定' : '自动匹配'));
     const remove = button('', 'icon-button small', () => mutate('review.remove', {subtitleId: sub.subtitleId}), 'x');
     remove.setAttribute('aria-label', `移除${sub.language}字幕关联`); remove.title = '仅移除本次关联，不删除文件'; title.append(remove);
     item.append(title, el('p', '', sub.name));
     const target = el('div', 'target-block'); const label = el('span'); label.append(iconNode('arrow'), document.createTextNode('整理后'));
-    target.append(label, el('p', '', sub.targetName)); item.append(target); subtitles.append(item);
+    target.append(label, el('p', '', sub.targetName)); item.append(target);
+    if(quality){const panel=el('div','subtitle-quality');quality(panel,sub);item.append(panel);}
+    subtitles.append(item);
   }
   host.append(subtitles);
   const basis = el('section', 'detail-section'); basis.append(el('div', 'detail-section-title')); basis.firstChild.append(el('h3', '', '匹配依据'));

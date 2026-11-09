@@ -1,6 +1,6 @@
 # Third-party notices
 
-Current release: 0.11.0-rc.3. The application contains Electron and a frozen Qt-free Python service. Qt, PySide and Shiboken are not distributed.
+Current local candidate: 0.12.0-rc.2. The application contains Electron and a frozen Qt-free Python service. Qt, PySide and Shiboken are not distributed.
 
 The original application uses the unmodified PolyForm Noncommercial License 1.0.0. This does not relicense or limit independent MIT, BSD, OFL or other rights of third-party components.
 
@@ -23,6 +23,12 @@ Overture transition/focus, modal/drawer, toast, tooltip and overlay adaptations 
 The binary bundle carries the original MIT text, author, provenance and modification records in `licenses/design-systems-*`.
 
 ## Optional diagnostics and historical releases
+
+The optional isolated synchronization worker contains ffsubsync 0.5.1 (MIT), NumPy (BSD and bundled notices), pysubs2 and srt (MIT), ffmpeg-python (Apache-2.0), webrtcvad-wheels (MIT/BSD notices), and the independently licensed dependencies recorded in `SYNC_RUNTIME.json`. Complete installed license attachments are copied to `licenses/sync-runtime/`; reviewed wheel/source digests remain in that manifest. No auditok, chardet/faust-cchardet, ASR model or FFmpeg binary is included. FFmpeg is a separately selected local executable; the development test binary is not a redistributed product component.
+
+NumPy's complete wheel license also covers its bundled BLAS/LAPACK/compiler runtimes and any applicable GCC Runtime Library Exception. Those original terms, exceptions, source links and copyright notices are preserved in full, rather than described as uniformly MIT/BSD.
+
+tqdm 4.67.1 retains its original MPL-2.0/MIT LICENCE. The full official MPL text is retained in `licenses/MPL-2.0.txt`, with origin in `licenses/MPL-2.0-ORIGIN.json`. Its unmodified Python Source Code Form is supplied under `licenses/sync-runtime/tqdm/source/`, with the fixed upstream source URL. Those independent files remain under their own terms, without YingXu's noncommercial restriction.
 
 PresentMon 2.6.0 and PyWinRT are optional development diagnostics under their own MIT terms. Their original texts are retained in `licenses/PresentMon-LICENSE.txt` and `licenses/PyWinRT-LICENSE.txt`; neither tool is included in the application.
 

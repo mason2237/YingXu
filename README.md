@@ -4,11 +4,13 @@
 
 拖入文件夹，核对匹配，确认整理。从查找字幕到整理完成，一处看清。
 
-[下载 Windows 版](https://github.com/mason2237/YingXu/releases/download/v0.11.0-rc.3/YingXu-0.11.0-rc.3-windows-x64.zip) · [查看更新](https://github.com/mason2237/YingXu/releases/tag/v0.11.0-rc.3)
+[下载 Windows 版](https://github.com/mason2237/YingXu/releases/download/v0.12.0-rc.2/YingXu-0.12.0-rc.2-windows-x64.zip) · [查看更新](https://github.com/mason2237/YingXu/releases/tag/v0.12.0-rc.2)
 
-适用于 Windows 11 x64 · 0.11.0-rc.3 预发布版
+适用于 Windows 11 x64 · 0.12.0-rc.2 预发布版
 
-本次修复多轨内嵌字幕导致详情加载失败、列表清空的问题。详情可以重试，已扫描的结果会保留。
+匹配更清楚，核对更从容。这次带来字幕检查、按语言补齐、时间调整和本地文本辅助，让整理前的每一步都更有依据。
+
+参考字幕对齐引擎已随包提供；音轨同步需要主动选择本机 FFmpeg。所有调整先预览、再确认，原字幕保留。[查看完整更新说明](release/RELEASE_NOTES.md)。
 
 <img src="docs/images/workspace-dark.png" width="1100" alt="映序字幕工作台，使用生成的示例文件">
 
@@ -27,6 +29,14 @@
 <img src="docs/images/online-subtitles-dark.png" width="1100" alt="映序在线字幕窗口，使用示例数据">
 
 字幕进入工作台后仍可核对和调整，不会因下载成功就直接整理。网站是否可用、字幕版本和时间轴是否适合当前片源，仍需留意。
+
+## 看清字幕，也看清差异
+
+检查字幕的时间、正文、重复和阅读速度，定位到需要留意的片段。按语言和用途核对还缺什么；已有合适候选时先审阅，减少重复下载。简体、繁体、强制字幕和 SDH 可以分别保留。
+
+字幕早了或晚了，可以手动调整，也可以选择可信的本地参考对齐。需要时，选择本机 FFmpeg 和音轨辅助同步；证据不足会提示停止。同语言文本比较提供额外线索，最终匹配由你决定。
+
+<img src="docs/images/subtitle-needs-rc2.png" width="1100" alt="按语言核对字幕需求，保留原字幕后审阅升级候选">
 
 ## 已经有字幕，就少一步
 

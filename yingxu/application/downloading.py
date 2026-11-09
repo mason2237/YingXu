@@ -11,6 +11,7 @@ from .reviewing import ReviewData
 class Downloads:
     def __init__(self, workspace, discovery, artifacts: SubtitleArtifacts, send):
         self.workspace, self.discovery, self.artifacts, self.send = workspace, discovery, artifacts, send
+        self.quality_jobs = {}
         self.queue = []
         self.armed = None
         self.receiving = None
@@ -55,6 +56,8 @@ class Downloads:
         if len(set(ids)) != len(ids) or not 1 <= len(ids) <= 20:
             raise ProtocolError('INVALID_REQUEST', '每批最多确认 20 份不同字幕。')
         tasks = [self.discovery.get(identifier)[0] for identifier in ids]
+        if any(self.discovery.entries[t.task_id]['provider'] in self.discovery.disabled for t in tasks):
+            raise ProtocolError('PROVIDER_STOPPED','来源已暂停，请先恢复来源或取消本次任务。')
         if any(task.phase != SubtitlePhase.SELECTED for task in tasks):
             raise ProtocolError('INVALID_TRANSITION', '请为每个视频明确选择候选；未选择项不会下载。')
         for task in tasks:
@@ -69,6 +72,9 @@ class Downloads:
             identifier = self.queue.pop(0)
             try:
                 task, entry = self.discovery.get(identifier)
+                if entry['provider'] in self.discovery.disabled:
+                    if task.phase==SubtitlePhase.DOWNLOADING:self.discovery.command(task,'interrupt',{'reason':'来源已暂停，下载等待明确继续。'},internal=True)
+                    self.paused.append(identifier);continue
                 if task.phase != SubtitlePhase.DOWNLOADING:
                     continue
                 retained = next((record for record in self.artifacts.list()
@@ -184,6 +190,47 @@ class Downloads:
         return workspace.launch('download', work, complete, '正在下载并检查字幕内容…', publish_cancelled=True)
 
     def dispatch(self, action, params):
+        if action=='online.qualityFiles':
+            record=self.artifacts.get(params['artifactId'])
+            if record['status']!='ready':raise ProtocolError('NOT_READY','该下载尚未准备好。')
+            offset,limit=params.get('offset',0),params.get('limit',10)
+            values=record['prepared']
+            return {'entries':[{'fileIndex':index,'name':value['name'],'quality':value.get('quality',{'status':'unchecked'})}
+                for index,value in enumerate(values[offset:offset+limit],offset)],'total':len(values),'offset':offset}
+        if action=='online.qualityResult':
+            context=self.quality_jobs.get(params['jobId'])
+            if context!=(params['artifactId'],self.workspace.session_id):
+                raise ProtocolError('STALE_REPORT','检查任务已过期。')
+            if params['jobId'] in self.workspace.results:
+                return {'status':'completed','report':self.workspace.results[params['jobId']]}
+            job=self.workspace.job
+            if not job or job['jobId']!=params['jobId']:raise ProtocolError('STALE_REPORT','检查结果已过期，请重新检查。')
+            return {'status':job['status'],'message':(job.get('error') or {}).get('message') or job['message']}
+        if action in {'online.quality','online.qualityPage'}:
+            self.workspace.require_idle()
+            quality=self.workspace.quality
+            if quality is None:raise ProtocolError('UNAVAILABLE','字幕检查组件未配置。')
+            identifier=params['artifactId'];file_index=params['fileIndex'];session=self.workspace.session_id
+            scope=('online',session,identifier,file_index)
+            if action=='online.qualityPage':
+                return quality.page(params['reportId'],scope,params.get('qualitySection','issues'),params.get('offset',0),params.get('limit',10))
+            record=self.artifacts.get(identifier)
+            if record['status']!='ready' or not 0<=file_index<len(record['prepared']):
+                raise ProtocolError('NOT_FOUND','字幕不属于当前下载的已验证文件。')
+            def work_quality(worker):
+                path,expected_digest=self.artifacts.prepared_for_quality(identifier,file_index)
+                snapshot=quality.inspect(path,scope,encoding=params.get('encoding','auto'),
+                    max_cps=params.get('maxCps',40),should_stop=worker.stop.is_set)
+                if snapshot.report.digest!=expected_digest:
+                    raise ProtocolError('FILE_CHANGED','字幕内容已变化，请重新下载后检查。')
+                return snapshot
+            def complete_quality(snapshot):
+                if self.workspace.session_id!=session:raise ProtocolError('STALE_REPORT','页面已变化，检查结果未采用。')
+                return quality.accept(snapshot)
+            job=self.workspace.launch('quality',work_quality,complete_quality,'正在只读检查下载字幕…')
+            self.quality_jobs[job['jobId']]=(identifier,session)
+            while len(self.quality_jobs)>8:self.quality_jobs.pop(next(iter(self.quality_jobs)))
+            return job
         if action == 'online.download':
             return self.confirm(params)
         if action == 'online.resumeQueue':
@@ -258,7 +305,7 @@ class Downloads:
                 if len(indices) != 1 or asdict(self.workspace.fs.file_mark(Path(association['video']))) != association['mark']:
                     raise ProtocolError('STALE_REVIEW', '原视频不在本次扫描中或身份已变化，未自动关联。')
                 index = indices[0]
-                if data.review.rows[index].uses_embedded:
+                if data.review.rows[index].uses_embedded and not self.workspace.needs.has_missing(data,index):
                     raise ProtocolError('ALREADY_SATISFIED', '视频内字幕已满足语言要求，无需导入外挂字幕。')
                 for path in self.artifacts.prepared(identifier):
                     entries.append((path, {'rowIndex': index, 'artifactId': identifier}))

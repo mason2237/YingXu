@@ -13,6 +13,7 @@ __pycache__/
 /work/electron-profile-noqt/
 .venv-core/
 .venv-build/
+.venv-sync/
 node_modules/
 .env
 .env.*

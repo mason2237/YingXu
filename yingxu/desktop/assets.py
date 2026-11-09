@@ -1,5 +1,10 @@
 """GUI-independent local asset allowlist, used by desktop packaging and local resource tests."""
 ASSETS = {
+    '/js/components/subtitle-sync.js':'text/javascript',
+    '/js/components/media-identity.js':'text/javascript',
+    '/js/components/subtitle-needs.js':'text/javascript',
+    '/js/components/subtitle-quality.js':'text/javascript',
+    '/css/subtitle-quality.css':'text/css',
     '/assets/fonts/NotoSansSC.ttf': 'font/ttf',
     '/assets/icons/check.svg': 'image/svg+xml',
     '/assets/icons/chevron.svg': 'image/svg+xml',

@@ -97,7 +97,10 @@ expose('yingxu:hdr:report',report=>{
 async function native(frame) {
   const reply={type:'native.result',requestId:frame.requestId,sessionId:frame.sessionId,action:frame.action};
   try {
-    if(frame.action==='folder.choose') {
+    if(frame.action==='sync.tool') {
+      const result=await dialog.showOpenDialog(win,{title:'选择你信任的本机 FFmpeg（将核对并运行所选工具）',filters:[{name:'FFmpeg',extensions:['exe']}],properties:['openFile']});
+      reply.cancelled=result.canceled;if(!result.canceled)reply.path=result.filePaths[0];
+    } else if(frame.action==='folder.choose') {
       const result=fixture?{canceled:false,filePaths:[path.resolve(fixture)]}:await dialog.showOpenDialog(win,{title:'选择视频和字幕目录',properties:['openDirectory']});
       reply.cancelled=result.canceled;if(!result.canceled)reply.path=result.filePaths[0];
     } else if(frame.action==='result.export') {
@@ -105,7 +108,7 @@ async function native(frame) {
         filters:[{name:'JSON 记录',extensions:['json']}],properties:['showOverwriteConfirmation']});
       reply.cancelled=result.canceled;if(!result.canceled)reply.path=result.filePath;
     } else if(frame.action==='file.copyName')clipboard.writeText(path.basename(frame.path));
-    else if(frame.action==='file.reveal'||['operation.cache','online.cache'].includes(frame.action)) {
+    else if(frame.action==='file.reveal'||['operation.cache','online.cache','sync.cache'].includes(frame.action)) {
       if(fs.statSync(frame.path).isDirectory()){const error=await shell.openPath(frame.path);if(error)throw Error(error);}
       else shell.showItemInFolder(frame.path);
     } else throw Error('ACTION_UNAVAILABLE');

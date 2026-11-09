@@ -1,0 +1,114 @@
+{
+  "date_hong_kong": "2026-11-09",
+  "task": "YX-04",
+  "baseline": "db0387a",
+  "branch": "codex/yx04-subtitle-quality",
+  "windows_full_suite_before_final_incremental": {
+    "schema": 1,
+    "suite": "windows",
+    "environment": {
+      "python": "3.12.0",
+      "os": "Windows-11-10.0.26200-SP0",
+      "windows": true,
+      "media": {
+        "version": "7.0.1",
+        "dll_present": true,
+        "can_parse": true
+      }
+    },
+    "scope": "all tests",
+    "status": "completed",
+    "success": true,
+    "seconds": 21.125,
+    "total": 237,
+    "passed": 237,
+    "failures": [],
+    "errors": [],
+    "skipped": []
+  },
+  "final_incremental": {
+    "passed": 17,
+    "log": "work/test-results/yx04-final-incremental.log",
+    "scope": "Final parser / reader / host / Unicode issue paging / architecture checks, including two tests added after the full-suite run."
+  },
+  "counts_overlap": true,
+  "frontend": {
+    "subtitle_quality": true,
+    "online": true,
+    "review_details": true
+  },
+  "source_window": {
+    "passed": true,
+    "sourceWindow": true,
+    "reverseTimeLocated": true,
+    "paging": true,
+    "encodingChoice": true,
+    "pureTextPreview": true,
+    "issueFailureKeepsList": true,
+    "downloadQualityUI": true,
+    "onlineLocalAPIRestricted": true,
+    "mediaUnchanged": true,
+    "maxReplyBytes": 2375,
+    "jsExceptions": 0,
+    "websiteVisited": false,
+    "exitCode": 0,
+    "output": "work\\test-results\\quality-desktop-1794204917421"
+  },
+  "unicode_paging_stress": {
+    "issues_round_tripped": 400,
+    "reversed_time_issues": 200,
+    "duplicate_issues": 199,
+    "no_valid_cues_issues": 1,
+    "requested_page_limit": 200,
+    "variable_page_sizes": true,
+    "all_frames_at_most_bytes": 8192,
+    "source_unchanged": true
+  },
+  "production_resource_staging": {
+    "resources": 66,
+    "new_js_and_css_included": true
+  },
+  "read_limits": {
+    "bytes": 8388608,
+    "cues": 50000,
+    "issues": 500,
+    "lines": 250000,
+    "line_characters": 32768,
+    "resident_reports": 2,
+    "resident_cues": 60000
+  },
+  "tested_source_sha256": {
+    "desktop/electron/online.cjs": "b0ca18de1fbbbed844839db023630f9f35c3304965d62ff73f0da08f3a66fb7c",
+    "frontend/css/subtitle-quality.css": "70c8ecacffbee81ce8ca3a1fedde068f24f68e2c4475dfd83ecd19389ac028ca",
+    "frontend/js/components/inspector.js": "423f426a52b6922a2d5b18e7daf18bbfd1b38821969a729c6679ee376f692885",
+    "frontend/js/components/subtitle-quality.js": "46310883282d03146171396f4f4f89fdf4dfb6c5f3f2dc8374ed65dd9885cb9e",
+    "frontend/js/online.js": "18edb1a14aca05f8a998eed22d16652d11352355361645ee47ccb9c65104d76b",
+    "frontend/js/workspace.js": "63b27212c463bfe2390c3e66b9eebf9d806029bf8156d852adba36e468e971e4",
+    "frontend/online.html": "34942d48f5f2805efd803e19ebc3638136c5795717d0c9cf477500ff90dcd43d",
+    "frontend/workspace.html": "0b34bebf29c91c92af8eac795e70f73f9d590a6d32e7caae9198685968ca94b3",
+    "scripts/check_quality_desktop.mjs": "c01d51e0f6f65436aa9b0e52d668af5980b01d1cac9db4ecf4779422cf854b1b",
+    "tests/frontend/subtitle_quality.cjs": "311812bb327c17c80537710d9507ea25a73628022db87226d49607c3e054d9c5",
+    "tests/integration/test_subtitle_quality_import.py": "933e146d9a9192ff3717520cf86bc00b5bc9262db31c30484181c1518895a3b6",
+    "tests/unit/test_subtitle_quality.py": "154a187f6ce3cebcfd85bdb71fcd554a38dbf80a8163117cf0baffc9a6ef3ab3",
+    "yingxu/adapters/subtitle_artifacts.py": "9e0c31d4906f7a8be0f44b4fc17432cc5ded50fbb658b5ef9fe18beacfac6c08",
+    "yingxu/adapters/subtitle_reader.py": "0200807fa7296fb2ee4e5fa18170dfa6522ccc5d5fce51cd6f7999893d29b1f6",
+    "yingxu/application/discovery.py": "76245949cca999c23fda818ed04b5a0b34b67496edf6cefbac3ce16d1c00bd48",
+    "yingxu/application/downloading.py": "d5ed5cb2d0c8603617ebc8874996169370e4ed7279b4e431e5c16634d285a0ef",
+    "yingxu/application/quality.py": "f3a18fabe33c9c1742512648747e14b96fa6d75b79a09d7ac6e36c91476cc1e0",
+    "yingxu/application/workspace.py": "09b1ee8f241b63882e8514fedfad8bb07edf61dd0f3bd63cb174050a196f12c4",
+    "yingxu/desktop/assets.py": "486e50b4dce011b4499e01c9ab53e2081abbfd6ed01f9c1a3af8066ae5a603a8",
+    "yingxu/desktop/host.py": "62e1b0faaeac733bb2b94724274f27983c6d8848767523dece8c8c05ee511ac3",
+    "yingxu/desktop/workspace_protocol.py": "1cee56cb7e346116291bcbccf450c065d6a2d8f313cbc5688aee19e03fc1e945",
+    "yingxu/domain/subtitle_document.py": "19ff5c729c43aa4e724a7d91c5363ad5e11a123c8521686ebb7608eda8644ee0",
+    "yingxu/domain/subtitle_quality.py": "9958a06f6586caf474372a059a33bb3d0942566f385da0d5d6d0fb748d63ae58",
+    "yingxu/ports/subtitle_artifacts.py": "14671fd59c45015d5987109e784f87989044002638572a7e44ffad8fd24ab058",
+    "yingxu/ports/subtitle_reader.py": "ff39d2057daa27f56c201f06410d1a74ee0f47376354e5222096330ce974b2ec"
+  },
+  "limits": [
+    "Read-only diagnosis; not subtitle synchronization, editing, OCR or proof of movie identity.",
+    "Bitmap SUB/SUP quality unsupported; uncertain encoding needs explicit choice.",
+    "Quality summaries are snapshots. Sources and final file plans are independently checked before execution.",
+    "No new application EXE, GitHub upload, clean Windows, HDR or presentation-rate certification.",
+    "Generated samples only; existing reliable execution/recovery/undo behavior retained."
+  ]
+}

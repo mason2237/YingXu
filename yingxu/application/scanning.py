@@ -6,7 +6,7 @@ from .reviewing import ReviewData
 
 
 def scan(folder, mark, options, embedded_options, revision, register,
-         filesystem: Filesystem, inspector: MediaInspector, worker):
+         filesystem: Filesystem, inspector: MediaInspector, worker, recognition=None):
     warnings = []
     warning_count = 0
 
@@ -45,6 +45,6 @@ def scan(folder, mark, options, embedded_options, revision, register,
         progress=lambda done, total, phase: worker.report(done, total, f'计算匹配 · {done} / {total}', phase),
     )
     check_cancelled(worker.stop.is_set)
-    data = ReviewData(review, register, revision=revision, warnings=warnings)
+    data = ReviewData(review, register, revision=revision, warnings=warnings, recognition=recognition)
     data.warning_count = warning_count
     return data

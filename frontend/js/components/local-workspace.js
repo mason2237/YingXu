@@ -1,5 +1,6 @@
 import {el,button,iconNode} from './icons.js';
 import {applyPrototypeMode} from './prototype-mode.js';
+import {prepareNeedsDialog, SubtitleNeedsPanel} from './subtitle-needs.js';
 
 const $ = id => document.getElementById(id);
 const pageControls = prefix => {
@@ -10,6 +11,7 @@ const pageControls = prefix => {
 };
 
 export function prepareLocalWorkspace() {
+  prepareNeedsDialog();
   document.title = '映序 · 字幕工作台';
   document.documentElement.dataset.workspaceMode = 'local';
   $('dataset-button').replaceChildren(iconNode('folder'),document.createTextNode('选择文件夹'));
@@ -63,6 +65,7 @@ export function prepareLocalWorkspace() {
 export class LocalWorkspace {
   constructor({adapter,store,dialogs,feedback,load,toast,update}) {
     Object.assign(this,{adapter,store,dialogs,feedback,load,toast,update});this.lastJob = null;
+    this.needs=new SubtitleNeedsPanel({adapter,store,dialogs,load,toast});
     adapter.readOptions = () => ({recursive:$('recursive-setting').checked,move:$('move-setting').checked});
     $('subtitle-inbox').addEventListener('click',()=>adapter.request('subtitle.inbox').catch(error=>toast(error.message,{tone:'error'})));
     $('online-subtitles-button').addEventListener('click',() => this.openSubtitles());
@@ -132,8 +135,9 @@ export class LocalWorkspace {
     $('recovery-notice-text').textContent=`有 ${pending} 个文件任务待核对；不会自动继续。`;$('recovery-open').disabled=store.busy;
     $('scan-options-button').disabled = store.busy;$('scan-options-start').disabled = store.busy || !store.summary.folderId;
     $('open-folder-button').disabled = store.busy || !store.summary.folderId;
-    $('online-subtitles-button').disabled = store.busy || this.openingSubtitles || !store.summary.scanId || !(store.summary.counts['未匹配'] > 0);
-    const stopping = adapter.state?.busy && job?.status === 'running' && ['scan','apply','undo','reconcile','recovery','undo_preview'].includes(job.kind);
+    $('online-subtitles-button').disabled = store.busy || this.openingSubtitles || !store.summary.scanId;
+    $('subtitle-needs-button').disabled=store.busy||!store.summary.scanId;
+    const stopping = adapter.state?.busy && job?.status === 'running' && ['scan','apply','undo','reconcile','recovery','undo_preview','needs'].includes(job.kind);
     $('stop-task').hidden = !stopping;$('stop-task').disabled = Boolean(job?.stopRequested);
     $('stop-task').lastChild.textContent = job?.stopRequested ? '正在停止…' : job?.kind === 'apply' ? '停止整理' : job?.kind==='undo'?'停止撤销':job?.kind==='scan'?'取消扫描':'取消核对';
     $('history-button').disabled = store.busy;

@@ -1,0 +1,246 @@
+{
+  "default_distributed": false,
+  "installed_in_runtime": false,
+  "read_user_config": false,
+  "prototype_only": true,
+  "results": {
+    "official": [
+      {
+        "input": "The.Movie.2024.1080p.WEB-DL.x265-GROUP.mkv",
+        "parser": "guessit",
+        "version": "4.4.0",
+        "title": "The Movie",
+        "episodes": [],
+        "warnings": []
+      },
+      {
+        "input": "Series.S01E01E02.mkv",
+        "parser": "guessit",
+        "version": "4.4.0",
+        "title": "Series",
+        "episodes": [
+          1,
+          2
+        ],
+        "warnings": []
+      }
+    ],
+    "replacement": [
+      {
+        "input": "The.Movie.2024.1080p.WEB-DL.x265-GROUP.mkv",
+        "parser": "guessit",
+        "version": "4.4.0",
+        "title": "Replacement Library",
+        "episodes": [],
+        "warnings": []
+      },
+      {
+        "input": "Series.S01E01E02.mkv",
+        "parser": "guessit",
+        "version": "4.4.0",
+        "title": "Replacement Library",
+        "episodes": [
+          1,
+          2
+        ],
+        "warnings": []
+      }
+    ],
+    "missing": [
+      {
+        "input": "The.Movie.2024.1080p.WEB-DL.x265-GROUP.mkv",
+        "parser": "builtin",
+        "version": "filename-1",
+        "title": "The Movie",
+        "episodes": [],
+        "warnings": [
+          "可选解析器不可用或结果无效，已使用本地规则"
+        ]
+      },
+      {
+        "input": "Series.S01E01E02.mkv",
+        "parser": "builtin",
+        "version": "filename-1",
+        "title": "Series",
+        "episodes": [
+          1,
+          2
+        ],
+        "warnings": [
+          "可选解析器不可用或结果无效，已使用本地规则"
+        ]
+      }
+    ]
+  },
+  "frozen_module_count": 282,
+  "external_library_modules_frozen": false,
+  "qt_modules": false,
+  "wheels": [
+    {
+      "file": "babelfish-0.6.1-py3-none-any.whl",
+      "sha256": "512f1501d4c8f7d38f0921f48660be7542de1a7b24abb6a6a65324a670150293",
+      "name": "babelfish",
+      "version": "0.6.1",
+      "license": "BSD-3-Clause",
+      "classifiers": [
+        "License :: OSI Approved :: BSD License"
+      ],
+      "requires": [
+        "importlib-metadata (>=4.6,<5.0) ; python_version < \"3.10\"",
+        "importlib-resources (>=5.0,<6.0) ; python_version < \"3.9\""
+      ],
+      "license_files": [
+        "babelfish-0.6.1.dist-info/LICENSE"
+      ],
+      "pth_files": [],
+      "uncompressed_bytes": 247075
+    },
+    {
+      "file": "guessit-4.4.0-py3-none-any.whl",
+      "sha256": "565bf82dd6dc8801f357b2eec6a1dd447007f398dbebd06b7b440e303e2df3bc",
+      "name": "guessit",
+      "version": "4.4.0",
+      "license": "LGPL-3.0-or-later",
+      "classifiers": [],
+      "requires": [
+        "babelfish>=0.6.1",
+        "python-dateutil>=2.8.0",
+        "rebulk<7,>=6.0.1",
+        "regex; extra == 'regex'"
+      ],
+      "license_files": [
+        "guessit/test/cross_parser/NOTICE.md",
+        "guessit-4.4.0.dist-info/licenses/LICENSE"
+      ],
+      "pth_files": [],
+      "uncompressed_bytes": 1220229
+    },
+    {
+      "file": "python_dateutil-4.0.0-py3-none-any.whl",
+      "sha256": "a5e246f79eb80475e691bf93862cead98decd8a498cf53ba0516fcdc0f50dc1c",
+      "name": "python-dateutil",
+      "version": "4.0.0",
+      "license": "BSD-3-Clause",
+      "classifiers": [],
+      "requires": [
+        "tzdata"
+      ],
+      "license_files": [
+        "python_dateutil-4.0.0.dist-info/licenses/AUTHORS.md",
+        "python_dateutil-4.0.0.dist-info/licenses/LICENSE"
+      ],
+      "pth_files": [],
+      "uncompressed_bytes": 324297
+    },
+    {
+      "file": "rebulk-6.0.1-py3-none-any.whl",
+      "sha256": "fe67fd0af60962c7f3957fa01ef0039c43631c09146228698ee22e20ac33907e",
+      "name": "rebulk",
+      "version": "6.0.1",
+      "license": "MIT",
+      "classifiers": [],
+      "requires": [
+        "regex ; extra == 'native'"
+      ],
+      "license_files": [
+        "rebulk-6.0.1.dist-info/licenses/",
+        "rebulk-6.0.1.dist-info/licenses/LICENSE"
+      ],
+      "pth_files": [],
+      "uncompressed_bytes": 333138
+    },
+    {
+      "file": "tzdata-2026.6-py2.py3-none-any.whl",
+      "sha256": "0a10eec6e13ef16b627fabed9a5f2ba61a62b1c67f327305f4e7e412a70b4aec",
+      "name": "tzdata",
+      "version": "2026.6",
+      "license": "Apache-2.0",
+      "classifiers": [],
+      "requires": [],
+      "license_files": [
+        "tzdata-2026.6.dist-info/licenses/LICENSE",
+        "tzdata-2026.6.dist-info/licenses/licenses/LICENSE_APACHE"
+      ],
+      "pth_files": [],
+      "uncompressed_bytes": 582438
+    }
+  ],
+  "source_materials": [
+    {
+      "file": "guessit-4.4.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a7/59/7efd84be0e171260ba4252dab8415d60a5500c22148fa91c61f727a6c909/guessit-4.4.0.tar.gz",
+      "sha256": "cca2c19ecd872c75ee7ebcbdc11075f5ae884882ec0ad67f742c3d25f2d47beb"
+    },
+    {
+      "file": "GPL-3.0-only.txt",
+      "repository_source": "licenses/GPL-3.0-only.txt",
+      "provenance": {
+        "file": "GPL-3.0-only.txt",
+        "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/LICENSES/GPL-3.0-only.txt",
+        "resolvedURL": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/LICENSES/GPL-3.0-only.txt",
+        "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+        "mode": "verbatim"
+      },
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+    },
+    {
+      "file": "LGPL-3.0-only.txt",
+      "repository_source": "licenses/LGPL-3.0-only.txt",
+      "provenance": {
+        "file": "LGPL-3.0-only.txt",
+        "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/LICENSES/LGPL-3.0-only.txt",
+        "resolvedURL": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/LICENSES/LGPL-3.0-only.txt",
+        "sha256": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768",
+        "mode": "verbatim"
+      },
+      "sha256": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768"
+    }
+  ],
+  "stdlib_hidden_imports": [
+    "__future__",
+    "_thread",
+    "abc",
+    "argparse",
+    "bisect",
+    "calendar",
+    "collections",
+    "collections.abc",
+    "contextlib",
+    "copy",
+    "ctypes",
+    "dataclasses",
+    "datetime",
+    "decimal",
+    "functools",
+    "heapq",
+    "importlib",
+    "importlib.metadata",
+    "importlib.resources",
+    "inspect",
+    "io",
+    "itertools",
+    "json",
+    "logging",
+    "math",
+    "mimetypes",
+    "operator",
+    "os",
+    "pathlib",
+    "re",
+    "shlex",
+    "stat",
+    "string",
+    "struct",
+    "sys",
+    "tarfile",
+    "time",
+    "traceback",
+    "types",
+    "typing",
+    "warnings",
+    "weakref",
+    "winreg",
+    "zoneinfo"
+  ],
+  "license_scope": "Local isolated experiment. Default runtime still only pymediainfo. Publication of an optional parser bundle requires its own full license/source/notice assembly."
+}

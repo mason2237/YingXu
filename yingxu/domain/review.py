@@ -4,17 +4,14 @@ from pathlib import Path
 import os
 
 from .matching import (AUTO_APPLY_THRESHOLD, MATCH_THRESHOLD, check_cancelled,
-                       is_same_path, similarity, strip_language_tag)
+                       is_same_path, similarity)
 from .planning import build_plan, destination_for
+from .subtitle_variants import VERSION as REVIEW_MODEL, variant_of
+from .match_assessment import AssessmentIndex
 
 
 def language_of(path: Path) -> str:
-    tag = strip_language_tag(path.stem)[1]
-    return {
-        ".chs": "简体中文", ".sc": "简体中文", ".cn": "简体中文", ".zh-cn": "简体中文",
-        ".cht": "繁体中文", ".tc": "繁体中文", ".tw": "繁体中文", ".zh-tw": "繁体中文",
-        ".eng": "英语", ".en": "英语", ".jp": "日语", ".kr": "韩语", ".zh": "中文",
-    }.get(tag, "未标记")
+    return variant_of(path).language_label
 
 
 def path_key(path: Path) -> str:
@@ -28,6 +25,7 @@ class ReviewMatch:
     score: float = 0.0
     manual: bool = False
     confirmed: bool = False
+    needs_review: bool = False
 
 
 @dataclass
@@ -52,7 +50,11 @@ class ReviewPlan:
         self.move = move
         # Only explicitly imported cache files use the video directory when move=False.
         self.imported = {}
+        # Suggestions stage a new association, while the original file stays untouched.
+        self.upgrades = {}
+        self.identities = {}
         self.rows = [ReviewRow(video, embedded=(embedded or {}).get(path_key(video), {})) for video in videos]
+        self.assessment = AssessmentIndex([row.video for row in self.rows if not row.uses_embedded],subtitles,should_stop)
         self._seed(should_stop, progress)
         self._replan(should_stop)
 
@@ -60,9 +62,9 @@ class ReviewPlan:
         report = (lambda done, total: progress(done, total, "matching")) if progress else None
         eligible = [row for row in self.rows if not row.uses_embedded]
         for row, item in zip(eligible, build_plan([row.video for row in eligible], list(self.subtitles), self.move,
-                                                 exists=self._exists, should_stop=should_stop, progress=report)):
+                                                 exists=self._exists, should_stop=should_stop, progress=report,assessment=self.assessment)):
             if item["subtitle"]:
-                row.matches.append(ReviewMatch(item["subtitle"], score=item["score"]))
+                row.matches.append(ReviewMatch(item["subtitle"], score=item["score"],needs_review=item['needs_review']))
         # Add distinct, explicitly tagged languages only when the episode and
         # similarity checks pass. Unmarked/duplicate-language files stay candidates.
         used = {path_key(match.source) for row in self.rows for match in row.matches}
@@ -72,18 +74,18 @@ class ReviewPlan:
                 progress(index, len(self.rows), "languages")
             if not row.matches:
                 continue
-            langs = {language_of(match.source) for match in row.matches}
+            variants = {variant_of(match.source).key for match in row.matches}
             options = sorted(self.subtitles, key=lambda sub: (-similarity(row.video, sub), str(sub).casefold()))
             for sub in options:
                 check_cancelled(should_stop)
-                lang = language_of(sub)
-                if lang == "未标记" or lang in langs or path_key(sub) in used:
+                variant = variant_of(sub)
+                if not variant.languages or variant.ambiguous or variant.key in variants or path_key(sub) in used:
                     continue
                 score = similarity(row.video, sub)
                 if score <= MATCH_THRESHOLD:
                     continue
-                row.matches.append(ReviewMatch(sub, score=score))
-                langs.add(lang)
+                row.matches.append(ReviewMatch(sub, score=score,needs_review=not self.assessment.assess(row.video,sub).auto_eligible))
+                variants.add(variant.key)
                 used.add(path_key(sub))
 
         if progress:
@@ -97,7 +99,7 @@ class ReviewPlan:
             for match in row.matches:
                 self._owners[path_key(match.source)] = index
                 match.target = destination_for(row.video, match.source, reserved,
-                                               self.move or path_key(match.source) in self.imported, exists=self._exists)
+                                               self.move or path_key(match.source) in self.imported or path_key(match.source) in self.upgrades, exists=self._exists)
                 reserved.add(path_key(match.target))
 
     def owner(self, subtitle: Path) -> int | None:
@@ -116,6 +118,7 @@ class ReviewPlan:
             new_paths.append(path)
             grouped.setdefault(metadata["rowIndex"], []).append(path)
         self.subtitles += tuple(new_paths)
+        self.assessment = AssessmentIndex([row.video for row in self.rows if not row.uses_embedded],self.subtitles)
         assigned = 0
         for index, paths in grouped.items():
             row = self.rows[index]
@@ -141,11 +144,12 @@ class ReviewPlan:
             raise ValueError("要替换的字幕不属于当前视频")
         if owner == index and subtitle != replace:
             raise ValueError("这份字幕已在当前视频的匹配列表中")
-        lang = language_of(subtitle)
-        if any(language_of(match.source) == lang and match.source != replace for match in row.matches):
-            raise ValueError("同一种语言已经关联字幕，请先更换或移除原字幕")
+        variant = variant_of(subtitle)
+        if any(variant_of(match.source).key == variant.key and match.source != replace for match in row.matches):
+            raise ValueError("同一种语言和用途已经关联字幕，请先更换或移除原字幕")
         if replace is not None:
             row.matches = [match for match in row.matches if match.source != replace]
+            self.upgrades.pop(path_key(replace),None)
         row.matches.append(ReviewMatch(subtitle, score=similarity(row.video, subtitle), manual=True))
         if row.embedded.get("satisfied"):
             row.embedded_ignored = True
@@ -155,6 +159,7 @@ class ReviewPlan:
     def remove(self, index: int, subtitle: Path):
         row = self.rows[index]
         row.matches = [match for match in row.matches if match.source != subtitle]
+        self.upgrades.pop(path_key(subtitle),None)
         self._replan()
 
     def confirm(self, index: int):
@@ -186,7 +191,7 @@ class ReviewPlan:
             return "已符合"
         if not row.matches:
             return "未匹配"
-        if any(not match.confirmed and (match.manual or match.score < AUTO_APPLY_THRESHOLD)
+        if any(not match.confirmed and (match.manual or match.needs_review or variant_of(match.source).ambiguous or match.score < AUTO_APPLY_THRESHOLD)
                for match in row.matches):
             return "需确认"
         if all(is_same_path(match.source, match.target) for match in row.matches):
@@ -204,5 +209,7 @@ class ReviewPlan:
                 cloned.matches = [copy(match) for match in row.matches]
                 result.rows[index] = cloned
         result.imported = dict(self.imported)
+        result.upgrades = dict(self.upgrades)
+        result.identities = dict(self.identities)
         result._owners = dict(self._owners)
         return result

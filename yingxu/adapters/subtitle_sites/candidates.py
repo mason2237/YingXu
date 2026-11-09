@@ -8,7 +8,7 @@ import re
 import unicodedata
 from urllib.parse import urlsplit, urlunsplit
 
-from ...domain.matching import extract_episode
+from ...domain.matching import episode_conflict, extract_episode
 from .zimuku import search_terms, source_url
 
 LANGUAGES = {
@@ -130,9 +130,7 @@ def rank_candidates(rows, video_name, preference="bilingual"):
             warnings.append("候选未标明年份")
         candidate_episode = extract_episode(names)
         if video_episode and candidate_episode:
-            mismatch = (video_episode[1] != candidate_episode[1] or
-                        (video_episode[0] is not None and candidate_episode[0] is not None
-                         and video_episode[0] != candidate_episode[0]))
+            mismatch = episode_conflict(video_name, names)
             conflict |= mismatch
             (warnings if mismatch else reasons).append("集数不一致" if mismatch else "季集一致")
         elif video_episode:

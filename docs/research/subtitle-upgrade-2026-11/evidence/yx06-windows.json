@@ -1,0 +1,11 @@
+{
+  "task": "YX-06",
+  "passed": true,
+  "tests": 9,
+  "log": "work/test-results/yx06.log",
+  "scope": "generated files and backend restart",
+  "limits": [
+    "Boundary hash cannot detect middle-only edits and is not ownership proof.",
+    "No site lookup or automatic video reads."
+  ]
+}

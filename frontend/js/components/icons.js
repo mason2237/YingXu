@@ -25,4 +25,4 @@ export function el(tag, className = '', text) {const node = document.createEleme
 export function iconNode(name, className = '') {const node = el('span', className); node.innerHTML = icon(name); return node;}
 export function button(text, className, click, iconName) {const node = el('button', className); node.type = 'button'; if (iconName) node.append(iconNode(iconName)); node.append(document.createTextNode(text)); if (click) node.addEventListener('click', click); return node;}
 export function badge(state) {const classes = {'待整理': 'ready', '需确认': 'review', '存在冲突': 'conflict', '已符合': 'unchanged', '已跳过': 'skipped'}; const labels = {'待整理': '已匹配', '需确认': '待确认', '已符合': '无需变更'}; return el('span', `badge ${classes[state] || ''}`, labels[state] || state);}
-export function language(value) {return el('span', 'language', value === '英语' ? 'EN' : value === '简体中文' ? '简' : value);}
+export function language(value) {const node = el('span', 'language', value === '英语' ? 'EN' : value === '简体中文' ? '简' : value);node.title = value;node.setAttribute('aria-label', value);return node;}

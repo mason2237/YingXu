@@ -21,11 +21,19 @@ from ..adapters.subtitle_sites.browser_provider import BrowserSiteProvider
 from ..adapters.subtitle_artifacts import LocalSubtitleArtifacts
 from ..adapters.subtitle_sites.zimuku import search_terms
 from ..adapters.thread_tasks import ThreadTasks
+from ..adapters.guessit_parser import GuessItParser
+from ..adapters.subtitle_reader import LocalSubtitleReader
+from ..adapters.media_identity import LocalMediaIdentity
+from ..adapters.sync_artifacts import LocalTransforms
+from ..adapters.sync_worker import SyncWorker
+from ..application.synchronizing import Synchronizing
 from ..application.discovery import Discovery
 from ..application.drafts import Drafts
 from ..application.downloading import Downloads
 from ..application.subtitles import SubtitleWorkflow
 from ..application.workspace import Workspace
+from ..application.recognition import Recognition
+from ..application.quality import Quality
 from ..domain.errors import ProtocolError
 from ..domain.media import DEFAULT_OPTIONS
 from ..domain.models import WorkflowCommand, WorkflowError
@@ -36,7 +44,7 @@ from .operation_runtime import build_execution
 
 
 DISABLED = frozenset()
-NATIVE = frozenset({'folder.choose', 'file.copyName', 'file.reveal', 'operation.cache', 'online.cache', 'result.export'})
+NATIVE = frozenset({'folder.choose', 'file.copyName', 'file.reveal', 'operation.cache', 'online.cache', 'result.export','sync.tool','sync.cache'})
 
 
 class Host:
@@ -75,8 +83,12 @@ class Host:
         self.workspace = Workspace(filesystem=filesystem, inspector=LocalMediaInspector(),
             previewer=LocalPreviewer(), history=JSONLHistoryReader(profile / 'history.jsonl'),
             settings=JSONSettings(profile / 'embedded.json', DEFAULT_OPTIONS), tasks=self.runner, changed=self.push,
-            execution=self.execution, drafts=Drafts(self.checkpoints,filesystem))
+            execution=self.execution, drafts=Drafts(self.checkpoints,filesystem),
+            recognition=Recognition(GuessItParser(enabled=True)) if os.environ.get('YINGXU_RELEASE_PARSER_SHADOW')=='1' else Recognition(),
+            quality=Quality(LocalSubtitleReader()),identity_reader=LocalMediaIdentity(),
+            policy_settings=JSONSettings(profile/'subtitle-policy.json',{'languages':['chinese'],'allowSDH':False,'includeForced':False}))
         self.workspace.interrupted_count = self.recovered
+        self.workspace.synchronizing=Synchronizing(self.workspace,LocalTransforms(profile/'transforms'),SyncWorker(Path(sys.executable).resolve().parent.parent if getattr(sys,'frozen',False) else Path(__file__).resolve().parents[2],profile))
         self.discovery = Discovery(self.workspace, self.workflow, BrowserSiteProvider(), self.native_send,
                                    JSONSettings(profile / 'online.json', {'language': 'bilingual'}))
         self.workspace.discovery = self.discovery
@@ -141,6 +153,7 @@ class Host:
                     native['path'] = str(self.execution.files.buffer_root)
                 elif request.action == 'online.cache':
                     native['path'] = str(self.downloads.artifacts.root)
+                elif request.action=='sync.cache':native['path']=str(self.workspace.synchronizing.artifacts.root)
                 elif request.action == 'result.export':
                     identifier = request.params['recordId']
                     if not self.execution.contains(identifier) and identifier not in self.workspace.records:
@@ -248,13 +261,16 @@ class Host:
             except (OSError, ValueError, ProtocolError) as error:
                 self.push('app.error', {'message': str(error)[:200]})
         elif kind == 'browser.result':
-            allowed = {'v', 'type', 'taskId', 'effectId', 'generation', 'status', 'raw', 'message', 'final'}
+            allowed = {'v', 'type', 'taskId', 'effectId', 'generation', 'status', 'raw', 'message', 'final','errorClass','statusCode','retryAfter'}
             if set(frame) - allowed or not all(valid_id(frame.get(key)) for key in ('taskId', 'effectId')):
                 return
             if type(frame.get('generation')) is not int or frame.get('status') not in {'manual', 'failed', 'results'}:
                 return
             if type(frame.get('final', False)) is not bool or not isinstance(frame.get('raw', ''), str) or not isinstance(frame.get('message', ''), str):
                 return
+            if ('statusCode' in frame and (type(frame['statusCode']) is not int or not 100<=frame['statusCode']<=599)
+                or 'errorClass' in frame and frame['errorClass'] not in {'transient','rate_limited','auth','manual','unsupported','security','permanent'}
+                or 'retryAfter' in frame and (not isinstance(frame['retryAfter'],str) or len(frame['retryAfter'])>100)):return
             try:
                 self.discovery.browser_result(frame)
             except (ProtocolError, WorkflowError) as error:
@@ -291,6 +307,11 @@ class Host:
                 if not isinstance(frame.get('path'), str):
                     raise ProtocolError('INVALID_REQUEST', '系统选择结果无效。')
                 self.workspace.accept_folder(Path(frame['path']).resolve(strict=True))
+            if request.action=='sync.tool' and not frame.get('cancelled'):
+                tool=Path(frame.get('path',''))
+                if not tool.is_absolute():raise ProtocolError('INVALID_REQUEST','工具路径必须来自系统选择对话框。')
+                value=self.workspace.launch('tool',lambda worker:self.workspace.synchronizing.engine.configure_ffmpeg(tool),lambda value:value,'核对所选 FFmpeg 的版本和摘要…')
+                self.respond(request.request_id,fingerprint,data=value);return
             if request.action == 'result.export' and not frame.get('cancelled'):
                 destination = Path(frame.get('path', ''))
                 if not destination.is_absolute() or destination.suffix.casefold() != '.json':
@@ -388,6 +409,9 @@ def main():
     try:
         while not host.stopping or host.workspace.worker is not None:
             host.loop.tick()
+            if not host.stopping:
+                try:host.discovery.tick()
+                except (ProtocolError,WorkflowError,OSError):pass
     finally:
         host.close()
     return 0

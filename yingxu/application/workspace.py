@@ -12,12 +12,15 @@ from ..ports.tasks import TaskRunner
 from ..ports.workspace import Filesystem, HistoryReader, MediaInspector, Previewer, Settings
 from .scanning import scan
 from .executing import Execution
+from .subtitle_needs import SubtitleNeeds
+from .media_identity import MediaIdentity
+from .content_matching import ContentMatching
 
 
 class Workspace:
     def __init__(self, *, filesystem: Filesystem, inspector: MediaInspector,
                  previewer: Previewer, history: HistoryReader, settings: Settings,
-                 tasks: TaskRunner, changed, execution: Execution | None = None, drafts=None):
+                 tasks: TaskRunner, changed, execution: Execution | None = None, drafts=None, recognition=None, quality=None, policy_settings=None, identity_reader=None):
         self.fs, self.inspector, self.previewer = filesystem, inspector, previewer
         self.history, self.settings, self.tasks, self.changed = history, settings, tasks, changed
         self.worker = None
@@ -46,6 +49,12 @@ class Workspace:
         self.last_result_id = None
         self._startup_checked = False
         self.drafts = drafts
+        self.recognition = recognition
+        self.quality = quality
+        self.needs = SubtitleNeeds(self,policy_settings)
+        self.identity = MediaIdentity(self,identity_reader) if identity_reader else None
+        self.synchronizing = None
+        self.content_matching=ContentMatching(self)
         self.draft_status = {'restored':False,'message':''}
 
     @property
@@ -224,7 +233,7 @@ class Workspace:
             self.draft_status = {'restored':False,'message':''}
             return {'scanId': data.scan_id, 'summary': self.summary()}
         def work(worker):
-            data = scan(root,mark,options,embedded,revision,self.register,self.fs,self.inspector,worker)
+            data = scan(root,mark,options,embedded,revision,self.register,self.fs,self.inspector,worker,self.recognition)
             return data, self.draft_capture(data,worker.stop.is_set,fresh=True)
         return self.launch('scan', work, complete, '正在读取视频与字幕…')
 
@@ -254,6 +263,7 @@ class Workspace:
                 return self.execution.issue(snapshot, session, 'execute')
             return self.preview_info()
         def freeze(worker):
+            self.needs.verify_staged(data,worker)
             snapshot = self.previewer.freeze(data.review)
             if not self.execution:
                 return snapshot
@@ -275,7 +285,7 @@ class Workspace:
 
     def restore_draft(self, saved):
         def work(worker):
-            try: return self.drafts.restore(saved,self.register,worker.stop.is_set), None
+            try: return self.drafts.restore(saved,self.register,worker.stop.is_set,recognition=self.recognition,subtitle_policy=self.needs.policy.dto()), None
             except (OSError, ValueError, ProtocolError) as error: return None,str(error)[:200]
         def complete(value):
             restored,error = value
@@ -286,6 +296,8 @@ class Workspace:
             self.folder_id = self.register(self.folder)
             self.revision = self.data.revision
             self.draft_status = {'restored':True,'message':'已恢复上次审阅与字幕队列；新增文件请重新扫描，整理前需重新预览确认。'}
+            if getattr(self.data.review,'model_migrated',False):
+                self.draft_status['message'] += '识别规则已升级，原有关联需重新核对。'
             if self.discovery: self.discovery.restore()
             return {'restored':True}
         return self.launch('restore',work,complete,'正在核对并恢复审阅草稿，不会自动整理或联网…')
@@ -342,6 +354,15 @@ class Workspace:
             raise
 
     def dispatch(self, action, params, session):
+        if action=='content.compare':return self.content_matching.dispatch(params)
+        if action.startswith('sync.'):
+            if self.synchronizing is None:raise ProtocolError('UNAVAILABLE','字幕时间处理组件未配置。')
+            return self.synchronizing.dispatch(action,params)
+        if action.startswith('identity.'):
+            if self.identity is None:raise ProtocolError('UNAVAILABLE','本地身份检查组件未配置。')
+            return self.identity.dispatch(action,params)
+        if action.startswith('requirements.'):
+            return self.needs.dispatch(action,params)
         if action == 'app.state':
             return self.state()
         if action == 'result.export':
@@ -419,6 +440,21 @@ class Workspace:
                 result['rows'] = [list_row(row) for row in result['rows']]
                 return result
             index = data.index(params['rowId'])
+            if action in {'review.quality','review.qualityPage'}:
+                if self.quality is None:raise ProtocolError('UNAVAILABLE','字幕检查组件未配置。')
+                subtitle=data.subtitle_ids.get(params['subtitleId'])
+                if subtitle is None:raise ProtocolError('NOT_FOUND','字幕不属于当前扫描。')
+                session=self.session_id
+                scope=('review',session,data.scan_id,data.revision,params['rowId'],params['subtitleId'])
+                if action=='review.qualityPage':
+                    return self.quality.page(params['reportId'],scope,params.get('qualitySection','issues'),params.get('offset',0),params.get('limit',20))
+                def complete_quality(snapshot):
+                    if self.data is not data or self.session_id!=session:
+                        raise ProtocolError('STALE_REPORT','审阅或页面已变化，请重新检查。')
+                    return self.quality.accept(snapshot)
+                return self.launch('quality',lambda worker:self.quality.inspect(subtitle,scope,
+                    encoding=params.get('encoding','auto'),max_cps=params.get('maxCps',40),should_stop=worker.stop.is_set),
+                    complete_quality,'正在只读检查字幕，原文件不会改写…')
             if action == 'review.details':
                 return data.detail_header(index)
             if action == 'review.detailPage':

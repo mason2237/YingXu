@@ -58,7 +58,7 @@ export class LocalAdapter extends EventTarget {
     },2000);
   }
   async start(action, params = {}) {
-    await this.init();return this.client.call(action,params,{timeout:['folder.choose','result.export'].includes(action) ? 0 : 10000});
+    await this.init();return this.client.call(action,params,{timeout:['folder.choose','result.export','sync.tool'].includes(action) ? 0 : 10000});
   }
   async request(action, params = {}) {
     const response = await this.start(action,params);

@@ -4,6 +4,7 @@ import stat
 import os
 import base64
 import io
+import subprocess
 from time import monotonic
 import tempfile
 import unittest
@@ -127,12 +128,21 @@ class ImportSafety(unittest.TestCase):
         self.assertEqual(budget["files"],0)
 
     @unittest.skipUnless(os.name=='nt','Windows bundled libarchive')
-    def test_windows_7z_stream_extracts_without_touching_archive(self):
+    def test_windows_7z_stream_handles_system_capability_without_changing_archive(self):
         path=self.root/'subtitles.7z'
         # Original generated SRT in sample[中文].chs.srt. A fixed fixture tests
         # actual extraction without requiring system tar to support 7z writing.
         path.write_bytes(base64.b64decode('N3q8ryccAAN6+DsYLQAAAAAAAAB8AAAAAAAAADI+a9IAGIKCXAxmLN3AjXSfYB8suiGnGQtSNm9nYVNF52VbDH7PxjJa+wn//+aogAABBAYAAQktAAcLAQABIwMBAQVdAACAAAwuAAgKAX3Lh24AAAUBEScAcwBhAG0AcABsAGUAWwAtTodlXQAuAGMAaABzAC4AcwByAHQAAAAUCgEAAIA+1d6xnQESCgEAgCzVhWBw3QETCgEAAIA+1d6xnQEVBgEAIIC2gQAA'))
         before=path.read_bytes()
+        tar=Path(os.environ.get('SystemRoot','C:/Windows'))/'System32/tar.exe'
+        probe=subprocess.run([str(tar),'-tf',str(path)],capture_output=True,timeout=10)
+        if probe.returncode:
+            # Some Windows Server libarchive builds cannot read 7z. The
+            # supported behavior there is an explicit failure, with no writes.
+            with self.assertRaisesRegex(ValueError,'系统不支持'):self.prepare(path)
+            self.assertEqual(path.read_bytes(),before)
+            self.assertFalse(list(self.root.glob('*.srt')))
+            return
         files,skipped=self.prepare(path)
         self.assertFalse(skipped)
         self.assertEqual(files[0].path.read_bytes(),SRT)

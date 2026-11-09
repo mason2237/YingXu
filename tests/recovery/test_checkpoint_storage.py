@@ -22,7 +22,7 @@ class CheckpointTests(unittest.TestCase):
 
     def test_old_imported_payload_reclaimed_without_touching_pinned_or_edited_files(self):
         with tempfile.TemporaryDirectory() as directory:
-            store=LocalSubtitleArtifacts(Path(directory)/'cache')
+            store=LocalSubtitleArtifacts(Path(directory).resolve()/'cache')
             record=store.reserve({'offerId':uuid4().hex,'page':'https://subhd.me/a/TEST','url':'https://subhd.me/sub.srt',
                 'name':'test.srt','mime':'text/plain','total':100},{'provider':'subhd','video':'generated.mkv'})
             store.path(record['id']).write_text('1\n00:00:01,000 --> 00:00:02,000\nHello\n',encoding='utf8')

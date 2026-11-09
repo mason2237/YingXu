@@ -2,7 +2,9 @@
 from pathlib import Path
 import stat
 import os
-import subprocess
+import base64
+import io
+from time import monotonic
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -18,7 +20,7 @@ SRT = b"1\n00:00:01,000 --> 00:00:02,000\nTest subtitle\n"
 class ImportSafety(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
-        self.root = Path(self.temp.name)
+        self.root = Path(self.temp.name).resolve()
 
     def tearDown(self):
         self.temp.cleanup()
@@ -126,15 +128,22 @@ class ImportSafety(unittest.TestCase):
 
     @unittest.skipUnless(os.name=='nt','Windows bundled libarchive')
     def test_windows_7z_stream_extracts_without_touching_archive(self):
-        source=self.root/'sample[中文].chs.srt';source.write_bytes(SRT)
         path=self.root/'subtitles.7z'
-        tar=Path(os.environ.get('SystemRoot','C:/Windows'))/'System32/tar.exe'
-        subprocess.run([str(tar),'-cf',str(path),'--format=7zip','--',source.name],cwd=self.root,check=True,capture_output=True)
+        # Original generated SRT in sample[中文].chs.srt. A fixed fixture tests
+        # actual extraction without requiring system tar to support 7z writing.
+        path.write_bytes(base64.b64decode('N3q8ryccAAN6+DsYLQAAAAAAAAB8AAAAAAAAADI+a9IAGIKCXAxmLN3AjXSfYB8suiGnGQtSNm9nYVNF52VbDH7PxjJa+wn//+aogAABBAYAAQktAAcLAQABIwMBAQVdAACAAAwuAAgKAX3Lh24AAAUBEScAcwBhAG0AcABsAGUAWwAtTodlXQAuAGMAaABzAC4AcwByAHQAAAAUCgEAAIA+1d6xnQESCgEAgCzVhWBw3QETCgEAAIA+1d6xnQEVBgEAIIC2gQAA'))
         before=path.read_bytes()
         files,skipped=self.prepare(path)
         self.assertFalse(skipped)
         self.assertEqual(files[0].path.read_bytes(),SRT)
         self.assertEqual(path.read_bytes(),before)
+
+    def test_native_listing_uses_system_codepage_under_python_utf8_mode(self):
+        from yingxu.adapters.subtitle_imports import native_archive_entries
+        raw='-rw-r--r-- 0 0 0 46 Jan 01 1970 sample[中文].chs.srt\n'.encode('cp936')
+        with patch('yingxu.adapters.subtitle_imports.native_archive_stream',return_value=io.BytesIO(raw)),patch('locale.getpreferredencoding',return_value='utf-8'),patch('locale.getencoding',return_value='cp936'):
+            entries=native_archive_entries(self.root/'sample.7z',monotonic()+5)
+        self.assertEqual(entries[0][0],'sample[中文].chs.srt')
 
 
 if __name__ == "__main__":

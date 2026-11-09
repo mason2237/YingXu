@@ -60,7 +60,9 @@ def native_archive_entries(path, deadline):
         raw = stream.read(256*1024+1)
         if len(raw)>256*1024: raise ValueError('压缩目录超过 256 KiB，未解压。')
     try: text = raw.decode('utf-8')
-    except UnicodeDecodeError: text = raw.decode(locale.getpreferredencoding(False))
+    # Native Windows tar still emits its ANSI code page when Python UTF-8
+    # mode is enabled. getencoding() reports that code page independently.
+    except UnicodeDecodeError: text = raw.decode(locale.getencoding())
     lines = text.splitlines()
     if len(lines)>MAX_ENTRIES: raise ValueError('压缩条目超过 200 个，未解压。')
     entries, names = [],set()

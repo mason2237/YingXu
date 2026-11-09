@@ -50,7 +50,7 @@ class AudioSyncTests(unittest.TestCase):
 
     def test_content_cache_invalidates_middle_only_same_time_change(self):
         with tempfile.TemporaryDirectory() as directory:
-            root=Path(directory);media=root/'media.mkv';media.write_bytes(b'A'*200000)
+            root=Path(directory).resolve();media=root/'media.mkv';media.write_bytes(b'A'*200000)
             cache=SpeechCache(root/'cache');first=cache.prepare(media,0,'tool');stamp=media.stat()
             raw=bytearray(media.read_bytes());raw[100000]=66;media.write_bytes(raw);os.utime(media,ns=(stamp.st_atime_ns,stamp.st_mtime_ns))
             self.assertNotEqual(first['key'],cache.prepare(media,0,'tool')['key'])

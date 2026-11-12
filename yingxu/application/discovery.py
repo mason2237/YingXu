@@ -150,9 +150,11 @@ class Discovery:
             values.append({'taskId': identifier, 'rowId': entry['rowId'], 'videoName': entry['videoName'],
                            'query': entry['query'], 'provider': entry['provider'], 'phase': task.phase.value,
                            'reason': task.data.get('reason', ''), 'candidateCount': len(entry['candidates']),
+                           'selectedCandidateId': task.data.get('selected_candidate_id'),
                            'retry':public_retry(entry.get('retry',{})), 'providerStopped':entry['provider'] in self.disabled})
         return {'tasks': values, 'offset': offset, 'total': len(self.entries), 'downloadAvailable': self.downloads is not None,
                 'language': self.language, 'pausedCount':len(self.downloads.paused) if self.downloads else 0,
+                'downloadBusy': bool(self.downloads and self.downloads.busy),
                 'stoppedProviders':sorted(self.disabled),'capabilities':{'remoteLocalFiles':False,'apiCredentialsRequired':False,'searchConcurrency':1,'automaticRetryLimit':3}}
 
     def dispatch(self, action, params, request_id):
@@ -176,7 +178,7 @@ class Discovery:
             return self.downloads.dispatch(action, params)
         if action not in {'online.cancel', 'online.candidates'}:
             self.workspace.require_idle()
-        if self.downloads and (self.downloads.armed or self.downloads.receiving or self.downloads.current or self.downloads.queue) and action in {'online.start', 'online.select', 'online.openCandidate', 'online.usePage'}:
+        if self.downloads and self.downloads.busy and action in {'online.start', 'online.select', 'online.openCandidate', 'online.usePage'}:
             raise ProtocolError('BUSY', '请先完成或取消已确认的下载队列，再更换候选。')
         if action == 'online.configure':
             self.settings.write(params)
@@ -184,10 +186,13 @@ class Discovery:
             return {'language': self.language}
         task, entry = self.get(params['taskId'])
         if action == 'online.usePage':
-            if task.phase not in {SubtitlePhase.AWAITING_USER, SubtitlePhase.NO_RESULTS, SubtitlePhase.CANDIDATES_READY, SubtitlePhase.SELECTED}:
+            if self.active or task.phase not in {SubtitlePhase.AWAITING_USER, SubtitlePhase.NO_RESULTS, SubtitlePhase.CANDIDATES_READY, SubtitlePhase.SELECTED}:
                 raise ProtocolError('INVALID_TRANSITION', '请先打开并核对网站结果页。')
+            download = params.get('acknowledged', False)
+            if download and (not self.downloads or entry['provider'] in self.disabled):
+                raise ProtocolError('PROVIDER_STOPPED', '请先恢复字幕来源。')
             task = self.command(task, 'capture_page', command_id=request_id)
-            self.page_pending = (task.task_id, task.revision, self.generation)
+            self.page_pending = (task.task_id, task.revision, self.generation, download)
             self.send({'type': 'browser.capture', 'taskId': task.task_id, 'effectId': task.active_effect_id, 'generation': self.generation})
             return {'pending': True}
         if action == 'online.candidates':
@@ -205,6 +210,10 @@ class Discovery:
                 raise ProtocolError('INVALID_REQUEST', '请先核对电影或剧集名称。')
             plan = self.provider.plan(query, params['provider'])
             resume = task.phase == SubtitlePhase.AWAITING_USER and query == entry['query'] and params['provider'] == entry['provider']
+            if task.phase == SubtitlePhase.CANCELLED:
+                previous_id = task.task_id
+                task = self.workflow.create_task(task.workspace_id, task.review_revision)
+                self.entries = {task.task_id if key == previous_id else key: value for key, value in self.entries.items()}
             task = self.command(task, 'resume' if resume else 'search',
                                 None if resume else {'query': query, 'provider_id': params['provider']}, command_id=request_id)
             entry.update(query=query, provider=params['provider'], language=self.language, candidates=[])
@@ -213,7 +222,7 @@ class Discovery:
             self.active = (task.task_id, task.active_effect_id)
             self.send({'type': 'browser.search', 'taskId': task.task_id, 'effectId': task.active_effect_id,
                        'generation': self.generation, 'resume': resume, 'plan': plan})
-            return {'phase': task.phase.value}
+            return {'phase': task.phase.value, 'taskId': task.task_id}
         if action == 'online.cancel':
             if 'retry' in entry:entry['retry'].update(paused=True,nextAttempt=None)
             self.command(task, 'cancel', command_id=request_id)
@@ -237,10 +246,17 @@ class Discovery:
 
     def page_result(self, frame):
         task, entry = self.get(frame['taskId'])
-        if self.page_pending != (task.task_id, task.revision, frame['generation']) or frame['generation'] != self.generation or frame['effectId'] != task.active_effect_id:
+        if (not self.page_pending or self.page_pending[:3] != (task.task_id, task.revision, frame['generation'])
+                or frame['generation'] != self.generation or frame['effectId'] != task.active_effect_id):
             return False
+        download = self.page_pending[3]
         self.page_pending = None
-        url = self.provider.url({'url': frame['url']}, entry['provider'])
+        try:
+            url = self.provider.url({'url': frame['url']}, entry['provider'])
+        except ProtocolError:
+            self.command(task, 'interrupt', {'reason': '请先在右侧打开这个来源的字幕详情或下载页。'}, internal=True)
+            self.workspace.emit('online.changed')
+            return False
         candidate = {'candidateId': uuid4().hex, 'url': url, 'title': frame['title'][:150] or '手动核对页面',
                      'release': frame['title'][:150], 'language': '需核对', 'score': 0,
                      'reasons': ['你选择了网站当前页面'], 'warnings': ['网站内容尚未验证，版本和语言需人工审阅']}
@@ -249,6 +265,8 @@ class Discovery:
         self.command(task, 'manual_result', {'candidates': [{'candidate_id': candidate['candidateId'],
                      'provider_id': entry['provider'], 'title': candidate['title']}]}, internal=True)
         entry['candidates'] = [candidate]
+        if download:
+            self.downloads.confirm({'taskIds': [task.task_id], 'acknowledged': True})
         self.workspace.emit('online.changed')
         return True
 

@@ -45,12 +45,12 @@ SCHEMAS['online.provider'] = ({'provider','enabled'},set())
 SCHEMAS['online.configure'] = ({'language'}, set())
 SCHEMAS['online.start'] = ({'taskId', 'query', 'provider'}, set())
 SCHEMAS['online.cancel'] = ({'taskId'}, set())
-SCHEMAS['online.usePage'] = ({'taskId'}, set())
+SCHEMAS['online.usePage'] = ({'taskId'}, {'acknowledged'})
 SCHEMAS['online.select'] = ({'taskId', 'candidateId'}, set())
 SCHEMAS['online.openCandidate'] = ({'taskId', 'candidateId'}, set())
 SCHEMAS['online.candidates'] = ({'taskId'}, {'offset', 'limit'})
 SCHEMAS['subtitle.inbox'] = (set(), set())
-SCHEMAS['online.download'] = ({'taskIds', 'acknowledged'}, set())
+SCHEMAS['online.download'] = ({'taskIds', 'acknowledged'}, {'candidateId'})
 SCHEMAS['online.resumeQueue'] = ({'acknowledged'}, set())
 SCHEMAS['online.downloads'] = (set(), {'offset', 'limit'})
 SCHEMAS['online.qualityFiles'] = ({'artifactId'}, {'offset','limit'})
@@ -136,6 +136,8 @@ def validate(action, params):
                 valid = True
         if not valid:
             raise ProtocolError("INVALID_REQUEST", f"参数 {key} 的类型或范围无效。")
+    if action == 'online.download' and 'candidateId' in params and len(params['taskIds']) != 1:
+        raise ProtocolError('INVALID_REQUEST', '下载指定候选时只能选择一个视频。')
 
 
 def decode(raw):

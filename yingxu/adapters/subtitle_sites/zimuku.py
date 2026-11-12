@@ -38,6 +38,27 @@ def source_url(url, hosts=SITE_HOSTS):
     return public_https(url) and urlsplit(url).hostname in hosts
 
 
+def download_script(candidate_url, hosts=SITE_HOSTS):
+    match = re.fullmatch(r'/(?:detail|dld)/(\d{1,12})\.html', urlsplit(candidate_url).path)
+    if not match:
+        return None
+    payload = json.dumps({'id': match[1], 'hosts': sorted(hosts)})
+    return r"""(() => {
+      const c=PAYLOAD,u=new URL(location.href);
+      if(u.protocol!=='https:'||!c.hosts.includes(u.hostname)||u.username||u.password||(u.port&&u.port!=='443'))return {status:'untrusted'};
+      const detail='/detail/'+c.id+'.html', download='/dld/'+c.id+'.html';
+      if(u.pathname!==detail&&u.pathname!==download)return {status:'manual'};
+      if(document.querySelector('input[name*="captcha"],img[src*="captcha"],iframe[src*="challenges.cloudflare"]'))
+        return {status:'manual',message:'网站需要验证，请在右侧完成。'};
+      const links=[...document.querySelectorAll(u.pathname===detail?'a[href]':'.down a[rel="nofollow"]')].filter(a=>{
+        if(!a.getClientRects().length||a.origin!==u.origin)return false;
+        return u.pathname===detail?a.pathname===download:/^\/download\/[A-Za-z0-9%=_-]+\/svr\/d0$/.test(a.pathname);
+      });
+      if(links.length!==1)return {status:'manual',message:'请在右侧选择网站的字幕下载按钮。'};
+      links[0].click();return {status:'clicked'};
+    })()""".replace('PAYLOAD', payload)
+
+
 def search_terms(filename):
     """Default to a title, leaving release/year/episode details for local ranking."""
     name = PureWindowsPath(filename).stem

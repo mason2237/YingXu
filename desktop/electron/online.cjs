@@ -3,6 +3,10 @@ const {BrowserWindow,WebContentsView,ipcMain}=require('electron');
 const {randomUUID}=require('node:crypto');
 const path=require('node:path');
 const fs=require('node:fs');
+const MAX_DOWNLOAD_BYTES=64*1024*1024;
+const MAX_SESSION_BYTES=256*1024*1024;
+const WAIT_FOR_DOWNLOAD_MS=90000;
+const DOWNLOAD_IDLE_MS=30000;
 
 const ACTIONS=new Set(['online.query','online.configure','online.start','online.cancel','online.candidates','online.select','online.openCandidate',
   'online.resumeQueue','online.usePage','online.download','online.downloads','online.retryDownload','online.discardDownload','online.compactDownload','online.import','online.cache',
@@ -15,12 +19,19 @@ function safeHttps(value,hosts=null) {
       !host.endsWith('.')&&!/\.(local|localhost|internal)$/.test(host)&&(!hosts||hosts.includes(host));
   } catch{return false;}
 }
+function zimukuDownloadRedirect(url,page,hosts,grant) {
+  if(!grant||!safeHttps(page,hosts)||!safeHttps(url,['s.zimuku.org']))return false;
+  const origin=new URL(page);
+  return ['zimuku.org','www.zimuku.org','srtku.com','www.srtku.com'].includes(origin.hostname)
+    && /^\/(detail|dld)\/\d+\.html$/.test(origin.pathname)
+    && new URL(url).pathname.startsWith('/download/');
+}
 
 class OnlineWindow {
   constructor({request,write,appearance,icon,incoming,diagnostics=false}) {
     Object.assign(this,{request,write,appearance,icon,incoming,diagnostics});
     this.window=null;this.view=null;this.ticket=null;this.timer=null;this.epoch=0;
-    this.grant=null;this.offers=new Map();this.received=0;this.downloadCount=0;
+    this.grant=null;this.grantTimer=null;this.offers=new Map();this.received=0;this.downloadCount=0;
     ipcMain.handle('yingxu:online:request',(event,action,params={})=>{
       if(!this.window||event.sender!==this.window.webContents||event.senderFrame!==this.window.webContents.mainFrame||
          event.senderFrame.origin!=='yingxu://app'||!ACTIONS.has(action))throw Error('UNTRUSTED_ONLINE_FRAME');
@@ -51,15 +62,31 @@ class OnlineWindow {
     });
     session.on('will-download',(event,item,source)=>this.download(event,item,source));
     session.webRequest.onHeadersReceived((details,callback)=>{
-      if(details.resourceType==='mainFrame'&&this.ticket&&details.statusCode>=400){
-        const retry=Object.entries(details.responseHeaders||{}).find(([name])=>name.toLowerCase()==='retry-after')?.[1]?.[0];
-        this.finish(this.ticket,{status:'failed',statusCode:details.statusCode,...(retry?{retryAfter:String(retry).slice(0,100)}:{}),message:`字幕来源暂时返回 ${details.statusCode}，请按提示等待或处理。`});
+      if(details.resourceType==='mainFrame'&&safeHttps(details.url,['s.zimuku.org'])&&
+         !Object.entries(details.responseHeaders||{}).some(([name,values])=>
+           name.toLowerCase()==='content-disposition'&&values.some(value=>/^attachment\b/i.test(value)))){
+        callback({cancel:true});return;
+      }
+      if(details.resourceType==='mainFrame'&&this.ticket){
+        this.ticket.httpError=null;
+        if(details.statusCode>=400){
+          const retry=Object.entries(details.responseHeaders||{}).find(([name])=>name.toLowerCase()==='retry-after')?.[1]?.[0];
+          this.ticket.httpError={status:'failed',statusCode:details.statusCode,
+            ...(retry?{retryAfter:String(retry).slice(0,100)}:{}),
+            message:`字幕来源返回 HTTP ${details.statusCode}，请重试或切换来源。`};
+        }
       }
       callback({cancel:false});
     });
-    const navigation=(event,url)=>{if(!safeHttps(url,this.ticket?.plan.hosts||this.hosts))event.preventDefault();};
-    contents.on('will-navigate',navigation);contents.on('will-redirect',navigation);
-    contents.setWindowOpenHandler(({url})=>{if(safeHttps(url,this.ticket?.plan.hosts||this.hosts))contents.loadURL(url).catch(()=>{});return {action:'deny'};});
+    const navigation=(event,url)=>{if(!safeHttps(event.url||url,this.ticket?.plan.hosts||this.hosts))event.preventDefault();};
+    contents.on('will-navigate',navigation);
+    contents.on('will-redirect',(event,url)=>{
+      if(!zimukuDownloadRedirect(event.url||url,contents.getURL(),this.hosts,this.grant))navigation(event,url);
+    });
+    contents.setWindowOpenHandler(({url,referrer})=>{
+      if(safeHttps(url,this.ticket?.plan.hosts||this.hosts))contents.loadURL(url,{httpReferrer:referrer}).catch(()=>{});
+      return {action:'deny'};
+    });
     contents.on('did-finish-load',()=>this.documentReady().then(()=>this.downloadReady()).catch(()=>this.fail('网站页面未能解析，请切换来源或手动浏览。')));
     contents.on('did-fail-load',(_event,code,_text,_url,isMainFrame)=>{if(isMainFrame&&code!==-3){if(this.ticket)this.finish(this.ticket,{status:'failed',errorClass:[-7,-21,-101,-102,-103,-105,-106,-118].includes(code)?'transient':'permanent',message:'网站连接未完成，临时故障会有限重试；必要验证需手动处理。'});else this.fail('网站加载失败，请重试或切换备用来源。');}});
     contents.on('render-process-gone',()=>this.fail('网站页面已退出，请重新查找。'));
@@ -92,14 +119,20 @@ class OnlineWindow {
     this.write({type:'browser.result',taskId:ticket.taskId,effectId:ticket.effectId,generation:ticket.generation,...value});
     if(value.final||['manual','failed'].includes(value.status)){clearTimeout(this.timer);this.ticket=null;this.changed();}
   }
-  fail(message){if(this.ticket)this.finish(this.ticket,{status:'failed',message});else this.notice(message);}
+  fail(message){
+    if(this.ticket)this.finish(this.ticket,{status:'failed',message});
+    else if(this.grant)this.downloadFailed(this.grant,message);
+    else this.notice(message);
+  }
   async documentReady() {
     const ticket=this.ticket,contents=this.view?.webContents;
     if(!ticket||!contents||!safeHttps(contents.getURL(),ticket.plan.hosts))return;
-    if(await contents.executeJavaScript(ticket.plan.challengeScript)){
+    const challenge=await contents.executeJavaScript(ticket.plan.challengeScript);
+    if(this.ticket!==ticket)return;
+    if(challenge){
       this.finish(ticket,{status:'manual',message:'网站需要验证，请在右侧完成后点击继续查找。'});return;
     }
-    if(this.ticket!==ticket)return;
+    if(ticket.httpError){this.finish(ticket,ticket.httpError);return;}
     const raw=await contents.executeJavaScript(ticket.plan.candidateScript);
     if(this.ticket!==ticket)return;
     let result;try{result=typeof raw==='string'?JSON.parse(raw):raw;}catch{result={status:'unrecognized',rows:[]};}
@@ -130,63 +163,104 @@ class OnlineWindow {
 
   async arm(frame) {
     const epoch=this.epoch;await this.show();if(epoch!==this.epoch)return;this.stop();
-    if(!safeHttps(frame.url,frame.hosts))throw Error('UNTRUSTED_PROVIDER_URL');
+    if(!safeHttps(frame.url,frame.hosts)){
+      this.downloadFailed(frame,'下载页不属于当前字幕来源，请重新查找。');return;
+    }
     this.hosts=frame.hosts;
-    this.grant={taskId:frame.taskId,effectId:frame.effectId,generation:frame.generation};
+    const grant=this.grant={taskId:frame.taskId,effectId:frame.effectId,generation:frame.generation};
+    this.grantTimer=setTimeout(()=>{
+      if(this.grant===grant)this.downloadFailed(grant,'网站没有开始下载。请重试、在右侧完成网站操作，或换个来源。');
+    },WAIT_FOR_DOWNLOAD_MS);
     this.downloadPlan={script:frame.downloadScript,clicked:new Set()};
     this.view.setVisible(true);
-    this.notice('已确认这份候选，正在尝试网站下载；必要验证或未识别的步骤请在右侧完成。下载后自动验证和解压。');
-    try{await this.view.webContents.loadURL(frame.url);}catch{this.downloadFailed(frame,'候选下载页面未能打开；请重新查找或切换来源。');}
+    this.notice('正在打开下载页。如果网站要求验证或选择线路，请在右侧操作。');
+    const contents=this.view.webContents;
+    if(contents.getURL()===frame.url){
+      await this.downloadReady();return;
+    }
+    try{await contents.loadURL(frame.url,{httpReferrer:contents.getURL()});}
+    catch(error){
+      if(this.grant===grant&&error.code!=='ERR_ABORTED')this.downloadFailed(grant,'下载页面未能打开，请重试或切换来源。');
+    }
   }
   disarm() {
     this.epoch++;
+    clearTimeout(this.grantTimer);
     this.grant=null;
     this.downloadPlan=null;
-    for(const value of this.offers.values()){clearTimeout(value.timer);value.item.cancel();}
-    this.offers.clear();
+    for(const value of this.offers.values())value.cancel();
   }
   download(event,item,source) {
     const grant=this.grant,page=this.view?.webContents.getURL(),url=item.getURL();
     const blob=url.startsWith('blob:');
     let sameBlob=false;
     try{sameBlob=blob&&new URL(url.slice(5)).origin===new URL(page).origin;}catch{}
-    if(!grant||source!==this.view?.webContents||!safeHttps(page,this.hosts)||
-       (!safeHttps(url)&&!sameBlob)||item.getTotalBytes()>64*1024*1024||
-       this.downloadCount>=20||this.received>=256*1024*1024){
-      event.preventDefault();this.notice('请先选择候选并确认下载；仅接收当前网站的有界字幕文件。');return;
+    if(!grant||source!==this.view?.webContents||!safeHttps(page,this.hosts)){
+      event.preventDefault();this.notice('请先在映序选择要下载的字幕。');return;
     }
+    if((!safeHttps(url)&&!sameBlob)||item.getTotalBytes()>MAX_DOWNLOAD_BYTES||
+       this.downloadCount>=20||this.received>=MAX_SESSION_BYTES){
+      event.preventDefault();this.downloadFailed(grant,'下载来源、文件大小或本次会话下载量超出限制。');return;
+    }
+    clearTimeout(this.grantTimer);
     this.grant=null;this.downloadCount++;
     const offerId=randomUUID().replaceAll('-','');
-    const frame={type:'download.offer',...grant,offerId,url,page,name:item.getFilename(),mime:item.getMimeType(),total:Math.max(0,item.getTotalBytes())};
+    const frame={type:'download.offer',...grant,offerId,url,page,name:item.getFilename(),mime:item.getMimeType(),
+      total:Math.max(0,item.getTotalBytes()),browserTransfer:true};
     if([url,page,frame.name,frame.mime].some(value=>value.length>2048)){
       event.preventDefault();this.downloadFailed(grant,'下载链接或文件名过长，已拒绝。');return;
     }
-    if(!blob) {
-      event.preventDefault();
-      // Cookies stay in memory and only accompany this HTTPS origin request.
-      this.view.webContents.session.cookies.get({url}).then(cookies=>{
-        const cookie=cookies.map(value=>`${value.name}=${value.value}`).join('; ');
-        if(cookie.length>2048)throw Error('网站凭据过长，请重新获取下载链接。');
-        this.write({...frame,headers:{Cookie:cookie,Referer:page,'User-Agent':this.view.webContents.getUserAgent()}});
-      }).catch(()=>this.downloadFailed(grant,'无法获取网站下载凭据，请回网站重新获取链接。'));
-      return;
-    }
-    fs.mkdirSync(this.incoming,{recursive:true});
+    // Keep the response Chromium already opened, including single-use links.
     const destination=path.join(this.incoming,offerId+'.part');
-    const handle=fs.openSync(destination,'wx');fs.closeSync(handle);
-    item.setSavePath(destination);item.pause();
-    const value={item,artifactId:null,received:0,timer:setTimeout(()=>{item.cancel();this.offers.delete(offerId);this.downloadFailed(grant,'接收下载超时；未导入，请重新获取。');},15000)};
+    try{
+      fs.mkdirSync(this.incoming,{recursive:true});
+      fs.closeSync(fs.openSync(destination,'wx'));
+      item.setSavePath(destination);
+    }catch{
+      event.preventDefault();this.downloadFailed(grant,'无法创建字幕暂存文件，请检查缓存目录。');return;
+    }
+    const value={artifactId:null,received:0,timer:null,finished:false};
+    const cleanup=()=>fs.rm(destination,{force:true},()=>{});
+    value.cancel=()=>{
+      if(!this.offers.delete(offerId))return;
+      clearTimeout(value.timer);
+      if(value.finished)cleanup();else item.cancel();
+    };
+    const stop=message=>{
+      if(!this.offers.has(offerId))return;
+      value.cancel();this.downloadFailed(grant,message);
+    };
+    value.resetTimer=()=>{
+      clearTimeout(value.timer);
+      value.timer=setTimeout(()=>stop('接收字幕超时，请重新下载。'),DOWNLOAD_IDLE_MS);
+    };
     this.offers.set(offerId,value);
-    item.on('updated',()=>{
-      const bytes=item.getReceivedBytes();this.received+=Math.max(0,bytes-value.received);value.received=bytes;
-      if(bytes>64*1024*1024||this.received>256*1024*1024)item.cancel();
+    value.resetTimer();
+    value.publish=()=>{
+      if(!value.finished||!value.artifactId||!this.offers.has(offerId))return;
+      try{
+        this.write({type:'download.result',artifactId:value.artifactId,status:'completed'});
+        this.offers.delete(offerId);clearTimeout(value.timer);
+      }catch{stop('无法交接字幕文件，请重新下载。');}
+    };
+    item.on('updated',(_event,state)=>{
+      if(!this.offers.has(offerId))return;
+      const bytes=item.getReceivedBytes(),delta=Math.max(0,bytes-value.received);
+      this.received+=delta;value.received=bytes;
+      if(bytes>MAX_DOWNLOAD_BYTES||this.received>MAX_SESSION_BYTES)stop('字幕文件超过下载限制。');
+      else if(state==='interrupted')stop('下载连接已中断，请重新下载。');
+      else if(delta)value.resetTimer();
     });
     item.once('done',(_event,status)=>{
-      clearTimeout(value.timer);this.offers.delete(offerId);
-      if(value.artifactId)this.write({type:'download.result',artifactId:value.artifactId,status:status==='completed'?'completed':'interrupted'});
-      this.changed();
+      value.finished=true;
+      if(!this.offers.has(offerId)){cleanup();return;}
+      const bytes=item.getReceivedBytes();
+      this.received+=Math.max(0,bytes-value.received);
+      if(status!=='completed')stop('字幕文件未能完整接收，请重新下载。');
+      else if(bytes>MAX_DOWNLOAD_BYTES||this.received>MAX_SESSION_BYTES)stop('字幕文件超过下载限制。');
+      else value.publish();
     });
-    this.write(frame);
+    try{this.write(frame);}catch{stop('无法登记这次下载，请重试。');}
   }
   capture(frame) {
     const contents=this.view?.webContents;if(!contents||contents.isDestroyed())return;
@@ -203,17 +277,20 @@ class OnlineWindow {
   accept(frame) {
     const value=this.offers.get(frame.offerId);
     if(!value)return;
-    clearTimeout(value.timer);value.artifactId=frame.artifactId;value.item.resume();
+    value.artifactId=frame.artifactId;value.resetTimer();value.publish();
+    this.notice('正在下载字幕，完成后会自动检查和解压。');
   }
   reject(frame) {
     const value=this.offers.get(frame.offerId);
-    if(value){clearTimeout(value.timer);value.item.cancel();this.offers.delete(frame.offerId);}
+    if(value)value.cancel();
     this.notice(frame.message);
   }
   downloadFailed(grant,message){
-    if(this.grant?.effectId===grant.effectId&&this.grant?.generation===grant.generation)this.grant=null;
+    if(this.grant?.effectId===grant.effectId&&this.grant?.generation===grant.generation){
+      clearTimeout(this.grantTimer);this.grant=null;this.downloadPlan=null;
+    }
     this.notice(message);
     try{this.write({type:'download.failed',taskId:grant.taskId,effectId:grant.effectId,generation:grant.generation,message});}catch{}
   }
 }
-module.exports={OnlineWindow,safeHttps,ACTIONS};
+module.exports={OnlineWindow,safeHttps,zimukuDownloadRedirect,ACTIONS};

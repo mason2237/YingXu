@@ -84,6 +84,7 @@ class LocalSubtitleArtifacts:
         blob = same_origin_blob(url, offer['page'], site.hosts)
         if not blob and not public_https(url):
             raise ValueError('不允许的下载来源。')
+        browser_transfer = blob or offer.get('browserTransfer') is True
         if type(offer['total']) is not int or not 0 <= offer['total'] <= MAX_DOWNLOAD_BYTES:
             raise ValueError('下载大小超过 64 MiB。')
         if offer.get('mime', '').split(';')[0] in {'text/html','application/xhtml+xml','application/x-msdownload','application/x-executable'}:
@@ -104,7 +105,8 @@ class LocalSubtitleArtifacts:
             (self.root / identifier).mkdir()
             record = {'v': 1, 'id': identifier, 'filename': safe_filename(offer['name']),
                       'url': url, 'page': offer['page'], 'blob': blob, 'total': offer['total'],
-                      'status': 'receiving' if blob else 'downloading', 'message': '',
+                      'browserTransfer': browser_transfer,
+                      'status': 'receiving' if browser_transfer else 'downloading', 'message': '',
                       'association': association, 'offerId': offer['offerId'], 'imported': False, 'prepared': [], 'http': {}}
             record['createdAt'] = time()
             self._save(record)
@@ -121,25 +123,25 @@ class LocalSubtitleArtifacts:
 
     def transfer(self, identifier, stop, report, headers=None):
         record = self.get(identifier)
-        if record['blob']:
-            raise ValueError('网站生成的 blob 不能跨会话续传，请重新获取。')
+        if record.get('browserTransfer', record['blob']):
+            raise ValueError('请返回网站重新下载这份字幕。')
         self.update(identifier, status='downloading', message='正在下载')
         return transfer(record, self.path(identifier),
                         lambda http: self.update(identifier, http=http), stop, report, headers)
 
     def verify(self, identifier):
         record = self.get(identifier)
-        if record['blob']:
+        if record.get('browserTransfer', record['blob']):
             temporary = self.root / '.incoming' / (record['offerId']+'.part')
             private_path(temporary, self.root)
             if not 0 < temporary.stat().st_size <= MAX_DOWNLOAD_BYTES:
-                raise ValueError('网站生成的下载为空或过大。')
+                raise ValueError('网站下载为空或过大。')
             with temporary.open('rb') as source, self.path(identifier).open('xb') as target:
                 size = 0
                 while block := source.read(65536):
                     size += len(block)
                     if size > MAX_DOWNLOAD_BYTES:
-                        raise ValueError('网站生成的下载超过限制。')
+                        raise ValueError('网站下载超过限制。')
                     target.write(block)
                 target.flush(); os.fsync(target.fileno())
             temporary.unlink()

@@ -216,10 +216,12 @@ class Host:
             if type(frame['generation']) is int and isinstance(frame['message'], str) and len(frame['message']) <= 200:
                 self.downloads.browser_failed(frame)
         elif kind == 'download.offer':
-            allowed = {'v', 'type', 'taskId', 'effectId', 'generation', 'offerId', 'url', 'page', 'name', 'mime', 'total', 'headers'}
+            allowed = {'v', 'type', 'taskId', 'effectId', 'generation', 'offerId', 'url', 'page', 'name', 'mime', 'total', 'headers', 'browserTransfer'}
             if set(frame) - allowed or not all(valid_id(frame.get(key)) for key in ('taskId', 'effectId', 'offerId')):
                 return
             if type(frame.get('generation')) is not int or type(frame.get('total')) is not int:
+                return
+            if 'browserTransfer' in frame and frame['browserTransfer'] is not True:
                 return
             if not all(isinstance(frame.get(key), str) and len(frame[key]) <= 2048 for key in ('url','page','name','mime')):
                 return
@@ -242,7 +244,7 @@ class Host:
             if set(frame) != {'v', 'type', 'artifactId', 'status'} or not valid_id(frame.get('artifactId')) or frame.get('status') not in {'completed', 'interrupted'}:
                 return
             try:
-                self.downloads.blob_result(frame)
+                self.downloads.browser_result(frame)
             except (OSError, ValueError, ProtocolError) as error:
                 self.push('app.error', {'message': str(error)[:200]})
         elif kind == 'reset':

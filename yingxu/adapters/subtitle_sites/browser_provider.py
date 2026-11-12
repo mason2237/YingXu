@@ -33,4 +33,5 @@ class BrowserSiteProvider:
 
     def download(self,candidate,provider):
         site=website_for(provider)
-        return subhd.download_script(self.url(candidate,provider),site.hosts) if site.provider=='subhd' else None
+        adapter = subhd if site.provider == 'subhd' else zimuku
+        return adapter.download_script(self.url(candidate, provider), site.hosts)

@@ -6,14 +6,26 @@ const vm=require('node:vm');
 const handlers=new Map();
 const moduleObject={exports:{}};
 const source=fs.readFileSync(path.resolve(__dirname,'../../desktop/electron/online.cjs'),'utf8');
-const wrapper=vm.runInNewContext('(function(require,module,exports){'+source+'\n})',{URL,setTimeout,clearTimeout,Buffer,process});
+const longTimers=new Map();
+function testTimer(callback,delay) {
+  if(delay!==90000)return setTimeout(callback,delay);
+  const token=Symbol('download deadline');longTimers.set(token,callback);return token;
+}
+const wrapper=vm.runInNewContext('(function(require,module,exports){'+source+'\n})',{
+  URL,setTimeout:testTimer,clearTimeout:token=>typeof token==='symbol'?longTimers.delete(token):clearTimeout(token),Buffer,process
+});
 wrapper(name=>name==='electron'?{ipcMain:{handle:(name,handler)=>handlers.set(name,handler)}}:require(name),moduleObject,moduleObject.exports);
-const {OnlineWindow,safeHttps}=moduleObject.exports;
+const {OnlineWindow,safeHttps,zimukuDownloadRedirect}=moduleObject.exports;
 
 (async()=>{
   for(const value of ['http://subhd.me/','file:///C:/example','https://127.0.0.1/','https://[::1]/','https://localhost/','https://device.local/','https://a:b@example.invalid/','https://subhd.me:444/'])assert.equal(safeHttps(value),false,value);
   assert.equal(safeHttps('https://subhd.me/search/Atlas',['subhd.me']),true);
   assert.equal(safeHttps('https://untrusted.example/',['subhd.me']),false);
+  const providerHosts=['zimuku.org'],page='https://zimuku.org/dld/1.html',cdn='https://s.zimuku.org/download/test.ass';
+  assert.equal(zimukuDownloadRedirect(cdn,page,providerHosts,{}),true);
+  assert.equal(zimukuDownloadRedirect(cdn,page,providerHosts,null),false);
+  assert.equal(zimukuDownloadRedirect(cdn,'https://zimuku.org/',providerHosts,{}),false);
+  assert.equal(zimukuDownloadRedirect('https://s.zimuku.org/',page,providerHosts,{}),false);
   const manager=new OnlineWindow({request:async()=>({ok:true}),write:()=>{},appearance:()=>({})});
   const mainFrame={origin:'yingxu://app'},contents={mainFrame};manager.window={webContents:contents};
   const request=handlers.get('yingxu:online:request');
@@ -53,5 +65,12 @@ const {OnlineWindow,safeHttps}=moduleObject.exports;
   const late=manager.downloadReady(),noticeCount=notices;manager.disarm();
   finishScript({status:'manual',message:'old result'});await late;
   assert.equal(notices,noticeCount,'A cancelled page callback must not change the current guidance');
-  console.log(JSON.stringify({passed:true,checks:['source-policy','IPC-whitelist','resume-after-verification','cancel-during-window-startup','cancel-during-download-startup','bounded-ordinary-download-steps','late-download-guidance-ignored']}));
+  const failures=[];
+  manager.write=frame=>failures.push(frame);
+  await manager.arm({taskId:'task',effectId:'deadline',generation:4,url:'https://subhd.me/a/TEST',hosts:['subhd.me']});
+  longTimers.get(manager.grantTimer)();
+  assert.equal(manager.grant,null);
+  assert.equal(failures.at(-1).type,'download.failed');
+  assert.equal(failures.at(-1).effectId,'deadline');
+  console.log(JSON.stringify({passed:true,checks:['source-policy','zimuku-download-redirect','IPC-whitelist','resume-after-verification','cancel-during-window-startup','cancel-during-download-startup','bounded-ordinary-download-steps','late-download-guidance-ignored','download-deadline']}));
 })().catch(error=>{console.error(error);process.exitCode=1;});

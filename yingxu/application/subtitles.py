@@ -140,7 +140,8 @@ class SubtitleWorkflow:
             data['reason'] = _text(params['reason'], 'reason')
             return next_state(SubtitlePhase.AWAITING_USER)
         if action == 'select':
-            _phase(task, SubtitlePhase.CANDIDATES_READY, SubtitlePhase.SELECTED)
+            _phase(task, SubtitlePhase.CANDIDATES_READY, SubtitlePhase.SELECTED,
+                   SubtitlePhase.INTERRUPTED)
             if params['candidate_id'] not in {item['candidate_id'] for item in data.get('candidates', [])}:
                 raise WorkflowError('CANDIDATE_NOT_FOUND', '候选不属于本次搜索结果。')
             data['selected_candidate_id'] = params['candidate_id']

@@ -19,6 +19,10 @@ class Downloads:
         self.paused = []
         self.maintenance_checked = False
 
+    @property
+    def busy(self):
+        return bool(self.queue or self.armed or self.current or self.receiving)
+
     def protected(self):
         values=self.workspace.execution.journal.referenced_paths()
         if self.workspace.data: values+=list(self.workspace.data.review.subtitles)
@@ -50,7 +54,7 @@ class Downloads:
         self.workspace.require_idle()
         if params['acknowledged'] is not True:
             raise ProtocolError('CONFIRMATION_REQUIRED', '请先确认候选再下载。')
-        if self.queue or self.armed or self.current or self.receiving:
+        if self.busy or self.discovery.active:
             raise ProtocolError('BUSY', '请先完成或取消当前下载队列。')
         ids = params.get('taskIds') or [params['taskId']]
         if len(set(ids)) != len(ids) or not 1 <= len(ids) <= 20:
@@ -58,6 +62,16 @@ class Downloads:
         tasks = [self.discovery.get(identifier)[0] for identifier in ids]
         if any(self.discovery.entries[t.task_id]['provider'] in self.discovery.disabled for t in tasks):
             raise ProtocolError('PROVIDER_STOPPED','来源已暂停，请先恢复来源或取消本次任务。')
+        candidate_id = params.get('candidateId')
+        if candidate_id:
+            task, = tasks
+            if task.phase == SubtitlePhase.CANCELLED and candidate_id == task.data.get('selected_candidate_id'):
+                self.discovery.command(task, 'resume_download', {'acknowledged': True})
+                self.queue.append(task.task_id)
+                self.advance()
+                return {'queued': 1}
+            task = self.discovery.command(task, 'select', {'candidate_id': candidate_id})
+            tasks = [task]
         if any(task.phase != SubtitlePhase.SELECTED for task in tasks):
             raise ProtocolError('INVALID_TRANSITION', '请为每个视频明确选择候选；未选择项不会下载。')
         for task in tasks:
@@ -77,12 +91,15 @@ class Downloads:
                     self.paused.append(identifier);continue
                 if task.phase != SubtitlePhase.DOWNLOADING:
                     continue
+                candidate_id = task.data['selected_candidate_id']
                 retained = next((record for record in self.artifacts.list()
-                    if record['association']['taskId']==identifier and not record['imported'] and record['status'] in {'ready','interrupted'}),None)
-                if retained and (retained['status']=='ready' or not retained['blob']):
-                    self.start(retained['id'],task,ready=retained['status']=='ready')
+                    if record['association']['taskId'] == identifier
+                    and record['association'].get('candidateId') == candidate_id
+                    and not record['imported'] and record['status'] == 'ready'), None)
+                if retained:
+                    self.start(retained['id'], task, ready=True)
                     return
-                row = next(row for row in entry['candidates'] if row['candidateId'] == task.data['selected_candidate_id'])
+                row = next(row for row in entry['candidates'] if row['candidateId'] == candidate_id)
                 self.armed = (identifier, task.active_effect_id, self.discovery.generation)
                 self.discovery.persist()
                 self.send({'type': 'browser.arm', 'taskId': identifier, 'effectId': task.active_effect_id,
@@ -131,10 +148,11 @@ class Downloads:
             return False
         data = self.workspace.data
         video = data.review.rows[data.index(entry['rowId'])].video
-        association = {'taskId': task.task_id, 'provider': entry['provider'], 'video': str(video),
+        association = {'taskId': task.task_id, 'candidateId': task.data['selected_candidate_id'],
+                       'provider': entry['provider'], 'video': str(video),
                        'mark': asdict(self.workspace.fs.file_mark(video)), 'language': self.discovery.language}
         record = self.artifacts.reserve(frame, association)
-        if record['blob']:
+        if record.get('browserTransfer', record['blob']):
             self.receiving = record['id']
             self.send({'type': 'browser.accept', 'offerId': frame['offerId'], 'artifactId': record['id'],
                        'path': str(self.artifacts.path(record['id']))})
@@ -144,7 +162,7 @@ class Downloads:
         self.workspace.emit('online.changed')
         return True
 
-    def blob_result(self, frame):
+    def browser_result(self, frame):
         identifier = frame['artifactId']
         if identifier != self.receiving or not self.armed:
             return False
@@ -153,15 +171,15 @@ class Downloads:
             return False
         self.receiving, self.armed = None, None
         if frame['status'] != 'completed':
-            self.artifacts.update(identifier, status='interrupted', message='网站生成的下载未完成，请重新获取。')
-            self.discovery.command(task, 'interrupt', {'reason': '网站生成的下载未完成，不能跨会话续传。'}, internal=True)
+            self.artifacts.update(identifier, status='interrupted', message='网站下载未完成，请重新下载。')
+            self.discovery.command(task, 'interrupt', {'reason': '网站下载未完成，请重新下载。'}, internal=True)
             self.advance()
             self.workspace.emit('online.changed')
         else:
-            self.start(identifier, task, blob=True)
+            self.start(identifier, task, browser_transfer=True)
         return True
 
-    def start(self, identifier, task, *, headers=None, blob=False, ready=False):
+    def start(self, identifier, task, *, headers=None, browser_transfer=False, ready=False):
         workspace = self.workspace
         self.current = (identifier, task.task_id, task.active_effect_id)
         ticket = self.current
@@ -169,7 +187,7 @@ class Downloads:
             try:
                 if ready:
                     return self.artifacts.prepared(identifier),None
-                if not blob:
+                if not browser_transfer:
                     self.artifacts.transfer(identifier, worker.stop.is_set, worker.report, headers)
                 return self.artifacts.prepare(identifier, worker.stop.is_set), None
             except Exception as error:
@@ -254,7 +272,7 @@ class Downloads:
             rows = self.artifacts.list()
             values = [{'artifactId': row['id'], 'name': row['filename'], 'videoName': Path(row['association']['video']).name,
                        'status': row['status'], 'message': row['message'], 'imported': row['imported'],
-                       'canResume': not row['blob'] and row['status'] == 'interrupted',
+                       'canResume': not row.get('browserTransfer', row['blob']) and row['status'] == 'interrupted',
                        'fileCount': len(row['prepared'])} for row in rows]
             offset, limit = params.get('offset', 0), params.get('limit', 10)
             return {'rows': values[offset:offset+limit], 'total': len(values), 'offset': offset}
@@ -267,11 +285,11 @@ class Downloads:
             record = self.artifacts.get(params['artifactId'])
             if record['status'] != 'interrupted' or record['imported']:
                 raise ProtocolError('INVALID_TRANSITION', '这份下载不需要重试。')
-            if record['blob']:
+            if record.get('browserTransfer', record['blob']):
                 return self.reject_blob()
             task = self.discovery.workflow.get_task(record['association']['taskId'])
             task = self.discovery.command(task, 'resume_download', {'acknowledged': True})
-            return self.start(record['id'], task, blob=record['blob']) if not record['blob'] else self.reject_blob()
+            return self.start(record['id'], task)
         if action == 'online.discardDownload':
             return self.artifacts.discard(params['artifactId'], self.protected())
         if action == 'online.compactDownload':
@@ -284,7 +302,7 @@ class Downloads:
 
     @staticmethod
     def reject_blob():
-        raise ProtocolError('MANUAL_REQUIRED', '网站生成的 blob 不能跨会话恢复，请在网站重新获取。')
+        raise ProtocolError('MANUAL_REQUIRED', '请返回候选结果重新下载这份字幕。')
 
     def import_ready(self, params):
         data = self.workspace.data

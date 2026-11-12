@@ -151,20 +151,23 @@ def prepare_download(path, root, expected_mark, *, should_stop=None, budget=None
         raise StalePlan("下载文件已变化，请重新下载后导入。")
     if not 0 < expected_mark.size <= MAX_DOWNLOAD_BYTES:
         raise ValueError("下载为空或超出 64 MiB 限制。")
-    output = path.parent / ("prepared-" + uuid4().hex)
+    # Keep the private path short enough for Windows with long paths disabled.
+    output = path.parent / ("prepared-" + uuid4().hex[:12])
     output.mkdir(exist_ok=False)
     files, skipped = [], []
     expanded = 0
+    output_index = 0
     if budget is None:
         budget = {"bytes":MAX_EXPANDED_BYTES,"files":MAX_ENTRIES}
 
     def copy_stream(reader, name, expected_size):
-        nonlocal expanded
+        nonlocal expanded, output_index
         if not 0 < expected_size <= MAX_FILE_BYTES:
             raise ValueError("字幕为空或单份超过 8 MiB。")
         if expected_size > budget["bytes"] or budget["files"] <= 0:
             raise ValueError("本批导入已达到文件数量或解压大小限制。")
-        directory = output / uuid4().hex
+        output_index += 1
+        directory = output / str(output_index)
         directory.mkdir(exist_ok=False)
         budget["files"] -= 1
         target = directory / safe_filename(name)

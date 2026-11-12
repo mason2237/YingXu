@@ -158,7 +158,7 @@ app.whenReady().then(async()=>{
       else if(frame.type==='browser.search')online.search(frame).catch(()=>online.fail('网站未能打开，请重试或切换来源。'));
       else if(frame.type==='browser.open')online.open(frame).catch(()=>online.notice('候选页面未能打开。'));
       else if(frame.type==='browser.stop')online.stop();
-      else if(frame.type==='browser.arm')online.arm(frame).catch(()=>online.notice('下载页未能打开；请重试或取消。'));
+      else if(frame.type==='browser.arm')online.arm(frame).catch(()=>online.downloadFailed(frame,'下载页未能打开，请重试。'));
       else if(frame.type==='browser.disarm')online.disarm();
       else if(frame.type==='browser.capture')online.capture(frame);
       else if(frame.type==='browser.accept')online.accept(frame);
